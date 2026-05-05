@@ -8,7 +8,7 @@ include 'subcases.inc'
 $ Direct Text Input for this Subcase
 BEGIN BULK
 $ Direct Text Input for Bulk Data
-PARAM,POST,-1
+PARAM   POST     0
 PARAM   PRTMAXIM  YES
 PARAM   WTMASS  .00259
 PARAM   AUNITS  .00259
