@@ -564,7 +564,6 @@ def write_damage_bdf(selected_nodes, output_path, damage_ratio=0.5, base_bdf_pat
         mf=mats[old_mid].copy()
         while len(mf)<7: mf.append("")
         mf[1]=str(new_mid)
-        mf[2]=f"{to_float(mf[2])*damage_ratio:.6g}"  # E
         if len(mf) > 3 and str(mf[3]).strip():
             mf[3]=f"{to_float(mf[3])*damage_ratio:.6g}"  # G
 
