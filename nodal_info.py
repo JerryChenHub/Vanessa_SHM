@@ -1,5 +1,12 @@
 import os
 import csv
+import re
+import time
+import shutil
+import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+
 bdf_path = r"/base_file/FEM_only.bdf"
 
 output_dir = os.path.dirname(bdf_path)
@@ -8,6 +15,7 @@ elements_csv = os.path.join(output_dir, "elements.csv")
 
 
 def to_float(s):
+    # Convert Nastran-style number text to float.
     s = s.strip()
     if not s:
         return None
@@ -22,10 +30,12 @@ def to_float(s):
 
 
 def fixed_fields(line, width=8):
+    # Split one BDF line into fixed-width fields.
     return [line[i:i + width].strip() for i in range(0, len(line.rstrip("\n")), width)]
 
 
 def parse_bdf(file_path):
+    # Parse GRID and supported element cards.
     nodes = []
     elements = []
 
@@ -82,6 +92,7 @@ def parse_bdf(file_path):
 
 
 def write_nodes(nodes, filepath):
+    # Write node table to CSV.
     with open(filepath, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["node_id", "x", "y", "z"])
@@ -89,6 +100,7 @@ def write_nodes(nodes, filepath):
 
 
 def write_elements(elements, filepath):
+    # Write element table to CSV.
     with open(filepath, "w", newline="") as f:
         writer = csv.writer(f)
 
@@ -104,11 +116,8 @@ def write_elements(elements, filepath):
             row = e + [""] * (3 + max_conn - len(e))
             writer.writerow(row)
 
-def fixed_fields(line, width=8):
-    return [line[i:i + width].strip() for i in range(0, len(line.rstrip("\n")), width)]
-
-
 def expand_thru(tokens):
+    # Expand THRU ranges into explicit IDs.
     nodes = []
     i = 0
 
@@ -131,6 +140,7 @@ def expand_thru(tokens):
 
 
 def parse_bdf_cards(file_path):
+    # Parse multi-line BDF cards.
     cards = []
     current = None
 
@@ -158,6 +168,7 @@ def parse_bdf_cards(file_path):
 
 
 def parse_fixed_nodes(file_path):
+    # Collect fixed node IDs from SPC/SPC1.
     fixed_nodes = set()
 
     cards = parse_bdf_cards(file_path)
@@ -166,7 +177,6 @@ def parse_fixed_nodes(file_path):
         card = fields[0]
 
         if card == "SPC":
-            # SPC: SID, G1, C1, D1, G2, C2, D2...
             i = 2
             while i < len(fields):
                 try:
@@ -177,7 +187,6 @@ def parse_fixed_nodes(file_path):
                 i += 3
 
         elif card == "SPC1":
-            # SPC1: SID, C, G1, G2, ...
             node_tokens = [x for x in fields[3:] if x]
             fixed_nodes.update(expand_thru(node_tokens))
 
@@ -185,20 +194,15 @@ def parse_fixed_nodes(file_path):
 
 
 def write_fixed_nodes(fixed_nodes, filepath):
+    # Write fixed node IDs to CSV.
     with open(filepath, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["node_id"])
         for node_id in fixed_nodes:
             writer.writerow([node_id])
 
-
-import os
-import pandas as pd
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-
-
 def plot_bdf_mesh_3d(data_dir="data", show_elements=True, show_faces=True):
+    # Plot mesh, fixed nodes, and optional faces.
     nodes_path = os.path.join(data_dir, "nodes.csv")
     elements_path = os.path.join(data_dir, "elements.csv")
     fixed_path = os.path.join(data_dir, "fixed_nodes.csv")
@@ -207,7 +211,6 @@ def plot_bdf_mesh_3d(data_dir="data", show_elements=True, show_faces=True):
     elements_df = pd.read_csv(elements_path)
     fixed_df = pd.read_csv(fixed_path)
 
-    # node_id -> xyz
     node_xyz = {
         int(row["node_id"]): (row["x"], row["y"], row["z"])
         for _, row in nodes_df.iterrows()
@@ -239,7 +242,6 @@ def plot_bdf_mesh_3d(data_dir="data", show_elements=True, show_faces=True):
         label="Fixed nodes"
     )
 
-    # ===== 组 element =====
     faces = []
 
     node_cols = [c for c in elements_df.columns if c.startswith("n")]
@@ -282,7 +284,6 @@ def plot_bdf_mesh_3d(data_dir="data", show_elements=True, show_faces=True):
                 xs, ys, zs = zip(*closed_pts)
                 ax.plot(xs, ys, zs, linewidth=0.25, alpha=0.25)
 
-    # ===== 画面片 =====
     if show_faces and faces:
         poly = Poly3DCollection(
             faces,
@@ -304,8 +305,7 @@ def plot_bdf_mesh_3d(data_dir="data", show_elements=True, show_faces=True):
 
 
 def set_axes_equal(ax):
-    """
-    """
+    # Force equal axis scale in 3D view.
     x_limits = ax.get_xlim3d()
     y_limits = ax.get_ylim3d()
     z_limits = ax.get_zlim3d()
@@ -325,6 +325,7 @@ def set_axes_equal(ax):
     ax.set_zlim3d([z_middle - max_range, z_middle + max_range])
 
 def print_bounds(data_dir="data"):
+    # Print xyz bounds for all and fixed nodes.
     import os, pandas as pd
     n=pd.read_csv(os.path.join(data_dir,"nodes.csv"))
     f=pd.read_csv(os.path.join(data_dir,"fixed_nodes.csv"))
@@ -337,6 +338,7 @@ def print_bounds(data_dir="data"):
 
 
 def plot_nodes_fixed_box(data_dir="data"):
+    # Plot nodes with fixed-node bounding box.
     import os, pandas as pd, matplotlib.pyplot as plt
     from itertools import product, combinations
 
@@ -373,6 +375,7 @@ def plot_nodes_fixed_box(data_dir="data"):
     plt.show()
 
 def plot_pick_nodes_fixed_box(data_dir="data", offset=30):
+    # Plot nodes and allow interactive pick.
     import os, pandas as pd, matplotlib.pyplot as plt
     from itertools import product, combinations
 
@@ -421,9 +424,8 @@ def plot_pick_nodes_fixed_box(data_dir="data", offset=30):
     plt.show()
 
 
-###从这里开始，开始选椭圆
-
 def get_floating_nodes(data_dir="data"):
+    # Get nodes not used by any element.
     import os, pandas as pd
     n=pd.read_csv(os.path.join(data_dir,"nodes.csv"))
     e=pd.read_csv(os.path.join(data_dir,"elements.csv"))
@@ -435,6 +437,7 @@ def get_floating_nodes(data_dir="data"):
 
 
 def get_box_nodes(data_dir="data", offset=30):
+    # Get nodes inside fixed-node bbox with margin.
     import os, pandas as pd
     n=pd.read_csv(os.path.join(data_dir,"nodes.csv"))
     f=pd.read_csv(os.path.join(data_dir,"fixed_nodes.csv"))
@@ -448,6 +451,7 @@ def get_box_nodes(data_dir="data", offset=30):
 
 
 def select_nodes_in_ellipsoid(node=1000,a=30,b=30,c=30,Ome=None,decay_rate=0.5,data_dir="data",box_offset=30):
+    # Select nodes in ellipsoid excluding floating/box nodes.
     import os, numpy as np, pandas as pd
 
     if Ome is None:
@@ -468,14 +472,13 @@ def select_nodes_in_ellipsoid(node=1000,a=30,b=30,c=30,Ome=None,decay_rate=0.5,d
     d=P-p0
     q=d @ np.asarray(Ome,float)
     val=(q[:,0]/a)**2+(q[:,1]/b)**2+(q[:,2]/c)**2
-    weight=np.exp(-decay_rate*val)
-
     mask=(val<=1.0) & (~n["node_id"].astype(int).isin(exclude))
     selected=n.loc[mask,"node_id"].astype(int).tolist()
 
     return selected
 
 def plot_selected_nodes(node=1000,a=30,b=30,c=30,Ome=None,decay_rate=0.5,data_dir="data",box_offset=30):
+    # Plot selected ellipsoid nodes and center.
     import os, numpy as np, pandas as pd, matplotlib.pyplot as plt
 
     if Ome is None:
@@ -498,10 +501,12 @@ def plot_selected_nodes(node=1000,a=30,b=30,c=30,Ome=None,decay_rate=0.5,data_di
     plt.tight_layout()
     plt.show()
 
-def write_damaged_bdf(selected_nodes,bdf_in="data/FEM_only.bdf",damage_ratio=0.5,out_dir="data"):
-    import os,time,re
+def write_damage_bdf(selected_nodes, output_path, damage_ratio=0.5, base_bdf_path="base_file/FEM_only.bdf"):
+    # Copy base FEM file, then write damaged properties/elements to output path.
+    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
+    shutil.copy2(base_bdf_path, output_path)
 
-    with open(bdf_in,"r",errors="ignore") as f:
+    with open(output_path,"r",errors="ignore") as f:
         lines=f.readlines()
 
     def ff(line): return [line[i:i+8].strip() for i in range(0,len(line.rstrip("\n")),8)]
@@ -596,20 +601,25 @@ def write_damaged_bdf(selected_nodes,bdf_in="data/FEM_only.bdf",damage_ratio=0.5
     if not inserted:
         out_lines.extend(add_lines)
 
-    ts=time.strftime("%Y%m%d_%H%M%S")
-    out_path=os.path.join(out_dir,f"FEM_{ts}.bdf")
-
-    with open(out_path,"w") as f:
+    with open(output_path,"w") as f:
         f.writelines(out_lines)
 
     print("selected elements:",len(selected_elems))
     print("new properties:",len(pid_map))
     print("pid map:",pid_map)
-    print("saved:",out_path)
+    print("saved:",output_path)
 
-    return out_path,[eid for eid,_ in selected_elems]
+    return output_path,[eid for eid,_ in selected_elems]
+
+
+def write_damaged_bdf(selected_nodes,bdf_in="data/FEM_only.bdf",damage_ratio=0.5,out_dir="data"):
+    # Backward-compatible wrapper.
+    ts=time.strftime("%Y%m%d_%H%M%S")
+    out_path=os.path.join(out_dir,f"FEM_{ts}.bdf")
+    return write_damage_bdf(selected_nodes, out_path, damage_ratio=damage_ratio, base_bdf_path=bdf_in)
 
 def check_bdf_duplicates(bdf_path):
+    # Report duplicate element/property/material IDs.
     from collections import defaultdict
 
     elem_cards={"CBAR","CBEAM","CROD","CTRIA3","CQUAD4","CTETRA","CHEXA"}
@@ -639,28 +649,7 @@ def check_bdf_duplicates(bdf_path):
     return ids
 if __name__ == "__main__":
     import numpy as np
-    #有几个node飘在外面
-    # print("Parsing BDF file...")
-    #
-    # nodes, elements = parse_bdf(bdf_path)
-    #
-    # print(f"Total nodes: {len(nodes)}")
-    # print(f"Total elements: {len(elements)}")
-    #
-    # write_nodes(nodes, nodes_csv)
-    # write_elements(elements, elements_csv)
-    #
-    # print("Done!")
-    # print(f"Nodes saved to: {nodes_csv}")
-    # print(f"Elements saved to: {elements_csv}")
-    # plot_bdf_mesh_3d(data_dir="data")
 
-    # plot_bdf_mesh_3d("data")
-    # plot_nodes_fixed_box("data")
-    # plot_pick_nodes_fixed_box("data")
-
-    # plot_selected_nodes(1000)
-    # check_bdf_duplicates("data/FEM_20260428_202832.bdf")
     selected_nodes = select_nodes_in_ellipsoid(
         node=1000,
         a=30,
@@ -671,12 +660,11 @@ if __name__ == "__main__":
         data_dir="old_data"
     )
 
-    out_bdf, selected_elements = write_damaged_bdf(
+    out_bdf, selected_elements = write_damage_bdf(
         selected_nodes,
-        bdf_in="data/FEM_only.bdf",
+        output_path="old_data/FEM_damaged.bdf",
         damage_ratio=0.1,
-        out_dir="old_data"
+        base_bdf_path="base_file/FEM_only.bdf"
     )
-
 
 
