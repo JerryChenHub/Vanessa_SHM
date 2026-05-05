@@ -617,18 +617,11 @@ def write_damage_bdf(selected_nodes, output_path, damage_ratio=0.5, base_bdf_pat
     return output_path,[eid for eid,_ in selected_elems]
 
 
-def write_damaged_bdf(selected_nodes,bdf_in="base_file/FEM_only.bdf",damage_ratio=0.5,out_dir="Temp"):
-    # Backward-compatible wrapper with base input and Temp output defaults.
+def write_damaged_bdf(selected_nodes,bdf_in="data/FEM_only.bdf",damage_ratio=0.5,out_dir="data"):
+    # Backward-compatible wrapper.
     ts=time.strftime("%Y%m%d_%H%M%S")
     out_path=os.path.join(out_dir,f"FEM_{ts}.bdf")
     return write_damage_bdf(selected_nodes, out_path, damage_ratio=damage_ratio, base_bdf_path=bdf_in)
-
-def damage_bdf(selected_nodes,out_path=None,damage_ratio=0.5,base_bdf_path="base_file/FEM_only.bdf",out_dir="Temp"):
-    # Preferred wrapper: copy from base_file and write damaged BDF into Temp by default.
-    if out_path is None:
-        ts=time.strftime("%Y%m%d_%H%M%S")
-        out_path=os.path.join(out_dir,f"FEM_{ts}.bdf")
-    return write_damage_bdf(selected_nodes, out_path, damage_ratio=damage_ratio, base_bdf_path=base_bdf_path)
 
 def check_bdf_duplicates(bdf_path):
     # Report duplicate element/property/material IDs.
@@ -678,4 +671,5 @@ if __name__ == "__main__":
         damage_ratio=0.1,
         base_bdf_path="base_file/FEM_only.bdf"
     )
+
 
