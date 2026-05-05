@@ -564,7 +564,12 @@ def write_damage_bdf(selected_nodes, output_path, damage_ratio=0.5, base_bdf_pat
         mf=mats[old_mid].copy()
         while len(mf)<7: mf.append("")
         mf[1]=str(new_mid)
-        mf[2]=f"{to_float(mf[2])*damage_ratio:.6g}"
+        e_val=to_float(mf[2])
+        if e_val is not None:
+            mf[2]=f"{e_val*damage_ratio:.6g}"
+        g_val=to_float(mf[3]) if len(mf)>3 else None
+        if g_val is not None:
+            mf[3]=f"{g_val*damage_ratio:.6g}"
 
         pf=props[old_pid]["fields"].copy()
         while len(pf)<8: pf.append("")
