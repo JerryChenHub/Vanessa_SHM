@@ -450,7 +450,7 @@ def get_box_nodes(data_dir="data", offset=30):
     return set(n.loc[inside,"node_id"].astype(int))
 
 
-def select_nodes_in_ellipsoid(node=1000,a=30,b=30,c=30,Ome=None,decay_rate=0.5,data_dir="data",box_offset=30):
+def select_nodes_in_ellipsoid(node=1000,a=30,b=30,c=30,Ome=None,data_dir="data",box_offset=30):
     # Select nodes in ellipsoid excluding floating/box nodes.
     import os, numpy as np, pandas as pd
 
@@ -477,7 +477,7 @@ def select_nodes_in_ellipsoid(node=1000,a=30,b=30,c=30,Ome=None,decay_rate=0.5,d
 
     return selected
 
-def plot_selected_nodes(node=1000,a=30,b=30,c=30,Ome=None,decay_rate=0.5,data_dir="data",box_offset=30):
+def plot_selected_nodes(node=1000,a=30,b=30,c=30,Ome=None,data_dir="data",box_offset=30):
     # Plot selected ellipsoid nodes and center.
     import os, numpy as np, pandas as pd, matplotlib.pyplot as plt
 
@@ -485,7 +485,7 @@ def plot_selected_nodes(node=1000,a=30,b=30,c=30,Ome=None,decay_rate=0.5,data_di
         Ome=np.eye(3)
 
     n=pd.read_csv(os.path.join(data_dir,"nodes.csv"))
-    selected=select_nodes_in_ellipsoid(node,a,b,c,Ome,decay_rate,data_dir,box_offset)
+    selected=select_nodes_in_ellipsoid(node,a,b,c,Ome,data_dir,box_offset)
 
     sel=n[n["node_id"].isin(selected)]
     center=n[n["node_id"]==node]
@@ -567,7 +567,7 @@ def write_damage_bdf(selected_nodes, output_path, damage_ratio=0.5, base_bdf_pat
         e_val=to_float(mf[2])
         if e_val is not None:
             mf[2]=f"{e_val*damage_ratio:.6g}"
-        g_val=to_float(mf[3]) if len(mf)>3 else None
+        g_val=to_float(mf[3])
         if g_val is not None:
             mf[3]=f"{g_val*damage_ratio:.6g}"
 
@@ -617,11 +617,18 @@ def write_damage_bdf(selected_nodes, output_path, damage_ratio=0.5, base_bdf_pat
     return output_path,[eid for eid,_ in selected_elems]
 
 
-def write_damaged_bdf(selected_nodes,bdf_in="data/FEM_only.bdf",damage_ratio=0.5,out_dir="data"):
-    # Backward-compatible wrapper.
+def write_damaged_bdf(selected_nodes,bdf_in="base_file/FEM_only.bdf",damage_ratio=0.5,out_dir="Temp"):
+    # Backward-compatible wrapper with base input and Temp output defaults.
     ts=time.strftime("%Y%m%d_%H%M%S")
     out_path=os.path.join(out_dir,f"FEM_{ts}.bdf")
     return write_damage_bdf(selected_nodes, out_path, damage_ratio=damage_ratio, base_bdf_path=bdf_in)
+
+def damage_bdf(selected_nodes,out_path=None,damage_ratio=0.5,base_bdf_path="base_file/FEM_only.bdf",out_dir="Temp"):
+    # Preferred wrapper: copy from base_file and write damaged BDF into Temp by default.
+    if out_path is None:
+        ts=time.strftime("%Y%m%d_%H%M%S")
+        out_path=os.path.join(out_dir,f"FEM_{ts}.bdf")
+    return write_damage_bdf(selected_nodes, out_path, damage_ratio=damage_ratio, base_bdf_path=base_bdf_path)
 
 def check_bdf_duplicates(bdf_path):
     # Report duplicate element/property/material IDs.
@@ -661,15 +668,13 @@ if __name__ == "__main__":
         b=30,
         c=30,
         Ome=np.eye(3),
-        decay_rate=0.5,
-        data_dir="old_data"
+        data_dir="base_file"
     )
 
     out_bdf, selected_elements = write_damage_bdf(
         selected_nodes,
-        output_path="old_data/FEM_damaged.bdf",
+        output_path="Temp/FEM_damaged.bdf",
         damage_ratio=0.1,
         base_bdf_path="base_file/FEM_only.bdf"
     )
-
 

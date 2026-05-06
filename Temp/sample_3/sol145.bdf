@@ -1,0 +1,28 @@
+SOL 145
+CEND
+$ Direct Text Input for Global Case Control Data
+TITLE = Flutter Solution
+ECHO = NONE
+RESVEC = NO
+SUBCASE 1
+TITLE=FLUTTER
+SPC = 1
+METHOD = 1
+FMETHOD = 1
+VECTOR(SORT1,REAL)=ALL
+SPCFORCES(SORT1,REAL)=ALL
+$ Direct Text Input for this Subcase
+BEGIN BULK
+$ Direct Text Input for Bulk Data
+PARAM    POST    0
+PARAM    WTMASS .00259
+PARAM    GRDPNT  0
+PARAM    SNORM  20.
+PARAM   PRTMAXIM YES
+PARAM   AUNITS   0.00259
+EIGRL    1                       20      0                       MASS
+include 'FEM_only.bdf'
+include 'aero_cards.bdf'
+include 'flutter_cards.bdf'
+include 'spline_cards.bdf'
+ENDDATA 0b984828
