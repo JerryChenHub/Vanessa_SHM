@@ -1,5 +1,6 @@
 import os
 import csv
+import math
 import re
 import time
 import shutil
@@ -522,6 +523,32 @@ def write_damage_bdf(selected_nodes, output_path, damage_ratio=0.5, base_bdf_pat
         if m: return float(m.group(1)+"e"+m.group(2))
         return float(s)
 
+    def bdf_float_8(v):
+        v=float(v)
+        if not math.isfinite(v):
+            raise ValueError(f"invalid BDF float: {v}")
+        if v == 0:
+            return "0."
+
+        for prec in range(7,-1,-1):
+            s=f"{v:.{prec}f}".rstrip("0").rstrip(".")
+            if s in ("","-0"):
+                s="0"
+            if s == "0" and v != 0:
+                continue
+            if len(s)<=8:
+                return s
+
+        exp=int(math.floor(math.log10(abs(v))))
+        mant=v/(10**exp)
+        for prec in range(6,-1,-1):
+            m=f"{mant:.{prec}f}".rstrip("0").rstrip(".")
+            s=f"{m}{exp:+d}"
+            if len(s)<=8:
+                return s
+
+        raise ValueError(f"could not format {v} as an 8-character BDF float")
+
     selected_nodes=set(map(int,selected_nodes))
     elem_cards={"CBAR":2,"CBEAM":2,"CROD":2,"CTRIA3":3,"CQUAD4":4,"CTETRA":4,"CHEXA":8}
     prop_cards={"PSHELL","PBAR"}
@@ -566,10 +593,10 @@ def write_damage_bdf(selected_nodes, output_path, damage_ratio=0.5, base_bdf_pat
         mf[1]=str(new_mid)
         e_val=to_float(mf[2])
         if e_val is not None:
-            mf[2]=f"{e_val*damage_ratio:.6g}"
+            mf[2]=bdf_float_8(e_val*damage_ratio)
         g_val=to_float(mf[3])
         if g_val is not None:
-            mf[3]=f"{g_val*damage_ratio:.6g}"
+            mf[3]=bdf_float_8(g_val*damage_ratio)
 
         pf=props[old_pid]["fields"].copy()
         while len(pf)<8: pf.append("")

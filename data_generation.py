@@ -49,15 +49,26 @@ def generate_data_sets(n=10, base_dir="base_file", temp_dir="Temp", info_dir="_d
         node = int(rng.choice(candidate_nodes))
         radius = _positive_normal(rng, 30, 5)
         damage_ratio = _bounded_normal(rng, 0.5, 0.1, 0.3, 0.7)
+        ome = np.eye(3)
 
         selected_nodes = select_nodes_in_ellipsoid(
             node=node,
             a=radius,
             b=radius,
             c=radius,
-            Ome=np.eye(3),
+            Ome=ome,
             data_dir=info_dir,
         )
+
+        with open(os.path.join(subfolder, "params.txt"), "w") as f:
+            f.write(f"damaged_node: {node}\n")
+            f.write(f"a: {radius:.12g}\n")
+            f.write(f"b: {radius:.12g}\n")
+            f.write(f"c: {radius:.12g}\n")
+            f.write("Ome:\n")
+            f.write(np.array2string(ome, separator=", "))
+            f.write("\n")
+            f.write(f"damage_ratio: {damage_ratio:.12g}\n")
 
         damage_bdf(
             selected_nodes=selected_nodes,
