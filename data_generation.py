@@ -61,7 +61,7 @@ def _damage_number_from_input(rng, d_n):
 def write_multiple_damage_bdf(
     selected_nodes_groups,
     out_path,
-    damage_ratio=0.5,
+    damage_ratio=0.3,
     base_bdf_path="base_file/FEM_only.bdf",
 ):
     """
