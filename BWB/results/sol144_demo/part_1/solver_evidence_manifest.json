@@ -1,0 +1,22 @@
+{
+  "archive": "solver_evidence.zip",
+  "sha256": "f1092c6c1e9480e71dee596f88afc8c903bf24f7151e8cd7fe88614b576b9c27",
+  "source_run": "workspace/BWB/sol144_demo/part_1_final",
+  "members_sha256": {
+    "aero_cards.bdf": "b52b1f920654443815db83acbc7c2e25b6a5861f41ed53c2ff585d922e6a5603",
+    "bwb_sol144.bdf": "4419dd76f6575272c4c70a0409d55681a6731c0fbf00dd76e9a51686170106bd",
+    "bwb_sol144.f04": "63d5cd703028c2313aae4fe740ea24acd300483f8c5ca021d6029efaf540c323",
+    "bwb_sol144.f06": "d1d4eeada1183ceb5e75818272920be9c0be7de999631151ab4012e46a388bcc",
+    "bwb_sol144.log": "62af65ebf4701259b2972a45f49ddb92ae0f021cccb7144bced5013e86114dc8",
+    "bwb_sol144.op2": "b36868815bccb530d02103e08c9e481174d755c299e4c03c5aa6021a86ce30e3",
+    "case_manifest.json": "01ba0cd3ad76f161aaeeacdd744614a916086b7c2c420cf20119a77f9f51b360",
+    "dmicards.bdf": "e12d3608faa6a3d2ae613c4b25524c39211132013ab76bf886ebcbb61efe5fa3",
+    "flight_condition.bdf": "c624d57629fdeabfce033797a47b7b0c63116825590c1f149447a07c326082e2",
+    "launcher.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "launcher.stdout.txt": "1ec469b2f00f286a93ee28b260673062621de227b19be7ef59debea2b29d8f06",
+    "run-invocation.json": "e0d4cc74b8b06162796eaee0eb308477c5dfb2873bf93fa113a3883f76de985e",
+    "run-summary.json": "65e24dd0bc1ef38bcb63927761996949ed313fd26b6bf73ef27353ceb2e75be1",
+    "spline_cards.bdf": "a1199fab9e45e50f483f819cf9f0b2e45d301f334add2eee5c8783a028079f89",
+    "structural_cards.bdf": "6fc0d77b835e4022e00993dee2bdc28a5a33fe095e911e8df98f4206647d50d5"
+  }
+}

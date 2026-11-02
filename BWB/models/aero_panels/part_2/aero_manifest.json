@@ -52,9 +52,9 @@
   "nasa_reuse": "Read-only bulk-card organization; no NASA numerical geometry, units, loads, or correction values copied.",
   "generator": {
     "path": "BWB/scripts/build_bwb_aero_panels.py",
-    "sha256": "aaaa99b9ce3b7ea8c8d6be3ef4a5185f35d9d249458abc6ff906ebc2c750df3a",
+    "sha256": "e49f35c3f830a50c23ae96415ebbc2c96e88aa5fdf482c66d9c8af5c1c813934",
     "hash_mode": "crlf_to_lf",
-    "raw_sha256_at_generation": "aaaa99b9ce3b7ea8c8d6be3ef4a5185f35d9d249458abc6ff906ebc2c750df3a"
+    "raw_sha256_at_generation": "e49f35c3f830a50c23ae96415ebbc2c96e88aa5fdf482c66d9c8af5c1c813934"
   },
   "structural_counts": {
     "nodes": 2940,

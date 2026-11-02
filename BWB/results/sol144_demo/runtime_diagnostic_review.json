@@ -1,0 +1,93 @@
+{
+  "status": "reviewed_empty_output_call; raw runtime diagnostic retained",
+  "log_path": "workspace/BWB/sol144_demo/part_1_final_trace/bwb_sol144.log",
+  "log_sha256": "da70f92ddd089faf4d6eb1b7d41ec0c2b6bf41a253957946db4ae9825f32094f",
+  "context": [
+    {
+      "line": 2679021,
+      "text": "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM ."
+    },
+    {
+      "line": 2679022,
+      "text": "MKL_VERBOSE DGEMM(T,N,0,1,3,00007FF7281AC7A8,00000208374B3360,3,00000208374B4300,3,00007FF7281AC7B0,00000208374B3040,0) 1.34us CNR:OFF Dyn:1 FastMM:1 TID:0  NThr:2"
+    }
+  ],
+  "decoded_DGEMM": {
+    "m": 0,
+    "n": 1,
+    "k": 3,
+    "lda": 3,
+    "ldb": 3,
+    "ldc": 0
+  },
+  "reference": "https://www.netlib.org/lapack/explore-html/d7/d2b/dgemm_8f_source.html",
+  "interpretation": "The reported invocation has a zero-row output. LDC validation fails before zero-size quick return. This is not a general waiver of runtime errors.",
+  "same_inputs_as_final_part_1": true,
+  "repeat_max_absolute_strain_difference": 0.0,
+  "repeat_max_absolute_displacement_rotation_difference": 0.0,
+  "f06_sha256": {
+    "final": "d1d4eeada1183ceb5e75818272920be9c0be7de999631151ab4012e46a388bcc",
+    "trace": "d1d4eeada1183ceb5e75818272920be9c0be7de999631151ab4012e46a388bcc"
+  },
+  "trace_run_summary": {
+    "status": "completed_with_runtime_errors",
+    "solver_completed": true,
+    "fatal_messages": [],
+    "runtime_errors": [
+      "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+      "Launcher returned exit code 1"
+    ],
+    "warning_messages": [],
+    "subcases_in_output": [
+      1
+    ],
+    "output_sections": {
+      "displacements": true,
+      "strains": true,
+      "aerodynamic_monitor_loads": true
+    },
+    "elapsed_seconds": 47.349,
+    "output_files": {
+      "bwb_sol144.f04": 137484,
+      "bwb_sol144.f06": 2628280,
+      "bwb_sol144.log": 346142237,
+      "bwb_sol144.op2": 720596
+    },
+    "command": [
+      "D:\\Siemens\\Femap 2406\\nastran\\bin\\nastran.exe",
+      "bwb_sol144.bdf",
+      "auth=29000@license-siemens.eng.uci.edu",
+      "program=NASTRAN",
+      "memory=1GB",
+      "parallel=2",
+      "sdirectory=D:\\Python\\Projects\\Vanessa_SHM\\workspace\\BWB\\sol144_demo\\part_1_final_trace\\scratch",
+      "scr=yes",
+      "notify=no",
+      "old=yes"
+    ],
+    "started_unix": 1793587326.3623776,
+    "source_case": "BWB/cases/sol144_demo/part_1",
+    "input_sha256": {
+      "aero_cards.bdf": "b52b1f920654443815db83acbc7c2e25b6a5861f41ed53c2ff585d922e6a5603",
+      "bwb_sol144.bdf": "4419dd76f6575272c4c70a0409d55681a6731c0fbf00dd76e9a51686170106bd",
+      "dmicards.bdf": "e12d3608faa6a3d2ae613c4b25524c39211132013ab76bf886ebcbb61efe5fa3",
+      "flight_condition.bdf": "c624d57629fdeabfce033797a47b7b0c63116825590c1f149447a07c326082e2",
+      "spline_cards.bdf": "a1199fab9e45e50f483f819cf9f0b2e45d301f334add2eee5c8783a028079f89",
+      "structural_cards.bdf": "6fc0d77b835e4022e00993dee2bdc28a5a33fe095e911e8df98f4206647d50d5"
+    },
+    "reused_inspector": {
+      "path": "NASA_SHM/core/run_local_nastran.py",
+      "sha256": "c14c54b6976e58d1fa31a6ccd04929dcfb7e1cfce31e2d14c2e979fc4f675368",
+      "hash_mode": "crlf_to_lf",
+      "raw_sha256_at_generation": "c14c54b6976e58d1fa31a6ccd04929dcfb7e1cfce31e2d14c2e979fc4f675368"
+    },
+    "runner": {
+      "path": "BWB/scripts/run_sol144.py",
+      "sha256": "a9a11d0adf03aae20f882f3402ff04904c2af0d8ded4624a540b9598976dafc5",
+      "hash_mode": "crlf_to_lf",
+      "raw_sha256_at_generation": "a9a11d0adf03aae20f882f3402ff04904c2af0d8ded4624a540b9598976dafc5"
+    },
+    "launcher_returncode": 1,
+    "fresh_f06": true
+  }
+}

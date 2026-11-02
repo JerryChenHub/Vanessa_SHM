@@ -170,6 +170,7 @@ def close(actual, expected, description, atol=2e-8, rtol=2e-8):
 
 def read_w2gj(grouped, count):
     header, entries = [], {}
+    columns = set()
     for f, location in grouped.get("DMI", []):
         if field(f, 1).upper() != "W2GJ":
             continue
@@ -178,12 +179,17 @@ def read_w2gj(grouped, count):
             header.append(f)
             continue
         require(column == 1, f"W2GJ has unexpected column {column}: {location}")
+        require(column not in columns, "W2GJ column must be a single logical entry")
+        columns.add(column)
         row = int(field(f, 3))
-        require(row not in entries, f"Duplicate W2GJ row {row}")
-        require(1 <= row <= count, f"W2GJ row {row} is out of bounds")
-        # The generator deliberately emits one scalar per DMI data entry.
-        require(not any(f[5:]), f"Unexpected compressed W2GJ entry: {location}")
-        entries[row] = nastran_float(field(f, 4))
+        values = f[4:]
+        while values and not values[-1]:
+            values = values[:-1]
+        for value in values:
+            require(bool(value), "W2GJ has an internal blank value")
+            require(1 <= row <= count, f"W2GJ row {row} is out of bounds")
+            entries[row] = nastran_float(value)
+            row += 1
     require(len(header) == 1, "Expected exactly one W2GJ DMI header")
     f = header[0]
     require(int(field(f, 3)) == 2, "W2GJ must be a rectangular matrix")

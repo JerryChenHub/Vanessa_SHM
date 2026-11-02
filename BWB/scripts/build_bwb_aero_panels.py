@@ -241,9 +241,10 @@ def build_part(part, source_root=DEFAULT_SOURCE, output_root=DEFAULT_OUTPUT, nch
     dmi = ['$ W2GJ: negative mean-surface normal slope at each box 3/4-chord control point.\n',
            '$ Sorted by CAERO1 EID, then chord-fast box ID. Values in linearized radians.\n',
            write_card('DMI',['W2GJ',0,2,2,0,None,len(boxes),1])]
-    for box in boxes:
-        dmi += [f"$ j={box['j_index']} box={box['id']}\n",
-                write_card('DMI',['W2GJ',1,box['j_index'],real(box['w2gj_rad'])])]
+    # QRG DMI remark 8: each column MUST be one logical entry. Distinct
+    # DMI records for individual rows of the same column fail IFS2P/325.
+    dmi += [write_card('DMI', ['W2GJ', 1, 1,
+            *[real(box['w2gj_rad']).replace('E', 'D') for box in boxes]])]
     files = dict(aero='aero_cards.bdf',spline='spline_cards.bdf',camber='dmicards.bdf',
                  structure='structural_cards.bdf',combined=f'part_{part}_aero_structure.bdf')
     for key, content in [('aero',aero),('spline',spline),('camber',dmi)]:

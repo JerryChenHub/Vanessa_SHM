@@ -1,10 +1,12 @@
 # BWB
 
-本项目从两个 SolidWorks 零件生成规则蒙皮，再由同一套蒙皮行列建立气动参考面、结构插值连接和弯度/扭转修正。当前输入包按零件独立组织；尚未指定真实飞行工况或运行 SOL144。
+本项目从两个 SolidWorks 零件生成规则蒙皮，再由同一套蒙皮行列建立气动参考面、结构插值连接和弯度/扭转修正。已在假设的 20 m/s、2° 迎角工况下分别运行两件的 SOL144，获得完整应变；两件尚未装配为整机。详见 [求解输入与复现](cases/sol144_demo/README.md) 和 [实际结果与合理性判断](results/sol144_demo/README.md)。
 
 - [规则蒙皮模型](models/skin_structured/README.md)：主翼采用平行弦向截面和连续展向列，保留材料、1 mm 厚度及根部固定的演示假设。
 - [气动面板模型](models/aero_panels/README.md)：每件 11 个 CAERO1、590 个气动小面板，附 SPLINE1/SET1、W2GJ、独立检查报告和 Femap 查看模型。
 - `models/skin_demo/`：原始 CAD 副本、Parasolid 导出及首版自由网格，保留作来源记录和对比。
+- `cases/sol144_demo/`：假设工况、完整 SOL144 入口、输入来源与求解诊断说明。
+- `results/sol144_demo/`：应变 CSV、位移、合理性检查、云图、Femap 结果模型及压缩求解证据。
 
 ## 目录与生成逻辑
 
@@ -34,7 +36,7 @@ BWB/
 
 气动生成以 `skin_structured/part_N/part_N_skin.bdf` 和 `mesh_layout.json` 为输入。上下蒙皮配对提取平均线，主翼、短过渡、弯折、翼梢分别建立顺流的平面 CAERO1；弯折分成 8 个小平面。SPLINE1 将每个大面连接到附近单侧蒙皮上分布的结构节点；当前支撑选取是建模方案，尚未验证其载荷传递和局部蒙皮应变精度。真实平均线相对参考面的弯度与扭转以 W2GJ 初始下洗补入，气动网格本身不包裹上下蒙皮。
 
-`aero_panels/part_N/part_N_aero_structure.bdf` 汇总结构与气动 bulk 卡片用于导入；它没有 SOL、TRIM 或求解输出请求。原生 `.modfem` 用于查看面板与结构，当前导入没有保存原生 W2GJ 矩阵或对应分析文本；后续求解必须包含 `dmicards.bdf`，不能仅重导出查看模型。完整 SOL144 入口、飞行工况、气动校核、结构收敛和 BWB 损伤数据生成仍需另行建立。
+`aero_panels/part_N/part_N_aero_structure.bdf` 汇总结构与气动 bulk 卡片用于导入；它没有 SOL、TRIM 或求解输出请求。实际求解入口是 `cases/sol144_demo/part_N/bwb_sol144.bdf`，保留全部四组输入并增加工况。原生气动查看 `.modfem` 没有保存 W2GJ；求解必须包含外部 `dmicards.bdf`，不能盲目重导出查看模型。`results/` 中的 `.modfem` 已导入实际 OP2 应变供查看。气动精度、结构收敛和 BWB 损伤数据生成仍未完成。
 
 - `BWB/`：本项目代码、说明和需要长期保留的成果。
 - `BWB/data/`：本项目输入数据，记录来源、单位和版本。
@@ -43,7 +45,7 @@ BWB/
 
 蒙皮生成入口为 `BWB/scripts/build_femap_skin_demo.py`；在仓库根目录执行，需 Windows 桌面 COM 和 Femap。气动卡片生成和独立检查直接处理 BDF/JSON，不需要启动 Femap；原生查看模型由 `view_femap_aero_panels.py` 通过 Femap COM 生成。这些建模入口均不调用求解器。具体重建命令见各模型目录的 README。
 
-当前两件气动输入的独立检查均为 PASS，最终导入 Femap 的 11 个大面、590 个小面板、11 个样条及支撑节点 ID 与输入一致。BWB 11 项测试和 NASA_SHM 19 项回归测试通过。这些结果确认当前输入、连接组织及原生导入的一致性，不代表已经完成 SOL144 求解或气动/应变精度校核。
+当前两件气动输入的独立检查均为 PASS，原生面板和样条与输入一致。SOL144 已完成完整结果恢复，力/力矩平衡和粗略量级检查通过；保留空矩阵 MKL 诊断、9 个封口单元的几何检查超限，并未把流程演示称为应变精度验证。详细数字和处理边界见结果报告。
 
 ## 本机环境
 

@@ -1,0 +1,354 @@
+{
+  "source_model": "BWB/models/aero_panels/part_1/part_1_aero_structure.modfem",
+  "source_model_sha256": "233d338bfa6a2a966de433006cc57cdebf87e06d1b4f09e43aa0f67146bd2481",
+  "source_op2": "workspace/BWB/sol144_demo/part_1_final/bwb_sol144.op2",
+  "source_op2_sha256": "b36868815bccb530d02103e08c9e481174d755c299e4c03c5aa6021a86ce30e3",
+  "source_case": "BWB/cases/sol144_demo/part_1",
+  "solver_completed": true,
+  "result_model": "BWB/results/sol144_demo/part_1/part_1_sol144_strain.modfem",
+  "original_solver_status": "completed_with_runtime_errors",
+  "runtime_diagnostics": [
+    "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+    "Launcher returned exit code 1"
+  ],
+  "reviewed_empty_matrix_diagnostic_allowed": true,
+  "diagnostic_review_note": "Explicit review identified DGEMM(T,N,0,1,2,...,ldc0) with an empty output matrix; original solver diagnostic is retained",
+  "entity_counts": {
+    "nodes": 2940,
+    "elements": 2915,
+    "aero_panels": 11,
+    "aero_splines": 11
+  },
+  "imported_result_sets": 1,
+  "catalog": [
+    {
+      "id": 1,
+      "title": "Simcenter NASTRAN Case 1",
+      "nastran_subcase": 0,
+      "analysis_type": 1,
+      "vector_count": 70,
+      "vectors": [
+        {
+          "id": 1,
+          "title": "Total Translation"
+        },
+        {
+          "id": 2,
+          "title": "T1 Translation"
+        },
+        {
+          "id": 3,
+          "title": "T2 Translation"
+        },
+        {
+          "id": 4,
+          "title": "T3 Translation"
+        },
+        {
+          "id": 5,
+          "title": "Total Rotation"
+        },
+        {
+          "id": 6,
+          "title": "R1 Rotation"
+        },
+        {
+          "id": 7,
+          "title": "R2 Rotation"
+        },
+        {
+          "id": 8,
+          "title": "R3 Rotation"
+        },
+        {
+          "id": 51,
+          "title": "Total Constraint Force"
+        },
+        {
+          "id": 52,
+          "title": "T1 Constraint Force"
+        },
+        {
+          "id": 53,
+          "title": "T2 Constraint Force"
+        },
+        {
+          "id": 54,
+          "title": "T3 Constraint Force"
+        },
+        {
+          "id": 55,
+          "title": "Total Constraint Moment"
+        },
+        {
+          "id": 56,
+          "title": "R1 Constraint Moment"
+        },
+        {
+          "id": 57,
+          "title": "R2 Constraint Moment"
+        },
+        {
+          "id": 58,
+          "title": "R3 Constraint Moment"
+        },
+        {
+          "id": 6043,
+          "title": "Plate Top Fiber"
+        },
+        {
+          "id": 6044,
+          "title": "Plate Bottom Fiber"
+        },
+        {
+          "id": 7020,
+          "title": "Plate Top X Normal Stress"
+        },
+        {
+          "id": 7021,
+          "title": "Plate Top Y Normal Stress"
+        },
+        {
+          "id": 7023,
+          "title": "Plate Top XY Shear Stress"
+        },
+        {
+          "id": 7026,
+          "title": "Plate Top MajorPrn Stress"
+        },
+        {
+          "id": 7027,
+          "title": "Plate Top MinorPrn Stress"
+        },
+        {
+          "id": 7029,
+          "title": "Plate Top PrnStress Angle"
+        },
+        {
+          "id": 7030,
+          "title": "Plate Top Mean Stress"
+        },
+        {
+          "id": 7031,
+          "title": "Plate Top MaxShear Stress"
+        },
+        {
+          "id": 7033,
+          "title": "Plate Top VonMises Stress"
+        },
+        {
+          "id": 7065,
+          "title": "Plate Top X Normal Strain"
+        },
+        {
+          "id": 7066,
+          "title": "Plate Top Y Normal Strain"
+        },
+        {
+          "id": 7068,
+          "title": "Plate Top XY Shear Strain"
+        },
+        {
+          "id": 7071,
+          "title": "Plate Top MajorPrn Strain"
+        },
+        {
+          "id": 7072,
+          "title": "Plate Top MinorPrn Strain"
+        },
+        {
+          "id": 7074,
+          "title": "Plate Top PrnStrain Angle"
+        },
+        {
+          "id": 7075,
+          "title": "Plate Top Mean Strain"
+        },
+        {
+          "id": 7076,
+          "title": "Plate Top MaxShear Strain"
+        },
+        {
+          "id": 7077,
+          "title": "Plate Top VonMises Strain"
+        },
+        {
+          "id": 8020,
+          "title": "Plate Mid X Normal Stress"
+        },
+        {
+          "id": 8021,
+          "title": "Plate Mid Y Normal Stress"
+        },
+        {
+          "id": 8023,
+          "title": "Plate Mid XY Shear Stress"
+        },
+        {
+          "id": 8026,
+          "title": "Plate Mid Major Stress"
+        },
+        {
+          "id": 8027,
+          "title": "Plate Mid Minor Stress"
+        },
+        {
+          "id": 8030,
+          "title": "Plate Mid Mean Stress"
+        },
+        {
+          "id": 8031,
+          "title": "Plate Mid MaxShear Stress"
+        },
+        {
+          "id": 8033,
+          "title": "Plate Mid VonMises Stress"
+        },
+        {
+          "id": 8065,
+          "title": "Plate Mid X Normal Strain"
+        },
+        {
+          "id": 8066,
+          "title": "Plate Mid Y Normal Strain"
+        },
+        {
+          "id": 8068,
+          "title": "Plate Mid XY Shear Strain"
+        },
+        {
+          "id": 8071,
+          "title": "Plate Mid Major Strain"
+        },
+        {
+          "id": 8072,
+          "title": "Plate Mid Minor Strain"
+        },
+        {
+          "id": 8075,
+          "title": "Plate Mid Mean Strain"
+        },
+        {
+          "id": 8076,
+          "title": "Plate Mid MaxShear Strain"
+        },
+        {
+          "id": 8077,
+          "title": "Plate Mid VonMises Strain"
+        },
+        {
+          "id": 9020,
+          "title": "Plate Bot X Normal Stress"
+        },
+        {
+          "id": 9021,
+          "title": "Plate Bot Y Normal Stress"
+        },
+        {
+          "id": 9023,
+          "title": "Plate Bot XY Shear Stress"
+        },
+        {
+          "id": 9026,
+          "title": "Plate Bot MajorPrn Stress"
+        },
+        {
+          "id": 9027,
+          "title": "Plate Bot MinorPrn Stress"
+        },
+        {
+          "id": 9029,
+          "title": "Plate Bot PrnStress Angle"
+        },
+        {
+          "id": 9030,
+          "title": "Plate Bot Mean Stress"
+        },
+        {
+          "id": 9031,
+          "title": "Plate Bot MaxShear Stress"
+        },
+        {
+          "id": 9033,
+          "title": "Plate Bot VonMises Stress"
+        },
+        {
+          "id": 9065,
+          "title": "Plate Bot X Normal Strain"
+        },
+        {
+          "id": 9066,
+          "title": "Plate Bot Y Normal Strain"
+        },
+        {
+          "id": 9068,
+          "title": "Plate Bot XY Shear Strain"
+        },
+        {
+          "id": 9071,
+          "title": "Plate Bot MajorPrn Strain"
+        },
+        {
+          "id": 9072,
+          "title": "Plate Bot MinorPrn Strain"
+        },
+        {
+          "id": 9074,
+          "title": "Plate Bot PrnStrain Angle"
+        },
+        {
+          "id": 9075,
+          "title": "Plate Bot Mean Strain"
+        },
+        {
+          "id": 9076,
+          "title": "Plate Bot MaxShear Strain"
+        },
+        {
+          "id": 9077,
+          "title": "Plate Bot VonMises Strain"
+        }
+      ]
+    }
+  ],
+  "selected_vector_statistics": {
+    "element_count": 2915,
+    "units": "m/m",
+    "minimum": {
+      "element_id": 2283,
+      "strain": -8.660614184918813e-06,
+      "microstrain": -8.660614184918813
+    },
+    "maximum": {
+      "element_id": 2353,
+      "strain": 1.68658334587235e-05,
+      "microstrain": 16.8658334587235
+    },
+    "maximum_absolute": {
+      "element_id": 2353,
+      "strain": 1.68658334587235e-05,
+      "microstrain": 16.8658334587235
+    }
+  },
+  "view": {
+    "id": 1,
+    "result_set": 1,
+    "vector_id": 7071,
+    "vector_title": "Plate Top MajorPrn Strain",
+    "contour_on": true,
+    "unaveraged_element_contour": true,
+    "deformation_display": false,
+    "units": "m/m",
+    "shell_side_note": "Top is the positive shell-normal face, not the aircraft upper skin"
+  },
+  "source_model_unchanged": true,
+  "source_op2_unchanged": true,
+  "analysis_deck_exported": false,
+  "analysis_authority": "External SOL144 BDF and W2GJ input used by the completed solver run",
+  "persistence_check": {
+    "reopened_from_disk": true,
+    "results_in_femap_database": true,
+    "sample_strain_retained": true,
+    "strain_contour_retained": true
+  }
+}

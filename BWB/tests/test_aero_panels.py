@@ -98,6 +98,13 @@ class AeroCardTests(unittest.TestCase):
         points[:, 1:] = 0
         self.assertEqual(normalwash_from_mean_section(points, [0, 1, 0], 0.75), 0.0)
 
+    def test_w2gj_column_requires_single_continued_logical_entry(self):
+        header = "DMI,W2GJ,0,2,2,0,,2,1\n"
+        with self.assertRaisesRegex(ValidationError, "single logical entry"):
+            read_w2gj(self.parse(header + "DMI,W2GJ,1,1,.1\nDMI,W2GJ,1,2,.2\n"), 2)
+        result = read_w2gj(self.parse(header + "DMI,W2GJ,1,1,1.0D-1,2.0D-1\n"), 2)
+        self.assertEqual(result, {1: 0.1, 2: 0.2})
+
     def test_excessive_free_field_width_and_record_length_are_rejected(self):
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "cards.bdf"

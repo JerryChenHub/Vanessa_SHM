@@ -3,3 +3,8 @@ BWB/models/**/*.bdf -text -whitespace
 BWB/models/**/*.x_t -text -whitespace
 BWB/models/**/*.SLDPRT binary
 BWB/models/**/*.modfem binary
+BWB/cases/**/*.bdf -text -whitespace
+# CSV writer emits standard CRLF; preserve exact hashes and allow those endings.
+BWB/results/**/*.csv -text -whitespace
+BWB/results/**/*.modfem binary
+BWB/results/**/*.zip binary
