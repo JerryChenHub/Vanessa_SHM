@@ -12,7 +12,7 @@ from pathlib import Path
 import re
 import zipfile
 
-from BWB.paths import REPOSITORY_ROOT as ROOT, WORKSPACE_DIR
+from BWB.paths import REPOSITORY_ROOT as ROOT, WORKSPACE_DIR, TRIAL_CASES_DIR, TRIAL_RESULTS_DIR
 from .build_sol144_demo import build
 from .build_bwb_aero_panels import provenance
 from .run_sol144 import run
@@ -55,9 +55,9 @@ def execute(run_root, solver, license_server):
     run_root = Path(run_root).resolve()
     if not run_root.is_relative_to(WORKSPACE_DIR):
         raise ValueError('Run directory must be in workspace/BWB')
-    input_root = ROOT / 'BWB/cases/aoa_sweep'
-    output_root = ROOT / 'BWB/results/aoa_sweep'
-    baseline_review = ROOT / 'BWB/results/sol144_demo/runtime_diagnostic_review.json'
+    input_root = TRIAL_CASES_DIR / 'aoa_sweep'
+    output_root = TRIAL_RESULTS_DIR / 'aoa_sweep'
+    baseline_review = TRIAL_RESULTS_DIR / 'sol144_demo/runtime_diagnostic_review.json'
     jobs = [(alpha, part, f'aoa_{alpha:02d}') for alpha in ANGLES for part in (1, 2)]
     for _, part, name in jobs:
         if (run_root / name / f'part_{part}' / 'bwb_sol144.f06').exists():

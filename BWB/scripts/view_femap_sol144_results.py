@@ -18,6 +18,15 @@ import shutil
 from femap_connection import ROOT, check, connect, ids
 from view_femap_aero_panels import entity_ids
 
+TRIAL_RESULTS = (ROOT / 'workspace/BWB/trials/results').resolve()
+
+
+def trial_results_path(path: Path) -> Path:
+    resolved = path.resolve()
+    if not resolved.is_relative_to(TRIAL_RESULTS):
+        raise ValueError('Use workspace/BWB/trials/results for temporary flight-condition results; BWB/results is not allowed')
+    return resolved
+
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -188,6 +197,7 @@ def verify_saved_result(app, output: Path, set_id: int, vector_id: int, sample: 
 def build(app, source_model: Path, op2: Path, output: Path,
           set_id: int | None = None, vector_id: int | None = None,
           allow_reviewed_diagnostic: bool = False) -> dict:
+    output = trial_results_path(output)
     run = require_completed_run(op2, source_model, allow_reviewed_diagnostic)
     if output.exists():
         raise FileExistsError(f'Use a new result model path to preserve previous results: {output}')
@@ -241,15 +251,20 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--model', type=Path, required=True)
     parser.add_argument('--op2', type=Path, required=True)
-    parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--output', type=Path, required=True,
+                        help='New .modfem file under workspace/BWB/trials/results')
     parser.add_argument('--output-set', type=int)
     parser.add_argument('--vector-id', type=int)
     parser.add_argument('--allow-reviewed-empty-matrix-diagnostic', action='store_true',
                         help='Explicitly accept only the reviewed DGEMM parameter 13 + launcher 1 diagnostic pair')
     args = parser.parse_args()
     source, op2, output = args.model.resolve(strict=True), args.op2.resolve(strict=True), args.output.resolve()
-    if output.suffix.lower() != '.modfem' or not output.is_relative_to(ROOT / 'BWB'):
-        parser.error('Use a new BWB .modfem output path')
+    try:
+        output = trial_results_path(output)
+    except ValueError as error:
+        parser.error(str(error))
+    if output.suffix.lower() != '.modfem':
+        parser.error('Use a new .modfem output file under workspace/BWB/trials/results')
     if output == source:
         parser.error('Source and result models must be different files')
     require_completed_run(op2, source, args.allow_reviewed_empty_matrix_diagnostic)

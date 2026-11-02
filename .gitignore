@@ -15,3 +15,10 @@ build/
 !/workspace/BWB/.gitkeep
 *.py[cod]
 /NASA_SHM/data_*/
+# Historical flight trials are temporary, including any locked Femap session residue.
+/BWB/cases/sol144_demo/
+/BWB/cases/aoa_sweep/
+/BWB/cases/speed_200/
+/BWB/results/sol144_demo/
+/BWB/results/aoa_sweep/
+/BWB/results/speed_200/

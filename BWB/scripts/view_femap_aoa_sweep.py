@@ -15,7 +15,7 @@ from femap_connection import ROOT, check, connect, ids
 from view_femap_aero_panels import entity_ids
 from view_femap_sol144_results import (
     catalog_results, choose_strain, require_completed_run, sha256,
-    strain_view, summarize_vector,
+    strain_view, summarize_vector, TRIAL_RESULTS, trial_results_path,
 )
 
 ANGLES = (3, 4, 5, 6)
@@ -59,6 +59,7 @@ def check_inputs(source_model: Path, run_root: Path, part: int, allow_diagnostic
 
 
 def build(app, part: int, run_root: Path, output: Path, allow_diagnostic: bool = False) -> dict:
+    output = trial_results_path(output)
     source = ROOT / f'BWB/models/aero_panels/part_{part}/part_{part}_aero_structure.modfem'
     inputs = check_inputs(source, run_root, part, allow_diagnostic)
     source_hash = sha256(source)
@@ -168,13 +169,16 @@ def build(app, part: int, run_root: Path, output: Path, allow_diagnostic: bool =
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--run-root', type=Path, required=True)
-    parser.add_argument('--output-dir', type=Path, default=ROOT / 'BWB/results/aoa_sweep')
+    parser.add_argument('--output-dir', type=Path, default=TRIAL_RESULTS / 'aoa_sweep',
+                        help='Temporary model directory under workspace/BWB/trials/results')
     parser.add_argument('--parts', nargs='+', type=int, choices=(1, 2), default=[1, 2])
     parser.add_argument('--allow-reviewed-empty-matrix-diagnostic', action='store_true')
     args = parser.parse_args()
     run_root, output_dir = args.run_root.resolve(strict=True), args.output_dir.resolve()
-    if not output_dir.is_relative_to(ROOT / 'BWB/results'):
-        parser.error('Use a dedicated BWB/results output directory')
+    try:
+        output_dir = trial_results_path(output_dir)
+    except ValueError as error:
+        parser.error(str(error))
     for part in args.parts:
         check_inputs(ROOT / f'BWB/models/aero_panels/part_{part}/part_{part}_aero_structure.modfem',
                      run_root, part, args.allow_reviewed_empty_matrix_diagnostic)

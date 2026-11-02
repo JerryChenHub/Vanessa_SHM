@@ -8,15 +8,16 @@ from pathlib import Path
 import shutil
 
 from .build_bwb_aero_panels import ROOT, provenance, real, write_card
+from BWB.paths import TRIAL_CASES_DIR, WORKSPACE_DIR
 
-DEFAULT_OUTPUT = ROOT / 'BWB/cases/sol144_demo'
+DEFAULT_OUTPUT = TRIAL_CASES_DIR / 'sol144_demo'
 INPUT_NAMES = ('structural_cards.bdf', 'aero_cards.bdf', 'spline_cards.bdf', 'dmicards.bdf')
 
 
 def build(output=DEFAULT_OUTPUT, velocity=20., density=1.225, sound_speed=340.3, alpha_deg=2.):
     output = Path(output).resolve()
-    if not output.is_relative_to(ROOT / 'BWB') and not output.is_relative_to(ROOT / 'workspace/BWB'):
-        raise ValueError('Output must be owned by BWB')
+    if not output.is_relative_to(WORKSPACE_DIR):
+        raise ValueError('Temporary trial inputs must be under workspace/BWB')
     if not all(math.isfinite(x) for x in (velocity, density, sound_speed, alpha_deg)):
         raise ValueError('Flight parameters must be finite')
     if min(velocity, density, sound_speed) <= 0 or velocity >= sound_speed:

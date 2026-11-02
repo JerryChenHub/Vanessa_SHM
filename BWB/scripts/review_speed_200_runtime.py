@@ -1,6 +1,11 @@
-"""Record the actual at-speed MKL trace and compare all printed result values."""
+"""Review temporary 200 m/s trial diagnostics and compare printed results.
+
+Trial exports/reviews live under workspace/BWB/trials/results. Original solver
+run and trace directories remain in their existing workspace/BWB locations.
+"""
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 import re
@@ -10,8 +15,11 @@ from .export_sol144_strain import export_case
 from .run_aoa_sweep import sha, EXPECTED_DIAGNOSTICS
 from .build_bwb_aero_panels import provenance
 
+DEFAULT_RESULTS = ROOT / 'workspace/BWB/trials/results/speed_200'
 
-def review():
+
+def review(results=DEFAULT_RESULTS):
+    results = Path(results).resolve()
     normal = ROOT / 'workspace/BWB/speed_200/run_01/aoa_06/part_1'
     trace = ROOT / 'workspace/BWB/speed_200/aoa_06_part_1_trace'
     normal_summary = json.loads((normal / 'run-summary.json').read_text())
@@ -36,7 +44,7 @@ def review():
     assert len(context) == 2 and not waiting
     trace_export = trace / 'export_verification'
     export_case(trace, trace_export, make_plot=False)
-    normal_export = ROOT / 'BWB/results/speed_200/aoa_06/part_1'
+    normal_export = results / 'aoa_06/part_1'
     compared = {}
     for name in ('shell_strain_long.csv', 'grid_displacements.csv', 'solver_generated_aero_displacements.csv'):
         compared[name] = dict(normal_sha256=sha(normal_export / name), trace_sha256=sha(trace_export / name))
@@ -56,7 +64,7 @@ def review():
         'limitations': 'Numerical repeatability does not validate large deformation, yielding, flow separation, buckling or divergence stability.',
         'review_script': provenance(Path(__file__)),
     }
-    output = ROOT / 'BWB/results/speed_200/runtime_diagnostic_review.json'
+    output = results / 'runtime_diagnostic_review.json'
     output.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     for review_path in output.parent.glob('aoa_*/part_*/case_review.json'):
         case_review = json.loads(review_path.read_text())
@@ -68,5 +76,12 @@ def review():
     print(output)
 
 
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--results', type=Path, default=DEFAULT_RESULTS)
+    args = parser.parse_args()
+    review(args.results)
+
+
 if __name__ == '__main__':
-    review()
+    main()

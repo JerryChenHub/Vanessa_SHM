@@ -17,21 +17,21 @@ Vanessa_SHM/
 │   ├── models/skin_demo/     CAD 输入与首版自由网格参考
 │   ├── models/skin_structured/ 当前规则蒙皮网格、检查及对比图
 │   ├── models/aero_panels/   两件独立的气动/结构输入与 Femap 查看模型
-│   ├── cases/sol144_demo/    假设飞况下可重建的 SOL144 输入
-│   ├── results/sol144_demo/  实际应变、云图、Femap 结果与求解证据
-│   ├── cases/aoa_sweep/      3°、4°、5°、6°的独立输入
-│   ├── results/aoa_sweep/    迎角扫描结果、2°–6°比较和多工况Femap模型
-│   ├── cases/speed_200/      200 m/s、3°–6°的独立输入
-│   ├── results/speed_200/    高动压线性输出、应力超限及模型适用性审查
 │   └── README.md             项目边界与复用约定
 └── workspace/                共享临时工作区，不提交计算文件
     ├── NASA_SHM/             原有 case、结果、诊断和历史归档
     └── BWB/                  BWB 临时文件、计算和中间结果
+        └── trials/           所有飞行工况试算，不提交 Git
+            ├── cases/        sol144_demo、aoa_sweep、speed_200 试算输入
+            ├── results/      对应输出、云图、Femap 结果和检查记录
+            ├── session_backups/ 迁移时保留的 Femap 会话备份
+            └── README.md     本机试算索引及迁移校验说明
 ```
 
 ## 项目边界
 
 - 各项目的代码、固定输入、测试和正式成果归各自目录；临时输出放入各自的 `workspace/<项目名>/`。
+- BWB 的飞行工况试算输入和结果统一放入 `workspace/BWB/trials/`，不作为正式成果提交。`BWB/models/` 保留 CAD、网格与气动基础模型，生成和检查代码、测试仍保留在 BWB 项目中。试算索引与下文结果链接仅在保留这些临时文件的本机可用。
 - BWB 可以显式导入 `NASA_SHM.core` 或读取 NASA_SHM 数据。调用时传入 BWB 自己的输入和输出路径，避免使用 NASA_SHM 专属的模型与输出默认值。
 - NASA_SHM 不依赖 BWB。BWB 专用改动放入 BWB；复用现有数据时保留来源、版本或文件哈希、单位和变换说明，派生成果写入 BWB。
 - NASA_SHM 原始计算数据、求解日志和源码快照保留；共享 workspace 不改变数据所有权。
@@ -57,11 +57,13 @@ NASA_SHM 的流程为：基础 BDF 与网格索引 → 刚度损伤样本 → SO
 
 BWB 的流程为：原始 CAD 的只读副本 → SolidWorks API 导出 Parasolid → Femap API 生成规则蒙皮 → 从蒙皮行列提取参考升力面 → 生成 CAERO1、SPLINE1 和 W2GJ → 独立检查与 Femap 查看。气动文件沿用 NASA_SHM 的卡片分文件组织，但几何、插值节点和初始弯度/扭转输入由 BWB 自己计算；没有移用 NASA 的气动数值、工况或应变结果。
 
-当前 BWB 气动包定义每件 11 个 CAERO1 大面、590 个小面板及对应结构连接。独立的 `cases/sol144_demo/` 已补齐假设飞况：20 m/s、迎角 2°、侧滑 0°、1 mm 铝蒙皮、根部固定。两件均实际运行 SOL144，得到完整的位移与蒙皮两表面应变，详见 [结果与合理性判断](BWB/results/sol144_demo/README.md)。两件保持各自 CAD 坐标并独立求解，不代表整机装配或自由飞行配平。
+当前 BWB 气动包定义每件 11 个 CAERO1 大面、590 个小面板及对应结构连接。已有临时试算 `workspace/BWB/trials/cases/sol144_demo/` 使用假设飞况：20 m/s、迎角 2°、侧滑 0°、1 mm 铝蒙皮、根部固定。两件均实际运行 SOL144，得到完整的位移与蒙皮两表面应变，详见本机的 [结果与合理性判断](workspace/BWB/trials/results/sol144_demo/README.md)。两件保持各自 CAD 坐标并独立求解，不代表整机装配或自由飞行配平。
 
 20 m/s 基准的两件输入检查、结果覆盖、力/力矩平衡和量级筛查均通过。求解器正常到达 END OF JOB，仍保留一条已追踪到零行矩阵的 MKL 诊断和非零启动器退出码；没有将它们改写为无错误运行。当前成果适合流程演示，尚未完成气动或网格精度验证，也未生成 BWB 损伤数据集。
 
-另已实际计算 [200 m/s、迎角 3°–6°](BWB/results/speed_200/README.md)。这八组虽然完成结果恢复并满足载荷平衡，却全部超过假设屈服强度和小变形筛查界限；其线性输出不能代表屈服后的真实响应，亦未验证屈曲或发散稳定性。
+另有 [20 m/s、迎角 3°–6°](workspace/BWB/trials/results/aoa_sweep/README.md) 和 [200 m/s、迎角 3°–6°](workspace/BWB/trials/results/speed_200/README.md) 的本机临时试算。200 m/s 的八组虽然完成结果恢复并满足载荷平衡，却全部超过假设屈服强度和小变形筛查界限；其线性输出不能代表屈服后的真实响应，亦未验证屈曲或发散稳定性。
+
+试算目录、迁移清单和会话备份见本机的 [BWB 试算索引](workspace/BWB/trials/README.md)。历史 JSON 中的旧路径作为当时的来源记录保留，迁移后的实际位置按索引查找。
 
 详细说明：[NASA_SHM](NASA_SHM/README.md)、[BWB](BWB/README.md)、[气动生成与文件说明](BWB/models/aero_panels/README.md)。Windows、Femap 和 Python 依赖配置见 BWB 说明。
 

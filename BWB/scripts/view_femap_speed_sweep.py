@@ -14,7 +14,7 @@ from pathlib import Path
 
 from femap_connection import ROOT, check, connect, ids
 from view_femap_aoa_sweep import ANGLES, build as build_angle_sweep, check_inputs, result_ids, sample_preserved
-from view_femap_sol144_results import catalog_results, sha256, strain_view
+from view_femap_sol144_results import catalog_results, sha256, strain_view, TRIAL_RESULTS, trial_results_path
 
 LINEAR_NOTE = (
     'LINEAR SOL144 RESULT ONLY. Linear elastic material and small-displacement structural theory; '
@@ -24,6 +24,7 @@ LINEAR_NOTE = (
 
 
 def read_review_evidence(review_dir: Path, part: int, run_root: Path, speed: float) -> tuple[dict, dict[int, dict]]:
+    review_dir = trial_results_path(review_dir)
     runtime_path = review_dir / 'runtime_diagnostic_review.json'
     runtime = json.loads(runtime_path.read_text(encoding='utf-8'))
     if (runtime.get('status') != 'at_speed_empty_output_call_reviewed; raw runtime diagnostic retained'
@@ -146,7 +147,8 @@ def check_display_sample(app, record: dict) -> None:
 
 def build(app, part: int, run_root: Path, output: Path, speed: float,
           default_result: str, allow_diagnostic: bool = False,
-          review_dir: Path = ROOT / 'BWB/results/speed_200') -> dict:
+          review_dir: Path = TRIAL_RESULTS / 'speed_200') -> dict:
+    output = trial_results_path(output)
     flights = verify_flight_labels(run_root, part, speed)
     runtime_review, physical_reviews = read_review_evidence(review_dir, part, run_root, speed)
     report = build_angle_sweep(app, part, run_root, output, allow_diagnostic)
@@ -248,9 +250,10 @@ def build(app, part: int, run_root: Path, output: Path, speed: float,
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--run-root', type=Path, required=True)
-    parser.add_argument('--output-dir', type=Path, default=ROOT / 'BWB/results/speed_200')
-    parser.add_argument('--review-dir', type=Path, default=ROOT / 'BWB/results/speed_200',
-                        help='Existing reviewed evidence directory, independent of the new model output directory')
+    parser.add_argument('--output-dir', type=Path, default=TRIAL_RESULTS / 'speed_200',
+                        help='Temporary model directory under workspace/BWB/trials/results')
+    parser.add_argument('--review-dir', type=Path, default=TRIAL_RESULTS / 'speed_200',
+                        help='Existing evidence under workspace/BWB/trials/results, independent of the new model output directory')
     parser.add_argument('--speed-mps', type=float, default=200.0)
     parser.add_argument('--parts', nargs='+', type=int, choices=(1, 2), default=[1, 2])
     parser.add_argument('--default-result', choices=('top-vonmises-stress', 'bottom-vonmises-stress', 'top-major-strain'),
@@ -260,9 +263,11 @@ def main() -> None:
     if not math.isfinite(args.speed_mps) or args.speed_mps <= 0:
         parser.error('--speed-mps must be positive and finite')
     run_root, output_dir = args.run_root.resolve(strict=True), args.output_dir.resolve()
-    review_dir = args.review_dir.resolve(strict=True)
-    if not output_dir.is_relative_to(ROOT / 'BWB/results'):
-        parser.error('Use a dedicated BWB/results output directory')
+    try:
+        output_dir = trial_results_path(output_dir)
+        review_dir = trial_results_path(args.review_dir)
+    except ValueError as error:
+        parser.error(str(error))
     for part in args.parts:
         verify_flight_labels(run_root, part, args.speed_mps)
         read_review_evidence(review_dir, part, run_root, args.speed_mps)

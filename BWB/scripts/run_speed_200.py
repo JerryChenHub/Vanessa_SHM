@@ -10,15 +10,15 @@ import json
 from pathlib import Path
 import re
 
-from BWB.paths import REPOSITORY_ROOT as ROOT, WORKSPACE_DIR
+from BWB.paths import REPOSITORY_ROOT as ROOT, WORKSPACE_DIR, TRIAL_CASES_DIR, TRIAL_RESULTS_DIR
 from .build_sol144_demo import build
 from .build_bwb_aero_panels import provenance
 from .run_sol144 import run
 from .run_aoa_sweep import archive_evidence, sha, EXPECTED_DIAGNOSTICS
 
 ANGLES = (3, 4, 5, 6)
-INPUT_ROOT = ROOT / 'BWB/cases/speed_200'
-OUTPUT_ROOT = ROOT / 'BWB/results/speed_200'
+INPUT_ROOT = TRIAL_CASES_DIR / 'speed_200'
+OUTPUT_ROOT = TRIAL_RESULTS_DIR / 'speed_200'
 
 
 def solve(run_root, solver, license_server):

@@ -1,8 +1,9 @@
-"""Summarize completed BWB 3/4/5/6-degree jobs against the existing 2-degree run.
+"""Summarize temporary BWB 3/4/5/6-degree trials against the existing 2-degree run.
 
 No solver is started. All ten result folders must exist before any aggregate
 artifact is written. Component-wise responses are checked for affine dependence
 on angle of attack; extrema and vector magnitudes are not required to be linear.
+Trial inputs/results belong under workspace/BWB/trials, not the project models.
 """
 from __future__ import annotations
 
@@ -16,7 +17,7 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_RESULTS = ROOT / "BWB/results/aoa_sweep"
+DEFAULT_RESULTS = ROOT / "workspace/BWB/trials/results/aoa_sweep"
 ANGLES = (2, 3, 4, 5, 6)
 DISPLACEMENT_COMPONENTS = ("ux_m", "uy_m", "uz_m", "rx_rad", "ry_rad", "rz_rad")
 STRAIN_COMPONENTS = ("exx_element", "eyy_element", "gamma_xy_element")
@@ -287,7 +288,8 @@ def summarize(results=DEFAULT_RESULTS, baseline=None):
                    ("body_up_lift_N", "max_translation_mm", "max_fiber_abs_principal_microstrain", "peak_von_mises_MPa")]
         table.append(f"| {angle}° | " + " | ".join(entries) + " |")
     maxima = report["maximum_mirror_differences"]
-    lines = ["# BWB 迎角扫描", "",
+    lines = ["# BWB 临时迎角试算", "",
+        "试算结果存放于 `workspace/BWB/trials/results/aoa_sweep/`，不属于正式模型成果。", "",
         "两个零件分别计算 3°、4°、5°、6°，并保留此前 2° 结果作为基线，共 10 组结果。各组是独立 SOL144 作业；根部固定、材料、结构、气动面板、SPLINE、W2GJ 和动压保持一致。",
         f"动压为 {dynamic_pressures[0]:g} Pa。此处向上气动力为各独立零件的 CAD +Y 气动力；该方向与严格的风轴升力方向存在迎角差异。", "",
         *table, "", "![迎角比较](aoa_comparison.png)", "",

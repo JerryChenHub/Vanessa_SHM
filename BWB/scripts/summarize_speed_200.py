@@ -1,8 +1,10 @@
-"""Compare completed 200 m/s SOL144 jobs with the actual 20 m/s AOA sweep.
+"""Compare temporary 200 m/s SOL144 trials with the actual 20 m/s AOA trials.
 
 Reads existing result tables only. Physical-screen failures are reported as
 model-applicability limitations, independently of result/solver completion.
 Nothing is inferred by multiplying the low-speed response by 100.
+Trial inputs/results default to workspace/BWB/trials. Historical source records
+are preserved verbatim; relocated files are resolved only when read.
 """
 from __future__ import annotations
 
@@ -23,6 +25,7 @@ except ImportError:
     from summarize_aoa_sweep import load_case, require, verify_recorded_hash
 
 ROOT = Path(__file__).resolve().parents[2]
+TRIALS = ROOT / "workspace/BWB/trials"
 ANGLES = (3, 4, 5, 6)
 MODEL_FILES = ("structural_cards.bdf", "aero_cards.bdf", "spline_cards.bdf", "dmicards.bdf")
 YIELD_MPA = 200.0
@@ -35,8 +38,21 @@ def source_record(path):
                 hash_mode="crlf_to_lf")
 
 
+def resolve_trial_source(recorded_path):
+    """Locate a migrated trial file without modifying its historical record."""
+    original = ROOT / recorded_path
+    if original.is_file() or not original.is_relative_to(ROOT):
+        return original
+    relative = original.relative_to(ROOT)
+    parts = relative.parts
+    if (len(parts) >= 3 and parts[0] == "BWB" and parts[1] in ("cases", "results")
+            and parts[2] in ("sol144_demo", "aoa_sweep", "speed_200")):
+        return TRIALS.joinpath(*parts[1:])
+    return original
+
+
 def verify_source_record(record):
-    path = ROOT / record["path"]
+    path = resolve_trial_source(record["path"])
     mode = record.get("hash_mode", "raw")
     require(mode in ("raw", "crlf_to_lf"), f"Unknown source hash mode: {mode}")
     raw = path.read_bytes()
@@ -219,7 +235,8 @@ def write_readme(path, report):
         ratio_table.append(f"| {r['alpha_deg']}° / {r['part']} | " +
                            " | ".join("未定义" if value is None else f"{value:.5g}" for value in values) + " |")
     restricted = sum(not r["within_small_deflection_and_elastic_screens"] for r in high)
-    lines = ["# BWB：200 m/s 与 20 m/s 求解结果比较", "",
+    lines = ["# BWB 临时试算：200 m/s 与 20 m/s 求解结果比较", "",
+        "试算结果存放于 `workspace/BWB/trials/results/speed_200/`，不属于正式模型成果。", "",
         f"200 m/s 工况使用 Mach {high[0]['mach']:.7f}、动压 {high[0]['dynamic_pressure_Pa']:.0f} Pa；"
         "密度 1.225 kg/m³、声速 340.3 m/s。两个零件各自固定根部，分别计算 3°、4°、5°、6°。"
         "结构仍为假设铝材、1 mm 蒙皮，无 rib/spar。", "",
@@ -324,10 +341,10 @@ def summarize(results, baseline, inputs, baseline_inputs, stability_review=None)
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--results", type=Path, default=ROOT / "BWB/results/speed_200")
-    parser.add_argument("--baseline", type=Path, default=ROOT / "BWB/results/aoa_sweep")
-    parser.add_argument("--cases", type=Path, default=ROOT / "BWB/cases/speed_200")
-    parser.add_argument("--baseline-cases", type=Path, default=ROOT / "BWB/cases/aoa_sweep")
+    parser.add_argument("--results", type=Path, default=TRIALS / "results/speed_200")
+    parser.add_argument("--baseline", type=Path, default=TRIALS / "results/aoa_sweep")
+    parser.add_argument("--cases", type=Path, default=TRIALS / "cases/speed_200")
+    parser.add_argument("--baseline-cases", type=Path, default=TRIALS / "cases/aoa_sweep")
     parser.add_argument("--stability-review", type=Path)
     args = parser.parse_args()
     try:
