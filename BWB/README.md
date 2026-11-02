@@ -6,6 +6,7 @@
 
 - [规则蒙皮模型](models/skin_structured/README.md)：主翼采用平行弦向截面和连续展向列，保留材料、1 mm 厚度及根部固定的演示假设。
 - [气动面板模型](models/aero_panels/README.md)：每件 11 个 CAERO1、590 个气动小面板，附 SPLINE1/SET1、W2GJ、独立检查报告和 Femap 查看模型。
+- [四区碳纤维/环氧策略](docs/composite_skin_strategy.md)：上表面、下表面、前缘、后缘分别赋值；[配置](config/composite_skin.json)控制加强区比例、逐层厚度和纤维角度。使用 MAT8/PCOMP，完整流程入口为 `python -m BWB.scripts.run_composite_demo --output workspace/BWB/trials/composite_skin/<新目录>`。
 - `models/skin_demo/`：原始 CAD 副本、Parasolid 导出及首版自由网格，保留作来源记录和对比。
 - `cases/`、`results/`：仅预留给明确选定的固定输入和正式成果，当前不收录飞况试算。
 - `tests/`：可复用代码的回归测试，所需试算输入由测试临时生成并清理，不依赖本机试算数据。
@@ -16,6 +17,7 @@
 BWB/
 ├── paths.py                          BWB 路径定义
 ├── data/                             BWB 自有输入数据
+├── config/composite_skin.json        四区织物/环氧材料与铺层参数
 ├── scripts/
 │   ├── ExportSkinGeometry.cs         SolidWorks API 导出实现
 │   ├── export_skin_geometry.ps1      CAD 导出入口
@@ -29,10 +31,15 @@ BWB/
 │   ├── run_sol144.py                 求解器调用与原始状态检查
 │   ├── export_sol144_strain.py       应变与位移提取
 │   ├── check_sol144_reasonableness.py 力/力矩平衡与量级检查
+│   ├── build_composite_skin.py       四区 MAT8/PCOMP 与材料方向赋值
+│   ├── run_composite_demo.py         复材生成、求解、导出和检查入口
+│   ├── export_composite_sol144.py    逐层材料坐标应力、应变提取
+│   ├── check_composite_sol144.py     复材本构、平衡和变形量级检查
+│   ├── plot_composite_assignment.py  四区与织物经纬方向图
 │   ├── run_aoa_sweep.py              3°–6°实际求解与证据归档
 │   ├── summarize_aoa_sweep.py        与2°基准对比及趋势检查
 │   └── view_femap_aoa_sweep.py       四迎角Femap结果模型
-├── docs/sol144_trials.md             临时试算运行方法与目录约定
+├── docs/                            临时试算说明、复材策略与文献依据
 ├── cases/、results/                  预留正式输入和成果；不存试算
 ├── tests/test_aero_panels.py          几何、符号、编号与输入检查
 └── models/
