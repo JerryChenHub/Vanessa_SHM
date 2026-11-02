@@ -1,0 +1,9 @@
+$ PREPROCESSOR GEOMETRY PACKAGE ONLY. No SOL, TRIM, load case or aerodynamic solution.
+$ Keep these authoritative bulk includes when preparing a future SOL144 deck.
+CEND
+BEGIN BULK
+INCLUDE 'structural_cards.bdf'
+INCLUDE 'aero_cards.bdf'
+INCLUDE 'spline_cards.bdf'
+INCLUDE 'dmicards.bdf'
+ENDDATA

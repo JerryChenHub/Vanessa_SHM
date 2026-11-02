@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "part": "2",
+  "units": "m-N-kg-s",
+  "caero1_macros": 11,
+  "aerodynamic_boxes": 590,
+  "shared_chord_interfaces": 10,
+  "spline1_count": 11,
+  "structural_nodes": 2940,
+  "structural_elements": 2915,
+  "w2gj_rows": 590,
+  "w2gj_min_rad": -0.1292750715,
+  "w2gj_max_rad": 0.07476522144,
+  "developed_area_m2": 0.28460358867957797,
+  "projected_reference_area_m2": 0.2614171900843125,
+  "reference_span_m": 0.8702281000000001,
+  "reference_chord_m": 0.32180992564142746,
+  "source_hashes_checked": 2,
+  "nasa_reference_hashes_checked": 5,
+  "generator_hash_checked": true,
+  "checks": [
+    "80-column records and fixed/free field widths",
+    "exported CAERO1 geometry and box ordering",
+    "CAD source leading edges and projected chords",
+    "shared edges and upward continuous normals",
+    "projected reference area/span/chord",
+    "unchanged structural cards and existing spline support nodes",
+    "complete single spline coverage",
+    "W2GJ matrix dimensions and complete row ordering",
+    "independent source-section PCHIP normalwash reconstruction",
+    "combined INCLUDE expansion",
+    "source SHA256 provenance"
+  ],
+  "limitations": [
+    "No Nastran solve, aerodynamic convergence or physical validation is implied.",
+    "W2GJ values are checked against the documented sampled correction, not against measured aerodynamic data."
+  ]
+}

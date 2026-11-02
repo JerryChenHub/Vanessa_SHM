@@ -1,0 +1,385 @@
+{
+  "input_bdf": "BWB\\models\\aero_panels\\part_1\\part_1_aero_structure.bdf",
+  "input_sha256": "1591062ca19c7480da65e1332bb78af62bdd2ce059effff365a1458380f1d255",
+  "source_hashes": {
+    "combined": "1591062ca19c7480da65e1332bb78af62bdd2ce059effff365a1458380f1d255",
+    "aero": "b52b1f920654443815db83acbc7c2e25b6a5861f41ed53c2ff585d922e6a5603",
+    "spline": "a1199fab9e45e50f483f819cf9f0b2e45d301f334add2eee5c8783a028079f89",
+    "camber": "ffd36ab8c047c735c4edce6e47fafdc98aad5fab0b3b8330579d64b6c46324d2",
+    "structure": "6fc0d77b835e4022e00993dee2bdc28a5a33fe095e911e8df98f4206647d50d5"
+  },
+  "output_model": "BWB\\models\\aero_panels\\part_1\\part_1_aero_structure.modfem",
+  "purpose": "Native aerodynamic entity review; BDF remains analysis authority",
+  "native_aero_entity_type": 95,
+  "aero_panels": 11,
+  "aero_boxes": 590,
+  "structural_nodes": 2940,
+  "structural_elements": 2915,
+  "pseudo_structural_aero_elements_created": 0,
+  "native_aero_splines": 11,
+  "spline_audit": [
+    {
+      "id": 1005001,
+      "caero": 1000001,
+      "set_id": 1005001,
+      "box_count": 390,
+      "structural_node_count": 77,
+      "box_ids_match": true,
+      "structural_node_ids_match": true
+    },
+    {
+      "id": 1015001,
+      "caero": 1010001,
+      "set_id": 1015001,
+      "box_count": 30,
+      "structural_node_count": 28,
+      "box_ids_match": true,
+      "structural_node_ids_match": true
+    },
+    {
+      "id": 1025001,
+      "caero": 1020001,
+      "set_id": 1025001,
+      "box_count": 10,
+      "structural_node_count": 14,
+      "box_ids_match": true,
+      "structural_node_ids_match": true
+    },
+    {
+      "id": 1035001,
+      "caero": 1030001,
+      "set_id": 1035001,
+      "box_count": 10,
+      "structural_node_count": 14,
+      "box_ids_match": true,
+      "structural_node_ids_match": true
+    },
+    {
+      "id": 1045001,
+      "caero": 1040001,
+      "set_id": 1045001,
+      "box_count": 10,
+      "structural_node_count": 14,
+      "box_ids_match": true,
+      "structural_node_ids_match": true
+    },
+    {
+      "id": 1055001,
+      "caero": 1050001,
+      "set_id": 1055001,
+      "box_count": 10,
+      "structural_node_count": 14,
+      "box_ids_match": true,
+      "structural_node_ids_match": true
+    },
+    {
+      "id": 1065001,
+      "caero": 1060001,
+      "set_id": 1065001,
+      "box_count": 10,
+      "structural_node_count": 14,
+      "box_ids_match": true,
+      "structural_node_ids_match": true
+    },
+    {
+      "id": 1075001,
+      "caero": 1070001,
+      "set_id": 1075001,
+      "box_count": 10,
+      "structural_node_count": 14,
+      "box_ids_match": true,
+      "structural_node_ids_match": true
+    },
+    {
+      "id": 1085001,
+      "caero": 1080001,
+      "set_id": 1085001,
+      "box_count": 10,
+      "structural_node_count": 14,
+      "box_ids_match": true,
+      "structural_node_ids_match": true
+    },
+    {
+      "id": 1095001,
+      "caero": 1090001,
+      "set_id": 1095001,
+      "box_count": 10,
+      "structural_node_count": 14,
+      "box_ids_match": true,
+      "structural_node_ids_match": true
+    },
+    {
+      "id": 1105001,
+      "caero": 1100001,
+      "set_id": 1105001,
+      "box_count": 90,
+      "structural_node_count": 70,
+      "box_ids_match": true,
+      "structural_node_ids_match": true
+    }
+  ],
+  "camber_storage_audit": {
+    "source": "BWB\\models\\aero_panels\\part_1\\dmicards.bdf",
+    "source_sha256": "ffd36ab8c047c735c4edce6e47fafdc98aad5fab0b3b8330579d64b6c46324d2",
+    "native_matrix_entities": [],
+    "W2GJ_found_as_native_matrix": false,
+    "W2GJ_found_in_analysis_text": false,
+    "all_source_noncomment_lines_retained_in_analysis_text": false,
+    "analysis_text_locations": [],
+    "solver_round_trip_verified": false,
+    "instruction": "Use authoritative dmicards.bdf; native viewing model is not a replacement analysis deck"
+  },
+  "panels": [
+    {
+      "eid": 1000001,
+      "title": "main",
+      "native_type": 0,
+      "pid": 1900002,
+      "cp": 0,
+      "igid": 1,
+      "nspan": 39,
+      "nchord": 10,
+      "p1": [
+        -0.033916,
+        -0.002789,
+        0.78
+      ],
+      "p4": [
+        -0.437915,
+        -0.004129,
+        0.0
+      ],
+      "x12": 0.1929566,
+      "x43": 0.4375098
+    },
+    {
+      "eid": 1010001,
+      "title": "transition",
+      "native_type": 0,
+      "pid": 1900002,
+      "cp": 0,
+      "igid": 1,
+      "nspan": 3,
+      "nchord": 10,
+      "p1": [
+        -0.021071,
+        -0.002865,
+        0.8125712
+      ],
+      "p4": [
+        -0.033916,
+        -0.002789,
+        0.78
+      ],
+      "x12": 0.1861723,
+      "x43": 0.1929566
+    },
+    {
+      "eid": 1020001,
+      "title": "bend_01",
+      "native_type": 0,
+      "pid": 1900002,
+      "cp": 0,
+      "igid": 1,
+      "nspan": 1,
+      "nchord": 10,
+      "p1": [
+        -0.018172,
+        -0.001975,
+        0.8199264
+      ],
+      "p4": [
+        -0.021071,
+        -0.002865,
+        0.8125712
+      ],
+      "x12": 0.18374385,
+      "x43": 0.1861723
+    },
+    {
+      "eid": 1030001,
+      "title": "bend_02",
+      "native_type": 0,
+      "pid": 1900002,
+      "cp": 0,
+      "igid": 1,
+      "nspan": 1,
+      "nchord": 10,
+      "p1": [
+        -0.015288,
+        0.00022967,
+        0.8270049
+      ],
+      "p4": [
+        -0.018172,
+        -0.001975,
+        0.8199264
+      ],
+      "x12": 0.1810103,
+      "x43": 0.18374385
+    },
+    {
+      "eid": 1040001,
+      "title": "bend_03",
+      "native_type": 0,
+      "pid": 1900002,
+      "cp": 0,
+      "igid": 1,
+      "nspan": 1,
+      "nchord": 10,
+      "p1": [
+        -0.01239,
+        0.0037868,
+        0.8334996
+      ],
+      "p4": [
+        -0.015288,
+        0.00022967,
+        0.8270049
+      ],
+      "x12": 0.17812165,
+      "x43": 0.1810103
+    },
+    {
+      "eid": 1050001,
+      "title": "bend_04",
+      "native_type": 0,
+      "pid": 1900002,
+      "cp": 0,
+      "igid": 1,
+      "nspan": 1,
+      "nchord": 10,
+      "p1": [
+        -0.009486,
+        0.0086467,
+        0.839085
+      ],
+      "p4": [
+        -0.01239,
+        0.0037868,
+        0.8334996
+      ],
+      "x12": 0.1752189,
+      "x43": 0.17812165
+    },
+    {
+      "eid": 1060001,
+      "title": "bend_05",
+      "native_type": 0,
+      "pid": 1900002,
+      "cp": 0,
+      "igid": 1,
+      "nspan": 1,
+      "nchord": 10,
+      "p1": [
+        -0.00661,
+        0.0144634,
+        0.8436908
+      ],
+      "p4": [
+        -0.009486,
+        0.0086467,
+        0.839085
+      ],
+      "x12": 0.17234415,
+      "x43": 0.1752189
+    },
+    {
+      "eid": 1070001,
+      "title": "bend_06",
+      "native_type": 0,
+      "pid": 1900002,
+      "cp": 0,
+      "igid": 1,
+      "nspan": 1,
+      "nchord": 10,
+      "p1": [
+        -0.003757,
+        0.0209079,
+        0.8473902
+      ],
+      "p4": [
+        -0.00661,
+        0.0144634,
+        0.8436908
+      ],
+      "x12": 0.1694924,
+      "x43": 0.17234415
+    },
+    {
+      "eid": 1080001,
+      "title": "bend_07",
+      "native_type": 0,
+      "pid": 1900002,
+      "cp": 0,
+      "igid": 1,
+      "nspan": 1,
+      "nchord": 10,
+      "p1": [
+        -0.0008875,
+        0.0277507,
+        0.8502757
+      ],
+      "p4": [
+        -0.003757,
+        0.0209079,
+        0.8473902
+      ],
+      "x12": 0.16662415,
+      "x43": 0.1694924
+    },
+    {
+      "eid": 1090001,
+      "title": "bend_08",
+      "native_type": 0,
+      "pid": 1900002,
+      "cp": 0,
+      "igid": 1,
+      "nspan": 1,
+      "nchord": 10,
+      "p1": [
+        0.0020623,
+        0.0348309,
+        0.8524111
+      ],
+      "p4": [
+        -0.0008875,
+        0.0277507,
+        0.8502757
+      ],
+      "x12": 0.16367565,
+      "x43": 0.16662415
+    },
+    {
+      "eid": 1100001,
+      "title": "winglet",
+      "native_type": 0,
+      "pid": 1900002,
+      "cp": 0,
+      "igid": 1,
+      "nspan": 9,
+      "nchord": 10,
+      "p1": [
+        0.0728018,
+        0.2065854,
+        0.8702281
+      ],
+      "p4": [
+        0.0020623,
+        0.0348309,
+        0.8524111
+      ],
+      "x12": 0.0929669,
+      "x43": 0.16367565
+    }
+  ],
+  "view": {
+    "view_id": 1,
+    "aero_mesh_visible": true,
+    "structural_mesh_visible": false,
+    "structural_mesh_retained_in_database": true
+  },
+  "solved": false,
+  "source_bdf_unchanged": true,
+  "validation": "Imported native panel IDs, divisions and supplied geometry match manifest"
+}
