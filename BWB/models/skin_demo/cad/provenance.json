@@ -1,0 +1,14 @@
+﻿[
+    {
+        "source_sha256":  "EE1E6104824523337433E32F44D4AA18E2FA4C1C3395C75196F15650BBC0CEC5",
+        "copy":  "D:\\Python\\Projects\\Vanessa_SHM\\BWB\\models\\skin_demo\\cad\\1.SLDPRT",
+        "copy_sha256":  "EE1E6104824523337433E32F44D4AA18E2FA4C1C3395C75196F15650BBC0CEC5",
+        "source":  "C:\\Users\\Jerry12138\\Downloads\\1.SLDPRT"
+    },
+    {
+        "source_sha256":  "7DFE932B0285E1373BBEB54E2B3804EE4B0B16FB416FCE5C7D9AB8E444165CB6",
+        "copy":  "D:\\Python\\Projects\\Vanessa_SHM\\BWB\\models\\skin_demo\\cad\\2.SLDPRT",
+        "copy_sha256":  "7DFE932B0285E1373BBEB54E2B3804EE4B0B16FB416FCE5C7D9AB8E444165CB6",
+        "source":  "C:\\Users\\Jerry12138\\Downloads\\2.SLDPRT"
+    }
+]

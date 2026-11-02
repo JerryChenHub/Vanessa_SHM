@@ -1,0 +1,485 @@
+{
+  "source": "D:\\Python\\Projects\\Vanessa_SHM\\BWB\\models\\skin_demo\\part_1\\part_1_skin.bdf",
+  "coordinate_units": "m",
+  "limitations": [
+    "Only CQUAD4/CTRIA3 shells are included in connectivity and surface metrics.",
+    "Edge-length ratio and diagonal-triangle warp are simple screening measures, not Nastran criteria.",
+    "No coordinate-system transformations or SPCADD expansion are performed.",
+    "Without --spc-set, reported constraints are the union of all direct sets, not an inferred active case.",
+    "Root planes are user-specified geometric selections; they are not inferred from a bounding box."
+  ],
+  "warnings": [],
+  "card_counts": {
+    "INIT MAS": 1,
+    "NASTRAN": 1,
+    "ID PART": 1,
+    "SOL SEST": 1,
+    "CEND": 1,
+    "TITLE": 1,
+    "ECHO =": 1,
+    "DISPLA": 1,
+    "SPCFOR": 1,
+    "OLOAD(": 1,
+    "FORCE(": 1,
+    "STRESS": 1,
+    "SPC =": 1,
+    "BEGIN BU": 1,
+    "PARAM": 6,
+    "CORD2C": 1,
+    "CORD2S": 1,
+    "SPC1": 47,
+    "PSHELL": 1,
+    "MAT1": 1,
+    "GRID": 1819,
+    "CQUAD4": 1706,
+    "CTRIA3": 177,
+    "ENDDATA": 1
+  },
+  "node_count": 1819,
+  "shell_element_count": 1883,
+  "shell_types": {
+    "CQUAD4": 1706,
+    "CTRIA3": 177
+  },
+  "bbox": {
+    "min": [
+      -0.437915,
+      -0.016795,
+      0.0
+    ],
+    "max": [
+      0.1658151,
+      0.2065854,
+      0.8730948
+    ],
+    "size": [
+      0.6037300999999999,
+      0.2233804,
+      0.8730948
+    ]
+  },
+  "coordinates_are_basic": true,
+  "duplicate_ids": {},
+  "missing_node_references": [],
+  "element_ids_missing_pshell": [],
+  "missing_material_references": [],
+  "elements_with_repeated_node_ids": [],
+  "zero_area_element_ids": [],
+  "connected_component_count": 1,
+  "connected_components": [
+    {
+      "node_count": 1819,
+      "element_count": 1883,
+      "first_node_id": 1
+    }
+  ],
+  "unused_grid_count": 0,
+  "unused_grid_examples": [],
+  "edges": {
+    "unique_count": 3701,
+    "free_count": 47,
+    "nonmanifold_count": 0,
+    "inconsistent_orientation_count": 0,
+    "free_edge_examples": [
+      [
+        65,
+        66
+      ],
+      [
+        66,
+        67
+      ],
+      [
+        67,
+        68
+      ],
+      [
+        68,
+        69
+      ],
+      [
+        64,
+        65
+      ],
+      [
+        63,
+        64
+      ],
+      [
+        61,
+        62
+      ],
+      [
+        60,
+        61
+      ],
+      [
+        59,
+        60
+      ],
+      [
+        58,
+        59
+      ],
+      [
+        62,
+        63
+      ],
+      [
+        57,
+        58
+      ],
+      [
+        77,
+        78
+      ],
+      [
+        76,
+        77
+      ],
+      [
+        75,
+        76
+      ],
+      [
+        79,
+        80
+      ],
+      [
+        78,
+        79
+      ],
+      [
+        74,
+        75
+      ],
+      [
+        72,
+        73
+      ],
+      [
+        71,
+        72
+      ],
+      [
+        70,
+        71
+      ],
+      [
+        73,
+        74
+      ],
+      [
+        69,
+        70
+      ],
+      [
+        810,
+        811
+      ],
+      [
+        809,
+        810
+      ],
+      [
+        808,
+        809
+      ],
+      [
+        811,
+        812
+      ],
+      [
+        807,
+        808
+      ],
+      [
+        812,
+        813
+      ],
+      [
+        813,
+        814
+      ],
+      [
+        814,
+        815
+      ],
+      [
+        815,
+        816
+      ],
+      [
+        816,
+        817
+      ],
+      [
+        805,
+        806
+      ],
+      [
+        804,
+        805
+      ],
+      [
+        803,
+        804
+      ],
+      [
+        802,
+        803
+      ],
+      [
+        806,
+        807
+      ],
+      [
+        801,
+        802
+      ],
+      [
+        800,
+        801
+      ],
+      [
+        819,
+        820
+      ],
+      [
+        820,
+        821
+      ],
+      [
+        821,
+        822
+      ],
+      [
+        818,
+        819
+      ],
+      [
+        57,
+        822
+      ],
+      [
+        817,
+        818
+      ],
+      [
+        80,
+        800
+      ]
+    ],
+    "nonmanifold_edge_examples": [],
+    "inconsistent_orientation_examples": [],
+    "free_edges_both_nodes_clamped": 47,
+    "free_edges_on_selected_roots": 47
+  },
+  "near_coincident_nodes": {
+    "enabled": true,
+    "tolerance": 1e-07,
+    "pair_count": 0,
+    "pair_examples": [],
+    "examples_truncated": false
+  },
+  "geometry_metrics": {
+    "total_area": 0.5305750597203613,
+    "element_area": {
+      "count": 1883,
+      "min": 1.8247380000001125e-08,
+      "median": 0.00029037047347866326,
+      "p95": 0.0004557576992379507,
+      "max": 0.0007081759285502831,
+      "mean": 0.000281771141646501
+    },
+    "edge_length": {
+      "count": 7355,
+      "min": 0.00012204540138815911,
+      "median": 0.01901449680270293,
+      "p95": 0.023813986500731407,
+      "max": 0.041939619179005405,
+      "mean": 0.017637097572009725
+    },
+    "longest_to_shortest_edge_ratio": {
+      "count": 1883,
+      "min": 1.0145920796920758,
+      "median": 1.4000842457892886,
+      "p95": 3.0226583133987583,
+      "max": 19.221539926765374,
+      "mean": 1.7350068165872066
+    },
+    "corner_angle_deg": {
+      "count": 7355,
+      "min": 0.613576507034227,
+      "median": 86.49202119633908,
+      "p95": 119.92449183757016,
+      "max": 174.02375841015981,
+      "mean": 87.83046250748974
+    },
+    "quad_diagonal_warp_angle_deg": {
+      "count": 1706,
+      "min": 0.0,
+      "median": 0.0659569356641945,
+      "p95": 1.6215772262917179,
+      "max": 47.16739189269637,
+      "mean": 0.4077523174697734
+    },
+    "worst_edge_ratio_elements": [
+      {
+        "id": 1847,
+        "edge_length_ratio": 19.221539926765374,
+        "area": 8.313674240429981e-07
+      },
+      {
+        "id": 1846,
+        "edge_length_ratio": 16.539505299598186,
+        "area": 2.3666858649513824e-06
+      },
+      {
+        "id": 1858,
+        "edge_length_ratio": 16.521111989419538,
+        "area": 2.314107707109527e-06
+      },
+      {
+        "id": 1845,
+        "edge_length_ratio": 16.518936728015024,
+        "area": 2.3105343930736884e-06
+      },
+      {
+        "id": 1857,
+        "edge_length_ratio": 16.499718907962844,
+        "area": 2.2606301846807305e-06
+      },
+      {
+        "id": 1844,
+        "edge_length_ratio": 16.497546445604463,
+        "area": 2.257160933384734e-06
+      },
+      {
+        "id": 1856,
+        "edge_length_ratio": 16.477783467064516,
+        "area": 2.207158621540088e-06
+      },
+      {
+        "id": 1843,
+        "edge_length_ratio": 16.475695864836364,
+        "area": 2.2037632612024434e-06
+      },
+      {
+        "id": 1855,
+        "edge_length_ratio": 16.457659602293724,
+        "area": 2.156496559790722e-06
+      },
+      {
+        "id": 1842,
+        "edge_length_ratio": 16.4555829355668,
+        "area": 2.153256981446895e-06
+      },
+      {
+        "id": 1854,
+        "edge_length_ratio": 16.4344403337742,
+        "area": 2.1068886496327187e-06
+      },
+      {
+        "id": 1841,
+        "edge_length_ratio": 16.43226808074296,
+        "area": 2.1036468394524946e-06
+      },
+      {
+        "id": 1853,
+        "edge_length_ratio": 16.41050417761052,
+        "area": 2.058276568770636e-06
+      },
+      {
+        "id": 1840,
+        "edge_length_ratio": 16.4083434794451,
+        "area": 2.0551883430579595e-06
+      },
+      {
+        "id": 1852,
+        "edge_length_ratio": 16.385798555048318,
+        "area": 2.0132164041537723e-06
+      },
+      {
+        "id": 1851,
+        "edge_length_ratio": 15.347473725098519,
+        "area": 1.7821493820323292e-06
+      },
+      {
+        "id": 1838,
+        "edge_length_ratio": 14.838468202075841,
+        "area": 1.820670879520936e-06
+      },
+      {
+        "id": 1863,
+        "edge_length_ratio": 14.652681390837511,
+        "area": 1.8572964517187104e-05
+      },
+      {
+        "id": 1862,
+        "edge_length_ratio": 12.909238509428157,
+        "area": 4.214559856791795e-06
+      },
+      {
+        "id": 1865,
+        "edge_length_ratio": 11.81634928334798,
+        "area": 4.442697271072726e-06
+      }
+    ]
+  },
+  "materials": {
+    "1": {
+      "E": 69000000000.0,
+      "G": 25940000000.0,
+      "nu": 0.33,
+      "rho": 2700.0
+    }
+  },
+  "plate_properties": {
+    "1": {
+      "mid1": 1,
+      "mid2": 1,
+      "mid3": 1,
+      "mid4": null,
+      "thickness": 0.001,
+      "bending_inertia_ratio": 1.0,
+      "transverse_shear_ratio": 0.8333333,
+      "nsm": 0.0,
+      "z1": null,
+      "z2": null
+    }
+  },
+  "property_usage": {
+    "1": {
+      "elements": 1883,
+      "area": 0.5305750597203623
+    }
+  },
+  "constraints": {
+    "direct_set_node_counts": {
+      "1": 47
+    },
+    "selected_direct_sets": [
+      1
+    ],
+    "permanently_constrained_grid_count": 0,
+    "constrained_existing_node_count": 47,
+    "fully_clamped_existing_node_count": 47,
+    "missing_node_ids": [],
+    "root_tolerance": 1e-06,
+    "root_planes": [
+      {
+        "axis": "z",
+        "coordinate": 0.0,
+        "node_count": 47,
+        "shell_node_count": 47,
+        "zero_displacement_123456_count": 47,
+        "partial_or_nonzero_constraint_count": 0,
+        "unconstrained_count": 0,
+        "fully_clamped_fraction": 1.0,
+        "not_fully_clamped_node_examples": []
+      }
+    ],
+    "fully_clamped_nodes_outside_selected_roots": 0
+  }
+}

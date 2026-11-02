@@ -3,14 +3,14 @@ import csv
 import math
 import re
 import time
-import shutil
 import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+from .paths import BASE_DIR, DATA_DIR, CASES_DIR
 
-bdf_path = r"/base_file/FEM_only.bdf"
+bdf_path = BASE_DIR / "FEM_only.bdf"
 
-output_dir = os.path.dirname(bdf_path)
+output_dir = DATA_DIR
 nodes_csv = os.path.join(output_dir, "nodes.csv")
 elements_csv = os.path.join(output_dir, "elements.csv")
 
@@ -36,59 +36,17 @@ def fixed_fields(line, width=8):
 
 
 def parse_bdf(file_path):
-    # Parse GRID and supported element cards.
-    nodes = []
-    elements = []
-
-    element_cards = {
-        "CBAR": 2,
-        "CBEAM": 2,
-        "CROD": 2,
-        "CTRIA3": 3,
-        "CQUAD4": 4,
-        "CTETRA": 4,
-        "CHEXA": 8,
-    }
-
-    with open(file_path, "r", errors="ignore") as f:
-        for line in f:
-            if not line.strip() or line.startswith("$"):
-                continue
-
-            card = line[:8].strip()
-
-            if card in ("", "*", "+"):
-                continue
-
-            fields = fixed_fields(line)
-            card = fields[0]
-
-            if card == "GRID":
-                try:
-                    node_id = int(fields[1])
-                    x = to_float(fields[3])
-                    y = to_float(fields[4])
-                    z = to_float(fields[5])
-                    nodes.append([node_id, x, y, z])
-                except Exception:
-                    pass
-
-            elif card in element_cards:
-                try:
-                    elem_id = int(fields[1])
-                    prop_id = int(fields[2])
-                    n_nodes = element_cards[card]
-
-                    conn = []
-                    for i in range(n_nodes):
-                        val = fields[3 + i]
-                        if val:
-                            conn.append(int(val))
-
-                    elements.append([elem_id, card, prop_id] + conn)
-                except Exception:
-                    pass
-
+    from .bdf_damage import read_cards, nastran_float, ELEMENT_NODES
+    with open(file_path) as source:
+        cards = read_cards(source.readlines())
+    nodes, elements = [], []
+    for card in cards:
+        fields = card.fields
+        if card.name == "GRID":
+            nodes.append([int(fields[1]), *[nastran_float(x) or 0. for x in fields[3:6]]])
+        elif card.name in ELEMENT_NODES:
+            count = ELEMENT_NODES[card.name]
+            elements.append([int(fields[1]), card.name, int(fields[2]), *[int(x) for x in fields[3:3+count] if x]])
     return nodes, elements
 
 
@@ -202,7 +160,7 @@ def write_fixed_nodes(fixed_nodes, filepath):
         for node_id in fixed_nodes:
             writer.writerow([node_id])
 
-def plot_bdf_mesh_3d(data_dir="data", show_elements=True, show_faces=True):
+def plot_bdf_mesh_3d(data_dir=DATA_DIR, show_elements=True, show_faces=True):
     # Plot mesh, fixed nodes, and optional faces.
     nodes_path = os.path.join(data_dir, "nodes.csv")
     elements_path = os.path.join(data_dir, "elements.csv")
@@ -325,7 +283,7 @@ def set_axes_equal(ax):
     ax.set_ylim3d([y_middle - max_range, y_middle + max_range])
     ax.set_zlim3d([z_middle - max_range, z_middle + max_range])
 
-def print_bounds(data_dir="data"):
+def print_bounds(data_dir=DATA_DIR):
     # Print xyz bounds for all and fixed nodes.
     import os, pandas as pd
     n=pd.read_csv(os.path.join(data_dir,"nodes.csv"))
@@ -338,7 +296,7 @@ def print_bounds(data_dir="data"):
 
 
 
-def plot_nodes_fixed_box(data_dir="data"):
+def plot_nodes_fixed_box(data_dir=DATA_DIR):
     # Plot nodes with fixed-node bounding box.
     import os, pandas as pd, matplotlib.pyplot as plt
     from itertools import product, combinations
@@ -375,7 +333,7 @@ def plot_nodes_fixed_box(data_dir="data"):
     plt.tight_layout()
     plt.show()
 
-def plot_pick_nodes_fixed_box(data_dir="data", offset=30):
+def plot_pick_nodes_fixed_box(data_dir=DATA_DIR, offset=30):
     # Plot nodes and allow interactive pick.
     import os, pandas as pd, matplotlib.pyplot as plt
     from itertools import product, combinations
@@ -425,7 +383,7 @@ def plot_pick_nodes_fixed_box(data_dir="data", offset=30):
     plt.show()
 
 
-def get_floating_nodes(data_dir="data"):
+def get_floating_nodes(data_dir=DATA_DIR):
     # Get nodes not used by any element.
     import os, pandas as pd
     n=pd.read_csv(os.path.join(data_dir,"nodes.csv"))
@@ -437,7 +395,7 @@ def get_floating_nodes(data_dir="data"):
     return set(n.loc[~n["node_id"].isin(used),"node_id"].astype(int))
 
 
-def get_box_nodes(data_dir="data", offset=30):
+def get_box_nodes(data_dir=DATA_DIR, offset=30):
     # Get nodes inside fixed-node bbox with margin.
     import os, pandas as pd
     n=pd.read_csv(os.path.join(data_dir,"nodes.csv"))
@@ -451,7 +409,7 @@ def get_box_nodes(data_dir="data", offset=30):
     return set(n.loc[inside,"node_id"].astype(int))
 
 
-def select_nodes_in_ellipsoid(node=1000,a=30,b=30,c=30,Ome=None,data_dir="data",box_offset=30):
+def select_nodes_in_ellipsoid(node=1000,a=30,b=30,c=30,Ome=None,data_dir=DATA_DIR,box_offset=30):
     # Select nodes in ellipsoid excluding floating/box nodes.
     import os, numpy as np, pandas as pd
 
@@ -478,7 +436,7 @@ def select_nodes_in_ellipsoid(node=1000,a=30,b=30,c=30,Ome=None,data_dir="data",
 
     return selected
 
-def plot_selected_nodes(node=1000,a=30,b=30,c=30,Ome=None,data_dir="data",box_offset=30):
+def plot_selected_nodes(node=1000,a=30,b=30,c=30,Ome=None,data_dir=DATA_DIR,box_offset=30):
     # Plot selected ellipsoid nodes and center.
     import os, numpy as np, pandas as pd, matplotlib.pyplot as plt
 
@@ -502,156 +460,19 @@ def plot_selected_nodes(node=1000,a=30,b=30,c=30,Ome=None,data_dir="data",box_of
     plt.tight_layout()
     plt.show()
 
-def write_damage_bdf(selected_nodes, output_path, damage_ratio=0.5, base_bdf_path="base_file/FEM_only.bdf"):
-    # Copy base FEM file, then write damaged properties/elements to output path.
-    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
-    shutil.copy2(base_bdf_path, output_path)
-
-    with open(output_path,"r",errors="ignore") as f:
-        lines=f.readlines()
-
-    def ff(line): return [line[i:i+8].strip() for i in range(0,len(line.rstrip("\n")),8)]
-    def field(v): return str(v)[:8].rjust(8)
-    def card(v): return str(v)[:8].ljust(8)
-    def make(fields): return card(fields[0])+"".join(field(x) for x in fields[1:]).rstrip()+"\n"
-
-    def to_float(s):
-        s=str(s).strip().replace("D","E").replace("d","e")
-        if not s: return None
-        if "e" in s.lower(): return float(s)
-        m=re.fullmatch(r"([+-]?(?:\d+(?:\.\d*)?|\.\d+))([+-]\d+)",s)
-        if m: return float(m.group(1)+"e"+m.group(2))
-        return float(s)
-
-    def bdf_float_8(v):
-        v=float(v)
-        if not math.isfinite(v):
-            raise ValueError(f"invalid BDF float: {v}")
-        if v == 0:
-            return "0."
-
-        for prec in range(7,-1,-1):
-            s=f"{v:.{prec}f}".rstrip("0").rstrip(".")
-            if s in ("","-0"):
-                s="0"
-            if s == "0" and v != 0:
-                continue
-            if len(s)<=8:
-                return s
-
-        exp=int(math.floor(math.log10(abs(v))))
-        mant=v/(10**exp)
-        for prec in range(6,-1,-1):
-            m=f"{mant:.{prec}f}".rstrip("0").rstrip(".")
-            s=f"{m}{exp:+d}"
-            if len(s)<=8:
-                return s
-
-        raise ValueError(f"could not format {v} as an 8-character BDF float")
-
-    selected_nodes=set(map(int,selected_nodes))
-    elem_cards={"CBAR":2,"CBEAM":2,"CROD":2,"CTRIA3":3,"CQUAD4":4,"CTETRA":4,"CHEXA":8}
-    prop_cards={"PSHELL","PBAR"}
-
-    props={}
-    mats={}
-    selected_elems=[]
-
-    for line in lines:
-        flds=ff(line)
-        c=flds[0]
-
-        if c in elem_cards:
-            eid=int(flds[1])
-            pid=int(flds[2])
-            conn=[int(x) for x in flds[3:3+elem_cards[c]] if x]
-            if conn and all(x in selected_nodes for x in conn):
-                selected_elems.append((eid,pid))
-
-        elif c in prop_cards:
-            props[int(flds[1])]={"fields":flds.copy(),"mid":int(flds[2])}
-
-        elif c=="MAT1":
-            mats[int(flds[1])]=flds.copy()
-
-    next_pid=max(props.keys())+1000
-    next_mid=max(mats.keys())+1000
-
-    pid_map={}
-    add_lines=[]
-
-    for old_pid in sorted(set(pid for _,pid in selected_elems)):
-        if old_pid not in props: continue
-        old_mid=props[old_pid]["mid"]
-        if old_mid not in mats: continue
-
-        new_pid=next_pid; next_pid+=1
-        new_mid=next_mid; next_mid+=1
-
-        mf=mats[old_mid].copy()
-        while len(mf)<7: mf.append("")
-        mf[1]=str(new_mid)
-        e_val=to_float(mf[2])
-        if e_val is not None:
-            mf[2]=bdf_float_8(e_val*damage_ratio)
-        g_val=to_float(mf[3])
-        if g_val is not None:
-            mf[3]=bdf_float_8(g_val*damage_ratio)
-
-        pf=props[old_pid]["fields"].copy()
-        while len(pf)<8: pf.append("")
-        pf[1]=str(new_pid)
-        pf[2]=str(new_mid)
-
-        pid_map[old_pid]=new_pid
-        add_lines.append("$ Damaged material/property\n")
-        add_lines.append(make(mf))
-        add_lines.append(make(pf))
-
-    selected_eid_set=set(eid for eid,_ in selected_elems)
-
-    out_lines=[]
-    inserted=False
-
-    for line in lines:
-        flds=ff(line)
-        c=flds[0]
-
-        if not inserted and c=="GRID":
-            out_lines.extend(add_lines)
-            inserted=True
-
-        if c in elem_cards:
-            eid=int(flds[1])
-            if eid in selected_eid_set:
-                old_pid=int(flds[2])
-                if old_pid in pid_map:
-                    line=line[:16]+field(pid_map[old_pid])+line[24:]
-
-        out_lines.append(line)
-
-    if not inserted:
-        out_lines.extend(add_lines)
-
-    with open(output_path,"w") as f:
-        f.writelines(out_lines)
-
-    print("selected elements:",len(selected_elems))
-    print("new properties:",len(pid_map))
-    print("pid map:",pid_map)
-    print("saved:",output_path)
-
-    return output_path,[eid for eid,_ in selected_elems]
+def write_damage_bdf(selected_nodes, output_path, damage_ratio=0.5, base_bdf_path=BASE_DIR / "FEM_only.bdf"):
+    from .bdf_damage import write_damage_regions
+    return write_damage_regions([selected_nodes], output_path, damage_ratio, base_bdf_path)
 
 
-def write_damaged_bdf(selected_nodes,bdf_in="base_file/FEM_only.bdf",damage_ratio=0.5,out_dir="Temp"):
-    # Backward-compatible wrapper with base input and Temp output defaults.
+def write_damaged_bdf(selected_nodes,bdf_in=BASE_DIR / "FEM_only.bdf",damage_ratio=0.5,out_dir=CASES_DIR):
+    # Backward-compatible wrapper with core input and workspace output defaults.
     ts=time.strftime("%Y%m%d_%H%M%S")
     out_path=os.path.join(out_dir,f"FEM_{ts}.bdf")
     return write_damage_bdf(selected_nodes, out_path, damage_ratio=damage_ratio, base_bdf_path=bdf_in)
 
-def damage_bdf(selected_nodes,out_path=None,damage_ratio=0.5,base_bdf_path="base_file/FEM_only.bdf",out_dir="Temp"):
-    # Preferred wrapper: copy from base_file and write damaged BDF into Temp by default.
+def damage_bdf(selected_nodes,out_path=None,damage_ratio=0.5,base_bdf_path=BASE_DIR / "FEM_only.bdf",out_dir=CASES_DIR):
+    # Preferred wrapper: copy from core/base and write into workspace/cases by default.
     if out_path is None:
         ts=time.strftime("%Y%m%d_%H%M%S")
         out_path=os.path.join(out_dir,f"FEM_{ts}.bdf")
@@ -695,13 +516,13 @@ if __name__ == "__main__":
         b=30,
         c=30,
         Ome=np.eye(3),
-        data_dir="base_file"
+        data_dir=DATA_DIR
     )
 
     out_bdf, selected_elements = write_damage_bdf(
         selected_nodes,
-        output_path="Temp/FEM_damaged.bdf",
+        output_path=CASES_DIR / "FEM_damaged.bdf",
         damage_ratio=0.1,
-        base_bdf_path="base_file/FEM_only.bdf"
+        base_bdf_path=BASE_DIR / "FEM_only.bdf"
     )
 

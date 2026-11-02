@@ -1,0 +1,213 @@
+{
+  "status": "PASS",
+  "bdf": "D:\\Python\\Projects\\Vanessa_SHM\\BWB\\models\\skin_structured\\part_2\\part_2_skin.bdf",
+  "checks": "Exported BDF coordinates and connectivity independently compared with layout metadata",
+  "tolerance": {
+    "coordinate_m": 2e-06,
+    "normalized_chord_fraction": 1e-05
+  },
+  "node_count": 2940,
+  "element_count": 2915,
+  "patches": {
+    "main_lower": {
+      "rows": 40,
+      "columns": 25,
+      "quad_count": 936,
+      "interior_nodes_checked": 874,
+      "interior_edge_valence": 4,
+      "interior_element_incidence": 4,
+      "max_row_z_spread_m": 0.0,
+      "max_normalized_chord_fraction_error": 4.209751857803257e-06,
+      "mean_signed_span_step_m": -0.02,
+      "max_span_step_error_m": 2.0469737016526324e-16
+    },
+    "main_upper": {
+      "rows": 40,
+      "columns": 25,
+      "quad_count": 936,
+      "interior_nodes_checked": 874,
+      "interior_edge_valence": 4,
+      "interior_element_incidence": 4,
+      "max_row_z_spread_m": 0.0,
+      "max_normalized_chord_fraction_error": 4.209751857803257e-06,
+      "mean_signed_span_step_m": -0.02,
+      "max_span_step_error_m": 2.0469737016526324e-16
+    },
+    "transition_lower": {
+      "rows": 4,
+      "columns": 25,
+      "quad_count": 72,
+      "interior_nodes_checked": 46,
+      "interior_edge_valence": 4,
+      "interior_element_incidence": 4
+    },
+    "transition_upper": {
+      "rows": 4,
+      "columns": 25,
+      "quad_count": 72,
+      "interior_nodes_checked": 46,
+      "interior_edge_valence": 4,
+      "interior_element_incidence": 4
+    },
+    "bend_lower": {
+      "rows": 9,
+      "columns": 25,
+      "quad_count": 192,
+      "interior_nodes_checked": 161,
+      "interior_edge_valence": 4,
+      "interior_element_incidence": 4
+    },
+    "bend_upper": {
+      "rows": 9,
+      "columns": 25,
+      "quad_count": 192,
+      "interior_nodes_checked": 161,
+      "interior_edge_valence": 4,
+      "interior_element_incidence": 4
+    },
+    "winglet_lower": {
+      "rows": 10,
+      "columns": 25,
+      "quad_count": 216,
+      "interior_nodes_checked": 184,
+      "interior_edge_valence": 4,
+      "interior_element_incidence": 4
+    },
+    "winglet_upper": {
+      "rows": 10,
+      "columns": 25,
+      "quad_count": 216,
+      "interior_nodes_checked": 184,
+      "interior_edge_valence": 4,
+      "interior_element_incidence": 4
+    }
+  },
+  "topology": {
+    "connected_components": 1,
+    "euler_characteristic": 1,
+    "free_edges": 49,
+    "free_edges_only_on_root": true,
+    "conforming_patch_interfaces": true
+  },
+  "quality_groups": {
+    "eight_surface_skin_patches": {
+      "element_count": 2832,
+      "element_types": {
+        "CQUAD4": 2832
+      },
+      "edge_length_ratio": {
+        "count": 2832,
+        "min": 1.0132258032601524,
+        "median": 1.871870596322327,
+        "p95": 4.194796630682733,
+        "max": 5.36097058030612
+      },
+      "corner_angle_deg": {
+        "count": 11328,
+        "min": 31.75004261021379,
+        "median": 89.96849591079834,
+        "p95": 115.12756258232136,
+        "max": 148.0332791120245
+      },
+      "diagonal_warp_deg": {
+        "count": 2832,
+        "min": 0.0,
+        "median": 0.04253587975068329,
+        "p95": 0.5530985117970684,
+        "max": 6.134808026383288
+      },
+      "area_m2": {
+        "count": 2832,
+        "min": 3.886750815253533e-05,
+        "median": 0.0001846887227006121,
+        "p95": 0.00034208271895825167,
+        "max": 0.0004990801118434029
+      },
+      "total_area_m2": 0.5276539226928251,
+      "reversed_or_flat_corner_element_ids": [],
+      "nonpositive_area_element_ids": []
+    },
+    "thin_trailing_edge_closure": {
+      "element_count": 59,
+      "element_types": {
+        "CQUAD4": 59
+      },
+      "edge_length_ratio": {
+        "count": 59,
+        "min": 4.906958706709871,
+        "median": 6.9145484990788075,
+        "p95": 45.82836087605014,
+        "max": 79.89080988912046
+      },
+      "corner_angle_deg": {
+        "count": 236,
+        "min": 9.641184413484746,
+        "median": 89.98703592281393,
+        "p95": 156.38972840148628,
+        "max": 170.37109876435315
+      },
+      "diagonal_warp_deg": {
+        "count": 59,
+        "min": 0.0,
+        "median": 0.36774272954390996,
+        "p95": 1.5822842526710794,
+        "max": 6.00759552863322
+      },
+      "area_m2": {
+        "count": 59,
+        "min": 3.067775749730541e-06,
+        "median": 4.965445133699951e-05,
+        "p95": 7.585210978217027e-05,
+        "max": 7.903289097638388e-05
+      },
+      "total_area_m2": 0.0024959588654380463,
+      "reversed_or_flat_corner_element_ids": [],
+      "nonpositive_area_element_ids": []
+    },
+    "thin_tip_cap_closure": {
+      "element_count": 24,
+      "element_types": {
+        "CTRIA3": 1,
+        "CQUAD4": 23
+      },
+      "edge_length_ratio": {
+        "count": 24,
+        "min": 1.2964211980763307,
+        "median": 1.886654906474767,
+        "p95": 2.116834848002251,
+        "max": 17.438316748756957
+      },
+      "corner_angle_deg": {
+        "count": 95,
+        "min": 42.38059515234111,
+        "median": 89.88288816504613,
+        "p95": 97.941439936613,
+        "max": 128.8174793000983
+      },
+      "diagonal_warp_deg": {
+        "count": 23,
+        "min": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "max": 0.0
+      },
+      "area_m2": {
+        "count": 24,
+        "min": 5.826800975000063e-06,
+        "median": 2.6660651017500005e-05,
+        "p95": 3.161841086250003e-05,
+        "max": 3.173003908499968e-05
+      },
+      "total_area_m2": 0.0005781030730500012,
+      "reversed_or_flat_corner_element_ids": [],
+      "nonpositive_area_element_ids": []
+    }
+  },
+  "limitations": [
+    "Quality metrics are geometric screens, not Nastran acceptance criteria or convergence verification.",
+    "CAD distance and projection validity are not independently rechecked without a CAD kernel.",
+    "Eight skin patches use CAD-projected interior nodes; trailing edge is an explicitly simplified ruled closure.",
+    "Straight-edged shell facets approximate curved CAD between nodes.",
+    "Parallel chord rows are constant-Z sections in the main wing; their three-dimensional lines follow airfoil curvature."
+  ]
+}

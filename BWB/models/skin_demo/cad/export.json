@@ -1,0 +1,20 @@
+﻿[
+    {
+        "part":  "1",
+        "source":  "D:\\Python\\Projects\\Vanessa_SHM\\BWB\\models\\skin_demo\\cad\\1.SLDPRT",
+        "parasolid":  "D:\\Python\\Projects\\Vanessa_SHM\\BWB\\models\\skin_demo\\cad\\1.x_t",
+        "open_error":  0,
+        "open_warning":  0,
+        "save_error":  0,
+        "save_warning":  0
+    },
+    {
+        "part":  "2",
+        "source":  "D:\\Python\\Projects\\Vanessa_SHM\\BWB\\models\\skin_demo\\cad\\2.SLDPRT",
+        "parasolid":  "D:\\Python\\Projects\\Vanessa_SHM\\BWB\\models\\skin_demo\\cad\\2.x_t",
+        "open_error":  0,
+        "open_warning":  0,
+        "save_error":  0,
+        "save_warning":  0
+    }
+]

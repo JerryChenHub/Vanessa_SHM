@@ -1,10 +1,12 @@
 import numpy as np
+import argparse
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 from mpl_toolkits.mplot3d.art3d import Line3DCollection, Poly3DCollection
+from .paths import ASSETS_DIR, DATA_DIR, CASES_DIR, FIGURES_DIR
 
 
 def _require_cv2():
@@ -125,14 +127,14 @@ def draw_report_circles(image_paths=None, output_paths=None):
     """Draw the report annotation circles on the configured images."""
     if image_paths is None:
         image_paths = [
-            Path("img/undamaged.png"),
-            Path("img/70.png"),
+            ASSETS_DIR / "undamaged.png",
+            ASSETS_DIR / "70.png",
         ]
 
     if output_paths is None:
         output_paths = [
-            Path("img/undamaged_with_circles.png"),
-            Path("img/70_with_circles.png"),
+            FIGURES_DIR / "undamaged_with_circles.png",
+            FIGURES_DIR / "70_with_circles.png",
         ]
 
     if len(image_paths) != len(output_paths):
@@ -192,10 +194,10 @@ def _resolve_strain_column(strain_df, strain_column):
 
 
 def plot_element_strain_presence(
-    data_dir="_data",
-    strain_path="Temp/sample_1/1.csv",
+    data_dir=DATA_DIR,
+    strain_path=CASES_DIR / "sample_1/results/strain_wide.csv",
     strain_column=0,
-    output_path="img/strain_presence.png",
+    output_path=FIGURES_DIR / "strain_presence.png",
     zero_tol=0.0,
     nonzero_color="#d62728",
     zero_color="#b8b8b8",
@@ -379,6 +381,16 @@ def plot_element_strain_presence(
 
 
 if __name__ == "__main__":
-    _, _, strain_summary = plot_element_strain_presence()
+    parser = argparse.ArgumentParser(description="Plot a shell-strain table against the core/data mesh.")
+    parser.add_argument("--strain-path", type=Path, default=CASES_DIR / "sample_1/results/strain_wide.csv")
+    parser.add_argument("--data-dir", type=Path, default=DATA_DIR)
+    parser.add_argument("--output-path", type=Path, default=FIGURES_DIR / "strain_presence.png")
+    parser.add_argument("--strain-column", type=int, default=0)
+    parser.add_argument("--show", action="store_true")
+    args = parser.parse_args()
+    _, _, strain_summary = plot_element_strain_presence(
+        data_dir=args.data_dir, strain_path=args.strain_path, strain_column=args.strain_column,
+        output_path=args.output_path, show=args.show,
+    )
 
     print(f"Saved strain presence plot: {strain_summary['output_path']}")

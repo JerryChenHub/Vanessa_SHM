@@ -5,5 +5,13 @@ __pycache__/
 .idea
 dist/
 build/
-Temp/
-Temp/*.modfem
+/workspace/*
+!/workspace/.gitkeep
+!/workspace/NASA_SHM/
+!/workspace/BWB/
+/workspace/NASA_SHM/*
+!/workspace/NASA_SHM/.gitkeep
+/workspace/BWB/*
+!/workspace/BWB/.gitkeep
+*.py[cod]
+/NASA_SHM/data_*/

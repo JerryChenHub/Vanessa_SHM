@@ -1,10 +1,13 @@
-import math
+import argparse
 import os
-import re
 import shutil
+import json
+import hashlib
+from pathlib import Path
 import numpy as np
 
-from nodal_info import (
+from .paths import BASE_DIR, DATA_DIR, CASES_DIR, require_working_output
+from .nodal_info import (
     select_nodes_in_ellipsoid,
     damage_bdf,
     get_floating_nodes,
@@ -58,206 +61,17 @@ def _damage_number_from_input(rng, d_n):
     return damage_number
 
 
-def write_multiple_damage_bdf(
-    selected_nodes_groups,
-    out_path,
-    damage_ratio=0.3,
-    base_bdf_path="base_file/FEM_only.bdf",
-):
+def write_multiple_damage_bdf(selected_nodes_groups, out_path, damage_ratio=0.3, base_bdf_path=BASE_DIR / "FEM_only.bdf"):
+    from .bdf_damage import write_damage_regions
+    return write_damage_regions(selected_nodes_groups, out_path, damage_ratio, base_bdf_path)
+
+
+def generate_data_sets(n=10, base_dir=BASE_DIR, temp_dir=CASES_DIR, info_dir=DATA_DIR, seed=None, d_n=1):
+    """Copy base inputs into workspace cases and apply stiffness damage.
+
+    ``temp_dir`` remains the output-directory argument for existing Python callers.
     """
-    Write one BDF with multiple damaged regions using the same damage_ratio.
-
-    This is intentionally separate from the existing damage_bdf/write_damage_bdf
-    path.  For multiple regions, it creates only one damaged material/property
-    pair per original property ID, instead of creating a new material for every
-    damage location.
-
-    selected_nodes_groups:
-        Iterable of selected-node lists/sets.  Each item is one damage region.
-    """
-    os.makedirs(os.path.dirname(os.path.abspath(out_path)), exist_ok=True)
-    shutil.copy2(base_bdf_path, out_path)
-
-    with open(out_path, "r", errors="ignore") as f:
-        lines = f.readlines()
-
-    def ff(line):
-        return [line[i:i + 8].strip() for i in range(0, len(line.rstrip("\n")), 8)]
-
-    def field(v):
-        return str(v)[:8].rjust(8)
-
-    def card(v):
-        return str(v)[:8].ljust(8)
-
-    def make(fields):
-        return card(fields[0]) + "".join(field(x) for x in fields[1:]).rstrip() + "\n"
-
-    def to_float(s):
-        s = str(s).strip().replace("D", "E").replace("d", "e")
-        if not s:
-            return None
-        if "e" in s.lower():
-            return float(s)
-        m = re.fullmatch(r"([+-]?(?:\d+(?:\.\d*)?|\.\d+))([+-]\d+)", s)
-        if m:
-            return float(m.group(1) + "e" + m.group(2))
-        return float(s)
-
-    def bdf_float_8(v):
-        v = float(v)
-        if not math.isfinite(v):
-            raise ValueError(f"invalid BDF float: {v}")
-        if v == 0:
-            return "0."
-
-        for prec in range(7, -1, -1):
-            s = f"{v:.{prec}f}".rstrip("0").rstrip(".")
-            if s in ("", "-0"):
-                s = "0"
-            if s == "0" and v != 0:
-                continue
-            if len(s) <= 8:
-                return s
-
-        exp = int(math.floor(math.log10(abs(v))))
-        mant = v / (10 ** exp)
-        for prec in range(6, -1, -1):
-            m = f"{mant:.{prec}f}".rstrip("0").rstrip(".")
-            s = f"{m}{exp:+d}"
-            if len(s) <= 8:
-                return s
-
-        raise ValueError(f"could not format {v} as an 8-character BDF float")
-
-    node_groups = []
-    for selected_nodes in selected_nodes_groups:
-        group = set(map(int, selected_nodes))
-        if group:
-            node_groups.append(group)
-
-    if not node_groups:
-        return out_path, []
-
-    elem_cards = {
-        "CBAR": 2,
-        "CBEAM": 2,
-        "CROD": 2,
-        "CTRIA3": 3,
-        "CQUAD4": 4,
-        "CTETRA": 4,
-        "CHEXA": 8,
-    }
-    prop_cards = {"PSHELL", "PBAR"}
-
-    props = {}
-    mats = {}
-    selected_elems = []
-
-    for line in lines:
-        flds = ff(line)
-        c = flds[0]
-
-        if c in elem_cards:
-            eid = int(flds[1])
-            pid = int(flds[2])
-            conn = [int(x) for x in flds[3:3 + elem_cards[c]] if x]
-
-            # Important difference from simply using one unioned node set:
-            # an element must be fully inside at least one damage region.
-            if conn and any(all(x in group for x in conn) for group in node_groups):
-                selected_elems.append((eid, pid))
-
-        elif c in prop_cards:
-            props[int(flds[1])] = {"fields": flds.copy(), "mid": int(flds[2])}
-
-        elif c == "MAT1":
-            mats[int(flds[1])] = flds.copy()
-
-    if not selected_elems:
-        return out_path, []
-
-    next_pid = max(props.keys()) + 1000
-    next_mid = max(mats.keys()) + 1000
-
-    pid_map = {}
-    add_lines = []
-
-    # Only one damaged material/property pair is created per original property.
-    # This avoids extra duplicate materials when several locations share one damage_ratio.
-    for old_pid in sorted(set(pid for _, pid in selected_elems)):
-        if old_pid not in props:
-            continue
-        old_mid = props[old_pid]["mid"]
-        if old_mid not in mats:
-            continue
-
-        new_pid = next_pid
-        next_pid += 1
-        new_mid = next_mid
-        next_mid += 1
-
-        mf = mats[old_mid].copy()
-        while len(mf) < 7:
-            mf.append("")
-        mf[1] = str(new_mid)
-
-        e_val = to_float(mf[2])
-        if e_val is not None:
-            mf[2] = bdf_float_8(e_val * damage_ratio)
-
-        g_val = to_float(mf[3])
-        if g_val is not None:
-            mf[3] = bdf_float_8(g_val * damage_ratio)
-
-        pf = props[old_pid]["fields"].copy()
-        while len(pf) < 8:
-            pf.append("")
-        pf[1] = str(new_pid)
-        pf[2] = str(new_mid)
-
-        pid_map[old_pid] = new_pid
-        add_lines.append("$ Damaged material/property\n")
-        add_lines.append(make(mf))
-        add_lines.append(make(pf))
-
-    selected_eid_set = set(eid for eid, _ in selected_elems)
-
-    out_lines = []
-    inserted = False
-
-    for line in lines:
-        flds = ff(line)
-        c = flds[0]
-
-        if not inserted and c == "GRID":
-            out_lines.extend(add_lines)
-            inserted = True
-
-        if c in elem_cards:
-            eid = int(flds[1])
-            if eid in selected_eid_set:
-                old_pid = int(flds[2])
-                if old_pid in pid_map:
-                    line = line[:16] + field(pid_map[old_pid]) + line[24:]
-
-        out_lines.append(line)
-
-    if not inserted:
-        out_lines.extend(add_lines)
-
-    with open(out_path, "w") as f:
-        f.writelines(out_lines)
-
-    print("selected elements:", len(selected_elems))
-    print("new properties:", len(pid_map))
-    print("pid map:", pid_map)
-    print("saved:", out_path)
-
-    return out_path, [eid for eid, _ in selected_elems]
-
-
-def generate_data_sets(n=10, base_dir="base_file", temp_dir="Temp", info_dir="_data", seed=None, d_n=1):
+    temp_dir = require_working_output(temp_dir)
     rng = np.random.default_rng(seed)
     os.makedirs(temp_dir, exist_ok=True)
     floating_nodes = get_floating_nodes(info_dir)
@@ -271,6 +85,8 @@ def generate_data_sets(n=10, base_dir="base_file", temp_dir="Temp", info_dir="_d
 
     for i in range(1, n + 1):
         subfolder = os.path.join(temp_dir, f"sample_{i}")
+        if any(Path(subfolder).glob('sol144.f06')):
+            raise FileExistsError(f"Refusing to overwrite a solved case: {subfolder}")
         os.makedirs(subfolder, exist_ok=True)
 
         for name in os.listdir(base_dir):
@@ -353,20 +169,55 @@ def generate_data_sets(n=10, base_dir="base_file", temp_dir="Temp", info_dir="_d
         base_bdf_path = os.path.join(base_dir, "FEM_only.bdf")
 
         if damage_number == 1:
-            damage_bdf(
+            _, modified_elements = damage_bdf(
                 selected_nodes=damage_specs[0]["selected_nodes"],
                 out_path=out_bdf_path,
                 damage_ratio=damage_ratio,
                 base_bdf_path=base_bdf_path,
             )
         else:
-            write_multiple_damage_bdf(
+            _, modified_elements = write_multiple_damage_bdf(
                 selected_nodes_groups=[spec["selected_nodes"] for spec in damage_specs],
                 out_path=out_bdf_path,
                 damage_ratio=damage_ratio,
                 base_bdf_path=base_bdf_path,
             )
 
+        if not modified_elements:
+            raise ValueError(f"No elements changed in {subfolder}; do not label this as damaged.")
+        manifest = {
+            "schema_version": 1,
+            "sample_index": i,
+            "seed": seed,
+            "stiffness_scale": float(damage_ratio),
+            "damage_definition": "Scale MAT1 E/G for all active PSHELL membrane, bending, transverse shear and coupling material references, and for PBAR beams; preserve density and geometry.",
+            "selection_rule": "All element nodes must be inside the same ellipsoid.",
+            "modified_element_ids": sorted(modified_elements),
+            "modified_element_count": len(modified_elements),
+            "regions": [{"center_node": s["node"], "axes": [s["a"],s["b"],s["c"]],
+                         "orientation": s["Ome"].tolist(),
+                         "selected_node_ids": sorted(map(int,s["selected_nodes"]))} for s in damage_specs],
+            "base_input_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+                                  for p in Path(base_dir).iterdir() if p.suffix.lower() in {".bdf", ".inc"}},
+            "case_input_sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+                                  for p in Path(subfolder).iterdir() if p.suffix.lower() in {".bdf", ".inc"}},
+        }
+        Path(subfolder, "case_manifest.json").write_text(json.dumps(manifest,indent=2),encoding="utf-8")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Generate damage cases from core/base into workspace/cases.")
+    parser.add_argument("--samples", type=int, default=10)
+    parser.add_argument("--seed", type=int)
+    parser.add_argument("--damage-regions", type=int, default=1)
+    parser.add_argument("--output-dir", type=Path, default=CASES_DIR)
+    parser.add_argument("--base-dir", type=Path, default=BASE_DIR)
+    parser.add_argument("--data-dir", type=Path, default=DATA_DIR)
+    args = parser.parse_args()
+    if args.samples < 1 or args.damage_regions < 1:
+        parser.error("--samples and --damage-regions must be positive")
+    generate_data_sets(args.samples, args.base_dir, args.output_dir, args.data_dir, args.seed, args.damage_regions)
+
 
 if __name__ == "__main__":
-    generate_data_sets(n=10)
+    main()

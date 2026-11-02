@@ -1,0 +1,48 @@
+# NASA_SHM 与 BWB
+
+本仓库承载两个独立项目，沿用一个 Git 仓库和一个 `workspace/`。外层目录名 `Vanessa_SHM` 暂时保留，项目归属以子目录为准。
+
+```text
+Vanessa_SHM/
+├── NASA_SHM/                 原项目的代码、模型和正式数据
+│   ├── core/                 代码、基础模型、网格参考数据和图片
+│   ├── tests/                原项目回归测试
+│   ├── data_2026-10-17/       已有正式数据集及计算记录
+│   └── README.md             NASA_SHM 使用说明
+├── BWB/                      BWB 蒙皮建模与后续分析
+│   ├── paths.py              BWB 自身路径
+│   ├── data/                 BWB 自有输入数据
+│   ├── scripts/              SolidWorks 导出、Femap 网格生成与检查
+│   ├── models/skin_demo/     CAD 输入与首版自由网格参考
+│   ├── models/skin_structured/ 当前规则蒙皮网格、检查及对比图
+│   └── README.md             项目边界与复用约定
+└── workspace/                共享临时工作区，不提交计算文件
+    ├── NASA_SHM/             原有 case、结果、诊断和历史归档
+    └── BWB/                  BWB 临时文件、计算和中间结果
+```
+
+## 项目边界
+
+- 各项目的代码、固定输入、测试和正式成果归各自目录；临时输出放入各自的 `workspace/<项目名>/`。
+- BWB 可以显式导入 `NASA_SHM.core` 或读取 NASA_SHM 数据。调用时传入 BWB 自己的输入和输出路径，避免使用 NASA_SHM 专属的模型与输出默认值。
+- NASA_SHM 不依赖 BWB。BWB 专用改动放入 BWB；复用现有数据时保留来源、版本或文件哈希、单位和变换说明，派生成果写入 BWB。
+- NASA_SHM 原始计算数据、求解日志和源码快照保留；共享 workspace 不改变数据所有权。
+
+## 从仓库根目录使用
+
+```powershell
+# NASA_SHM 生成与检查入口
+python -m NASA_SHM.core.data_generation --help
+python -m NASA_SHM.core.batch_run --help
+
+# 运行已有回归测试
+Push-Location NASA_SHM
+python -m unittest discover -s tests -v
+Pop-Location
+```
+
+NASA_SHM 默认生成位置为 `workspace/NASA_SHM/cases/`。显式传入的相对路径仍以当前工作目录为基准。
+
+详细说明：[NASA_SHM](NASA_SHM/README.md)、[BWB](BWB/README.md)。BWB 已建立 SolidWorks 几何导出、Femap 蒙皮壳网格生成、根部约束和结构 BDF 导出流程；目前用于建模演示，尚未加入气动面板或运行 SOL144。Windows、Femap 和 Python 依赖配置见 BWB 说明。
+
+迁移前文件校验清单、旧索引备份及迁移校验记录位于 `workspace/NASA_SHM/archive/project-split/`。

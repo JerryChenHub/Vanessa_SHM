@@ -1,0 +1,5 @@
+# Preserve exporter bytes and fixed-width field padding in BWB engineering inputs.
+BWB/models/**/*.bdf -text -whitespace
+BWB/models/**/*.x_t -text -whitespace
+BWB/models/**/*.SLDPRT binary
+BWB/models/**/*.modfem binary
