@@ -8,6 +8,7 @@
 - `cases/sol144_demo/`：假设工况、完整 SOL144 入口、输入来源与求解诊断说明。
 - `results/sol144_demo/`：应变 CSV、位移、合理性检查、云图、Femap 结果模型及压缩求解证据。
 - `cases/aoa_sweep/`、[results/aoa_sweep](results/aoa_sweep/README.md)：保持基准速度和结构假设，对两件分别计算 3°、4°、5°、6°，并与 2° 基准比较。
+- `cases/speed_200/`、[results/speed_200](results/speed_200/README.md)：200 m/s、3°–6°八个实际求解。全部超过假设屈服强度和小变形界限；保留输出用于识别线性模型的适用范围，未模拟屈服后的真实响应。
 
 ## 目录与生成逻辑
 
@@ -33,6 +34,8 @@ BWB/
 │   └── view_femap_aoa_sweep.py       四迎角Femap结果模型
 ├── cases/sol144_demo/、aoa_sweep/     独立求解输入
 ├── results/sol144_demo/、aoa_sweep/   应变、检查、图和Femap结果
+├── cases/speed_200/                  200 m/s独立输入
+├── results/speed_200/                高动压线性输出、超限统计及适用性审查
 ├── tests/test_aero_panels.py          几何、符号、编号与输入检查
 └── models/
     ├── skin_demo/                    源 CAD 与历史自由网格

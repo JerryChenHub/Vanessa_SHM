@@ -1,0 +1,620 @@
+{
+  "part": 2,
+  "result_model": "BWB/results/speed_200/part_2_200mps_aoa_3to6.modfem",
+  "source_model": "BWB/models/aero_panels/part_2/part_2_aero_structure.modfem",
+  "source_model_sha256": "757eb8881b3a8879e2f1bba647b5792140b966a929174f0e1340e9618a506da6",
+  "angles_deg": [
+    3,
+    4,
+    5,
+    6
+  ],
+  "result_sets": [
+    {
+      "aoa_deg": 3,
+      "output_set_id": 1,
+      "output_set_title": "200 m/s | AOA 3 deg | Part 2 | LINEAR SOL144",
+      "vector_id": 7071,
+      "vector_title": "Plate Top MajorPrn Strain",
+      "imported_vector_count": 70,
+      "source_op2": "workspace/BWB/speed_200/run_01/aoa_03/part_2/bwb_sol144.op2",
+      "source_op2_sha256": "e69315c16ba9f5d6e680be22cb3b18f84568772232b880191c1cb914776e2860",
+      "source_run_summary_sha256": "8057de0d3dd0a34ac4a1ebeb6293d323280c10a796ce8edab207f6a3e3a10538",
+      "source_case": "BWB/cases/speed_200/aoa_03/part_2",
+      "original_solver_status": "completed_with_runtime_errors",
+      "runtime_diagnostics": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "solver_completed": true,
+      "fresh_f06": true,
+      "strain_statistics": {
+        "element_count": 2915,
+        "units": "m/m",
+        "minimum": {
+          "element_id": 1348,
+          "strain": -0.0021860685665160418,
+          "microstrain": -2186.0685665160418
+        },
+        "maximum": {
+          "element_id": 1405,
+          "strain": 0.0057623544707894325,
+          "microstrain": 5762.3544707894325
+        },
+        "maximum_absolute": {
+          "element_id": 1405,
+          "strain": 0.0057623544707894325,
+          "microstrain": 5762.3544707894325
+        }
+      },
+      "output_set_notes": "Angle of attack = 3 degrees. Output-set value records AOA in degrees.\nImported actual OP2: workspace/BWB/speed_200/run_01/aoa_03/part_2/bwb_sol144.op2\nOriginal solver status: completed_with_runtime_errors.\nIntel MKL ERROR: Parameter 13 was incorrect on en",
+      "physical_review": {
+        "case_review": "BWB/results/speed_200/aoa_03/part_2/case_review.json",
+        "case_review_sha256": "d773f7170666405463bf2348e685852c864fd00247c5561396aa9f757ce788df",
+        "reasonableness": "BWB/results/speed_200/aoa_03/part_2/reasonableness.json",
+        "reasonableness_sha256": "e3afe448a63a66a4b140ab007522fb01e9f1ba5414a0812ae6a73092f6834577",
+        "status": "linear_result_exceeds_model_screens",
+        "result_integrity_checks_pass": true,
+        "linear_physics_screens_pass": false,
+        "failed_physical_screens": [
+          "small_translation",
+          "small_rotation",
+          "below_assumed_yield"
+        ],
+        "max_translation_m": 0.09002334887352835,
+        "max_translation_over_reference_span": 0.10344799124910854,
+        "max_rotation_deg": 23.33504325073271,
+        "assumed_yield_MPa": 200.0,
+        "peak_von_mises_MPa_from_F06_strains": 391.2353136841788,
+        "limitations": [
+          "A finite linear solution does not prove stability below divergence.",
+          "Yield or large-deformation screen failures invalidate physical predictions of this linear elastic model.",
+          "No buckling, plasticity, geometrically nonlinear equilibrium or flow separation is simulated."
+        ]
+      },
+      "flight": {
+        "velocity_m_s": 200.0,
+        "density_kg_m3": 1.225,
+        "sound_speed_m_s": 340.3,
+        "mach": 0.5877167205406993,
+        "dynamic_pressure_Pa": 24500.0,
+        "angle_of_attack_deg": 3,
+        "angle_of_attack_rad": 0.05235987755982989,
+        "sideslip_deg": 0.0
+      },
+      "case_manifest_sha256": "c4d7794596463d4ebed01cf1097027c5c6d3e14f51aea64e5021043802418ff2",
+      "display_vector_id": 9033,
+      "display_vector_title": "Plate Bot VonMises Stress",
+      "display_statistics": {
+        "element_count": 2915,
+        "units": "Pa",
+        "minimum": {
+          "element_id": 2913,
+          "value": 1347948.25,
+          "MPa": 1.34794825
+        },
+        "maximum": {
+          "element_id": 1405,
+          "value": 369270720.0,
+          "MPa": 369.27072
+        },
+        "maximum_absolute": {
+          "element_id": 1405,
+          "value": 369270720.0,
+          "MPa": 369.27072
+        }
+      },
+      "von_mises_stress_fibers": {
+        "top": {
+          "vector_id": 7033,
+          "vector_title": "Plate Top VonMises Stress",
+          "element_count": 2915,
+          "units": "Pa",
+          "minimum": {
+            "element_id": 2823,
+            "value": 459983.8125,
+            "MPa": 0.4599838125
+          },
+          "maximum": {
+            "element_id": 1405,
+            "value": 391235328.0,
+            "MPa": 391.235328
+          },
+          "maximum_absolute": {
+            "element_id": 1405,
+            "value": 391235328.0,
+            "MPa": 391.235328
+          }
+        },
+        "bottom": {
+          "vector_id": 9033,
+          "vector_title": "Plate Bot VonMises Stress",
+          "element_count": 2915,
+          "units": "Pa",
+          "minimum": {
+            "element_id": 2913,
+            "value": 1347948.25,
+            "MPa": 1.34794825
+          },
+          "maximum": {
+            "element_id": 1405,
+            "value": 369270720.0,
+            "MPa": 369.27072
+          },
+          "maximum_absolute": {
+            "element_id": 1405,
+            "value": 369270720.0,
+            "MPa": 369.27072
+          }
+        }
+      }
+    },
+    {
+      "aoa_deg": 4,
+      "output_set_id": 2,
+      "output_set_title": "200 m/s | AOA 4 deg | Part 2 | LINEAR SOL144",
+      "vector_id": 7071,
+      "vector_title": "Plate Top MajorPrn Strain",
+      "imported_vector_count": 70,
+      "source_op2": "workspace/BWB/speed_200/run_01/aoa_04/part_2/bwb_sol144.op2",
+      "source_op2_sha256": "2c9f61adcd5041666be92b52b1d04ec4817ecd319d84979a7250ee0cad55462c",
+      "source_run_summary_sha256": "c3e49c265e304948650091374941d2eecd773ed0b3e85719764ee192b9bce6c5",
+      "source_case": "BWB/cases/speed_200/aoa_04/part_2",
+      "original_solver_status": "completed_with_runtime_errors",
+      "runtime_diagnostics": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "solver_completed": true,
+      "fresh_f06": true,
+      "strain_statistics": {
+        "element_count": 2915,
+        "units": "m/m",
+        "minimum": {
+          "element_id": 1348,
+          "strain": -0.0025726701132953167,
+          "microstrain": -2572.6701132953167
+        },
+        "maximum": {
+          "element_id": 1405,
+          "strain": 0.006608042865991592,
+          "microstrain": 6608.042865991592
+        },
+        "maximum_absolute": {
+          "element_id": 1405,
+          "strain": 0.006608042865991592,
+          "microstrain": 6608.042865991592
+        }
+      },
+      "output_set_notes": "Angle of attack = 4 degrees. Output-set value records AOA in degrees.\nImported actual OP2: workspace/BWB/speed_200/run_01/aoa_04/part_2/bwb_sol144.op2\nOriginal solver status: completed_with_runtime_errors.\nIntel MKL ERROR: Parameter 13 was incorrect on en",
+      "physical_review": {
+        "case_review": "BWB/results/speed_200/aoa_04/part_2/case_review.json",
+        "case_review_sha256": "073144921cd849327e8adbfeca6de47f2bc4dbbe7a7930ea9e9aa6794a4e08bc",
+        "reasonableness": "BWB/results/speed_200/aoa_04/part_2/reasonableness.json",
+        "reasonableness_sha256": "52f44fe6a5d2238a80452a789525749aff39ffc43a5ad66560b7f980ceab98a8",
+        "status": "linear_result_exceeds_model_screens",
+        "result_integrity_checks_pass": true,
+        "linear_physics_screens_pass": false,
+        "failed_physical_screens": [
+          "small_translation",
+          "small_rotation",
+          "below_assumed_yield"
+        ],
+        "max_translation_m": 0.10961800581424842,
+        "max_translation_over_reference_span": 0.12596468191988794,
+        "max_rotation_deg": 27.19237715635913,
+        "assumed_yield_MPa": 200.0,
+        "peak_von_mises_MPa_from_F06_strains": 449.35744920865045,
+        "limitations": [
+          "A finite linear solution does not prove stability below divergence.",
+          "Yield or large-deformation screen failures invalidate physical predictions of this linear elastic model.",
+          "No buckling, plasticity, geometrically nonlinear equilibrium or flow separation is simulated."
+        ]
+      },
+      "flight": {
+        "velocity_m_s": 200.0,
+        "density_kg_m3": 1.225,
+        "sound_speed_m_s": 340.3,
+        "mach": 0.5877167205406993,
+        "dynamic_pressure_Pa": 24500.0,
+        "angle_of_attack_deg": 4,
+        "angle_of_attack_rad": 0.06981317007977318,
+        "sideslip_deg": 0.0
+      },
+      "case_manifest_sha256": "1c1e6b2ae49701410f7d812213b8bf853eef24701ab651b7046f23a57b0cd524",
+      "display_vector_id": 9033,
+      "display_vector_title": "Plate Bot VonMises Stress",
+      "display_statistics": {
+        "element_count": 2915,
+        "units": "Pa",
+        "minimum": {
+          "element_id": 2913,
+          "value": 1566959.0,
+          "MPa": 1.566959
+        },
+        "maximum": {
+          "element_id": 2329,
+          "value": 428023136.0,
+          "MPa": 428.023136
+        },
+        "maximum_absolute": {
+          "element_id": 2329,
+          "value": 428023136.0,
+          "MPa": 428.023136
+        }
+      },
+      "von_mises_stress_fibers": {
+        "top": {
+          "vector_id": 7033,
+          "vector_title": "Plate Top VonMises Stress",
+          "element_count": 2915,
+          "units": "Pa",
+          "minimum": {
+            "element_id": 2823,
+            "value": 444409.59375,
+            "MPa": 0.44440959375
+          },
+          "maximum": {
+            "element_id": 1405,
+            "value": 449357440.0,
+            "MPa": 449.35744
+          },
+          "maximum_absolute": {
+            "element_id": 1405,
+            "value": 449357440.0,
+            "MPa": 449.35744
+          }
+        },
+        "bottom": {
+          "vector_id": 9033,
+          "vector_title": "Plate Bot VonMises Stress",
+          "element_count": 2915,
+          "units": "Pa",
+          "minimum": {
+            "element_id": 2913,
+            "value": 1566959.0,
+            "MPa": 1.566959
+          },
+          "maximum": {
+            "element_id": 2329,
+            "value": 428023136.0,
+            "MPa": 428.023136
+          },
+          "maximum_absolute": {
+            "element_id": 2329,
+            "value": 428023136.0,
+            "MPa": 428.023136
+          }
+        }
+      }
+    },
+    {
+      "aoa_deg": 5,
+      "output_set_id": 3,
+      "output_set_title": "200 m/s | AOA 5 deg | Part 2 | LINEAR SOL144",
+      "vector_id": 7071,
+      "vector_title": "Plate Top MajorPrn Strain",
+      "imported_vector_count": 70,
+      "source_op2": "workspace/BWB/speed_200/run_01/aoa_05/part_2/bwb_sol144.op2",
+      "source_op2_sha256": "7707cec734163b21386fcc70d12c010fa431df95b9d5788cff9f2ec9b8a291f0",
+      "source_run_summary_sha256": "bff384d5ae36fb248f88dcb93c84fbbde101d59bf1b84f39a264cd92c26e7e01",
+      "source_case": "BWB/cases/speed_200/aoa_05/part_2",
+      "original_solver_status": "completed_with_runtime_errors",
+      "runtime_diagnostics": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "solver_completed": true,
+      "fresh_f06": true,
+      "strain_statistics": {
+        "element_count": 2915,
+        "units": "m/m",
+        "minimum": {
+          "element_id": 1372,
+          "strain": -0.0028894362039864063,
+          "microstrain": -2889.4362039864063
+        },
+        "maximum": {
+          "element_id": 1405,
+          "strain": 0.007454014848917723,
+          "microstrain": 7454.014848917723
+        },
+        "maximum_absolute": {
+          "element_id": 1405,
+          "strain": 0.007454014848917723,
+          "microstrain": 7454.014848917723
+        }
+      },
+      "output_set_notes": "Angle of attack = 5 degrees. Output-set value records AOA in degrees.\nImported actual OP2: workspace/BWB/speed_200/run_01/aoa_05/part_2/bwb_sol144.op2\nOriginal solver status: completed_with_runtime_errors.\nIntel MKL ERROR: Parameter 13 was incorrect on en",
+      "physical_review": {
+        "case_review": "BWB/results/speed_200/aoa_05/part_2/case_review.json",
+        "case_review_sha256": "c1e5318fcd92f36b54614e84f80c01b8b1b0e2eeff9a691d0048c5a81e5b9c9f",
+        "reasonableness": "BWB/results/speed_200/aoa_05/part_2/reasonableness.json",
+        "reasonableness_sha256": "d4e5247547bf222200c3dd1000c5c7bad5c48cdc737823aa56d1da57bc45a629",
+        "status": "linear_result_exceeds_model_screens",
+        "result_integrity_checks_pass": true,
+        "linear_physics_screens_pass": false,
+        "failed_physical_screens": [
+          "small_translation",
+          "small_rotation",
+          "below_assumed_yield"
+        ],
+        "max_translation_m": 0.12921311055082607,
+        "max_translation_over_reference_span": 0.14848188716363683,
+        "max_rotation_deg": 31.05114910967581,
+        "assumed_yield_MPa": 200.0,
+        "peak_von_mises_MPa_from_F06_strains": 507.62163588558997,
+        "limitations": [
+          "A finite linear solution does not prove stability below divergence.",
+          "Yield or large-deformation screen failures invalidate physical predictions of this linear elastic model.",
+          "No buckling, plasticity, geometrically nonlinear equilibrium or flow separation is simulated."
+        ]
+      },
+      "flight": {
+        "velocity_m_s": 200.0,
+        "density_kg_m3": 1.225,
+        "sound_speed_m_s": 340.3,
+        "mach": 0.5877167205406993,
+        "dynamic_pressure_Pa": 24500.0,
+        "angle_of_attack_deg": 5,
+        "angle_of_attack_rad": 0.08726646259971647,
+        "sideslip_deg": 0.0
+      },
+      "case_manifest_sha256": "3133eefabfb62eed03898ac5d9966b4ae7d311efc2a538c4849145b4c7b42903",
+      "display_vector_id": 9033,
+      "display_vector_title": "Plate Bot VonMises Stress",
+      "display_statistics": {
+        "element_count": 2915,
+        "units": "Pa",
+        "minimum": {
+          "element_id": 2913,
+          "value": 1787312.625,
+          "MPa": 1.787312625
+        },
+        "maximum": {
+          "element_id": 2305,
+          "value": 501405792.0,
+          "MPa": 501.405792
+        },
+        "maximum_absolute": {
+          "element_id": 2305,
+          "value": 501405792.0,
+          "MPa": 501.405792
+        }
+      },
+      "von_mises_stress_fibers": {
+        "top": {
+          "vector_id": 7033,
+          "vector_title": "Plate Top VonMises Stress",
+          "element_count": 2915,
+          "units": "Pa",
+          "minimum": {
+            "element_id": 2823,
+            "value": 463863.625,
+            "MPa": 0.463863625
+          },
+          "maximum": {
+            "element_id": 1405,
+            "value": 507621664.0,
+            "MPa": 507.621664
+          },
+          "maximum_absolute": {
+            "element_id": 1405,
+            "value": 507621664.0,
+            "MPa": 507.621664
+          }
+        },
+        "bottom": {
+          "vector_id": 9033,
+          "vector_title": "Plate Bot VonMises Stress",
+          "element_count": 2915,
+          "units": "Pa",
+          "minimum": {
+            "element_id": 2913,
+            "value": 1787312.625,
+            "MPa": 1.787312625
+          },
+          "maximum": {
+            "element_id": 2305,
+            "value": 501405792.0,
+            "MPa": 501.405792
+          },
+          "maximum_absolute": {
+            "element_id": 2305,
+            "value": 501405792.0,
+            "MPa": 501.405792
+          }
+        }
+      }
+    },
+    {
+      "aoa_deg": 6,
+      "output_set_id": 4,
+      "output_set_title": "200 m/s | AOA 6 deg | Part 2 | LINEAR SOL144",
+      "vector_id": 7071,
+      "vector_title": "Plate Top MajorPrn Strain",
+      "imported_vector_count": 70,
+      "source_op2": "workspace/BWB/speed_200/run_01/aoa_06/part_2/bwb_sol144.op2",
+      "source_op2_sha256": "72ec02481d98afa95c42702f4fc888563d57f929f93e40bc48a464264d4c45dd",
+      "source_run_summary_sha256": "e98a5a3b6bb3f55e0b94c53b4fb3f4749010767d715a0de74741672a3a3d0d3c",
+      "source_case": "BWB/cases/speed_200/aoa_06/part_2",
+      "original_solver_status": "completed_with_runtime_errors",
+      "runtime_diagnostics": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "solver_completed": true,
+      "fresh_f06": true,
+      "strain_statistics": {
+        "element_count": 2915,
+        "units": "m/m",
+        "minimum": {
+          "element_id": 1372,
+          "strain": -0.0033190902322530746,
+          "microstrain": -3319.0902322530746
+        },
+        "maximum": {
+          "element_id": 1405,
+          "strain": 0.008300176821649075,
+          "microstrain": 8300.176821649075
+        },
+        "maximum_absolute": {
+          "element_id": 1405,
+          "strain": 0.008300176821649075,
+          "microstrain": 8300.176821649075
+        }
+      },
+      "output_set_notes": "Angle of attack = 6 degrees. Output-set value records AOA in degrees.\nImported actual OP2: workspace/BWB/speed_200/run_01/aoa_06/part_2/bwb_sol144.op2\nOriginal solver status: completed_with_runtime_errors.\nIntel MKL ERROR: Parameter 13 was incorrect on en",
+      "physical_review": {
+        "case_review": "BWB/results/speed_200/aoa_06/part_2/case_review.json",
+        "case_review_sha256": "db37176b486637fdcd1a2c6c92d797b9130525261d69a73a750cf4ae46da02ca",
+        "reasonableness": "BWB/results/speed_200/aoa_06/part_2/reasonableness.json",
+        "reasonableness_sha256": "ed3d71b4ca7e01448573ee21c06a8a793f2a3e85b63707c35fae34860cb0f840",
+        "status": "linear_result_exceeds_model_screens",
+        "result_integrity_checks_pass": true,
+        "linear_physics_screens_pass": false,
+        "failed_physical_screens": [
+          "small_translation",
+          "small_rotation",
+          "below_assumed_yield"
+        ],
+        "max_translation_m": 0.14880841987398596,
+        "max_translation_over_reference_span": 0.1709993275027386,
+        "max_rotation_deg": 34.91088617686757,
+        "assumed_yield_MPa": 200.0,
+        "peak_von_mises_MPa_from_F06_strains": 574.8895870556006,
+        "limitations": [
+          "A finite linear solution does not prove stability below divergence.",
+          "Yield or large-deformation screen failures invalidate physical predictions of this linear elastic model.",
+          "No buckling, plasticity, geometrically nonlinear equilibrium or flow separation is simulated."
+        ]
+      },
+      "flight": {
+        "velocity_m_s": 200.0,
+        "density_kg_m3": 1.225,
+        "sound_speed_m_s": 340.3,
+        "mach": 0.5877167205406993,
+        "dynamic_pressure_Pa": 24500.0,
+        "angle_of_attack_deg": 6,
+        "angle_of_attack_rad": 0.10471975511965978,
+        "sideslip_deg": 0.0
+      },
+      "case_manifest_sha256": "8c8cec2042b5ee677752e6b4856292ad0e4eaec14770a1dd70f9b1f139260fa7",
+      "display_vector_id": 9033,
+      "display_vector_title": "Plate Bot VonMises Stress",
+      "display_statistics": {
+        "element_count": 2915,
+        "units": "Pa",
+        "minimum": {
+          "element_id": 2913,
+          "value": 2008567.25,
+          "MPa": 2.00856725
+        },
+        "maximum": {
+          "element_id": 2305,
+          "value": 574889536.0,
+          "MPa": 574.889536
+        },
+        "maximum_absolute": {
+          "element_id": 2305,
+          "value": 574889536.0,
+          "MPa": 574.889536
+        }
+      },
+      "von_mises_stress_fibers": {
+        "top": {
+          "vector_id": 7033,
+          "vector_title": "Plate Top VonMises Stress",
+          "element_count": 2915,
+          "units": "Pa",
+          "minimum": {
+            "element_id": 2827,
+            "value": 442960.28125,
+            "MPa": 0.44296028125
+          },
+          "maximum": {
+            "element_id": 1405,
+            "value": 565984128.0,
+            "MPa": 565.984128
+          },
+          "maximum_absolute": {
+            "element_id": 1405,
+            "value": 565984128.0,
+            "MPa": 565.984128
+          }
+        },
+        "bottom": {
+          "vector_id": 9033,
+          "vector_title": "Plate Bot VonMises Stress",
+          "element_count": 2915,
+          "units": "Pa",
+          "minimum": {
+            "element_id": 2913,
+            "value": 2008567.25,
+            "MPa": 2.00856725
+          },
+          "maximum": {
+            "element_id": 2305,
+            "value": 574889536.0,
+            "MPa": 574.889536
+          },
+          "maximum_absolute": {
+            "element_id": 2305,
+            "value": 574889536.0,
+            "MPa": 574.889536
+          }
+        }
+      }
+    }
+  ],
+  "entity_counts": {
+    "nodes": 2940,
+    "elements": 2915,
+    "aero_panels": 11,
+    "aero_splines": 11
+  },
+  "independent_result_sets": 4,
+  "all_prior_result_samples_preserved": true,
+  "reviewed_empty_matrix_diagnostic_allowed": true,
+  "diagnostic_policy": "Original statuses retained; only the explicitly reviewed DGEMM parameter 13 and launcher 1 pair can bypass the clean-status gate",
+  "default_display": {
+    "aoa_deg": 6,
+    "velocity_m_s": 200.0,
+    "id": 1,
+    "result_set": 4,
+    "vector_id": 9033,
+    "vector_title": "Plate Bot VonMises Stress",
+    "contour_on": true,
+    "unaveraged_element_contour": true,
+    "deformation_display": false,
+    "units": "Pa",
+    "shell_side_note": "Top/Bottom follow positive/negative shell-normal fibers, not aircraft upper/lower skins."
+  },
+  "persistence_check": {
+    "reopened_from_disk": true,
+    "all_four_sets_in_femap_database": true,
+    "all_four_labels_and_strain_samples_retained": true,
+    "all_four_display_samples_retained": true,
+    "all_four_applicability_notes_retained": true,
+    "default_aoa_6_scalar_contour_retained": true
+  },
+  "source_model_unchanged": true,
+  "source_op2_files_unchanged": true,
+  "analysis_deck_exported": false,
+  "velocity_m_s": 200.0,
+  "linear_solution_only": true,
+  "applicability_note": "LINEAR SOL144 RESULT ONLY. Linear elastic material and small-displacement structural theory; no plasticity, geometric nonlinearity, or failure prediction. A strength or deformation screen may invalidate physical interpretation without deleting this computed field.",
+  "physical_screen_is_not_an_import_gate": true,
+  "runtime_diagnostic_review": {
+    "path": "BWB/results/speed_200/runtime_diagnostic_review.json",
+    "sha256": "904054cba10515b48bacbf0b888fa31101416807a00baf46348834fb1656bf92",
+    "status": "at_speed_empty_output_call_reviewed; raw runtime diagnostic retained",
+    "scope": "Directly traced at 200 m/s, AOA 6, part 1. Other seven cases share solver, Mach, q, trim-variable count and error signature but were not individually verbose-traced.",
+    "limitations": "Numerical repeatability does not validate large deformation, yielding, flow separation, buckling or divergence stability."
+  },
+  "stress_unit_conversion": "Native stress values are Pa; MPa = Pa / 1000000.",
+  "shell_fiber_convention": "Top/Bottom follow the shell normal, not aircraft upper/lower skins.",
+  "default_result_kind": "bottom-vonmises-stress",
+  "all_imported_op2_vectors_retained": true,
+  "result_model_sha256": "0011883cdecf55efe60eef16a666a8274f879a5fc2fd027cc8ee447e5c5e6979"
+}

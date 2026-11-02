@@ -25,6 +25,8 @@ except ImportError:
     from check_aero_panels import grouped_cards, read_aero_geometry
 
 ROOT = Path(__file__).resolve().parents[2]
+PRINT_ABSOLUTE_FLOOR = 1e-10
+PRINT_ARITHMETIC_RTOL = 128 * np.finfo(float).eps
 
 
 def require(condition, message):
@@ -47,8 +49,57 @@ def shift_moment(moment_about_zero, force, new_origin):
     return np.asarray(moment_about_zero) - np.cross(new_origin, force)
 
 
-def read_load_tables(path):
+def printed_roundoff(token):
+    """Half the last printed decimal place, retaining each F06 token's exponent."""
+    token = token.strip().upper().replace("D", "E")
+    if "E" not in token:
+        token = re.sub(r"(?<=[0-9.])([+-]\d+)$", r"E\1", token)
+    match = re.fullmatch(r"[+-]?(\d*\.?\d+|\d+\.)(?:E([+-]?\d+))?", token)
+    require(match is not None and math.isfinite(nastran_float(token)),
+            f"Unrecognized finite printed number: {token}")
+    mantissa, exponent = match.group(1), int(match.group(2) or 0)
+    decimals = len(mantissa.split(".")[1]) if "." in mantissa else 0
+    return .5 * 10. ** (exponent - decimals)
+
+
+def print_tolerance(propagated_roundoff, magnitude):
+    """Printed-data uncertainty plus a small absolute and arithmetic-relative floor."""
+    return (np.asarray(propagated_roundoff) + PRINT_ABSOLUTE_FLOOR
+            + PRINT_ARITHMETIC_RTOL * np.asarray(magnitude))
+
+
+def cross_magnitude_bound(a, b):
+    """Componentwise |a cross b| bound without cancellation; also propagates errors."""
+    a, b = np.abs(a), np.abs(b)
+    return np.array([a[1] * b[2] + a[2] * b[1],
+                     a[2] * b[0] + a[0] * b[2],
+                     a[0] * b[1] + a[1] * b[0]])
+
+
+def pressure_consistency(coefficient, pressure, q, coefficient_roundoff, pressure_roundoff):
+    residual = abs(pressure - q * coefficient)
+    tolerance = float(print_tolerance(pressure_roundoff + abs(q) * coefficient_roundoff,
+                                      abs(pressure) + abs(q * coefficient)))
+    return residual, tolerance
+
+
+def reaction_consistency(points, values, roundoff, listed, listed_roundoff):
+    """Propagate printed nodal force/moment uncertainty through their resultant sum."""
+    total, budget, magnitude = np.zeros(6), np.zeros(6), np.zeros(6)
+    for point, row, error in zip(points, values, roundoff):
+        total[:3] += row[:3]
+        total[3:] += row[3:] + np.cross(point, row[:3])
+        budget[:3] += error[:3]
+        budget[3:] += error[3:] + cross_magnitude_bound(point, error[:3])
+        magnitude[:3] += np.abs(row[:3])
+        magnitude[3:] += np.abs(row[3:]) + cross_magnitude_bound(point, row[:3])
+    tolerance = print_tolerance(budget + listed_roundoff, magnitude + np.abs(listed))
+    return total - listed, tolerance
+
+
+def read_load_tables(path, include_precision=False):
     pressures, resultants, reactions = {}, {}, {}
+    precision = {"pressures": {}, "resultants": {}, "reactions": {}}
     section, subcase, ended = None, None, False
     with Path(path).open(errors="replace") as stream:
         for line in stream:
@@ -72,16 +123,21 @@ def read_load_tables(path):
                 key = (subcase, int(values[4]))
                 require(key not in pressures, f"Duplicate aerodynamic pressure {key}")
                 pressures[key] = (nastran_float(values[2]), nastran_float(values[3]))
+                precision["pressures"][key] = tuple(printed_roundoff(v) for v in values[2:4])
             elif section == "resultant" and values[:1] == ["TOTALS"]:
                 require(subcase is not None and subcase not in resultants and len(values) == 7,
                         "Unrecognized or duplicated SPCFORCE resultant")
                 resultants[subcase] = np.array([nastran_float(v) for v in values[1:]])
+                precision["resultants"][subcase] = np.array([printed_roundoff(v) for v in values[1:]])
                 section = None
             elif section == "spc" and len(values) == 8 and values[0].isdigit() and values[1] == "G":
                 key = (subcase, int(values[0]))
                 require(subcase is not None and key not in reactions, f"Duplicate/unidentified SPCFORCE row {key}")
                 reactions[key] = np.array([nastran_float(v) for v in values[2:]])
+                precision["reactions"][key] = np.array([printed_roundoff(v) for v in values[2:]])
     require(ended and pressures and resultants and reactions, "Incomplete APRES/SPCFORCE/end-of-job output")
+    if include_precision:
+        return pressures, resultants, reactions, precision
     return pressures, resultants, reactions
 
 
@@ -162,7 +218,7 @@ def check(case_dir, export_dir, part_index, job_name="bwb_sol144", yield_mpa=200
     alpha_index = trim[0].index("ANGLEA")
     alpha = nastran_float(trim[0][alpha_index + 1])
     require(dynamic_pressure > 0, "Nonpositive dynamic pressure")
-    pressures, resultants, reactions = read_load_tables(f06)
+    pressures, resultants, reactions, precision = read_load_tables(f06, include_precision=True)
     subcases = sorted(resultants)
     require(set(pressures) == {(s, b) for s in subcases for b in boxes}, "APRES box/subcase coverage is incomplete")
     require(set(reactions) == {(s, n) for s in subcases for n in root_nodes}, "SPCFORCE root/subcase coverage differs")
@@ -180,22 +236,31 @@ def check(case_dir, export_dir, part_index, job_name="bwb_sol144", yield_mpa=200
     reports = []
     for subcase in subcases:
         force, moment = np.zeros(3), np.zeros(3)
-        max_cp_error = 0.
+        cp_checks = []
         for bid, box in boxes.items():
             coefficient, pressure = pressures[(subcase, bid)]
-            max_cp_error = max(max_cp_error, abs(pressure - dynamic_pressure * coefficient))
+            error, tolerance = pressure_consistency(coefficient, pressure, dynamic_pressure,
+                                                     *precision["pressures"][(subcase, bid)])
+            cp_checks.append((error, tolerance, bid))
             load = pressure * box["area_m2"] * np.array(box["normal"])
             force += load
             moment += np.cross(box["pressure_point"], load)
-        require(max_cp_error <= 1e-3, "APRES pressure is inconsistent with q times Cp")
-        reaction_force, reaction_moment = np.zeros(3), np.zeros(3)
-        for nid in root_nodes:
-            values = reactions[(subcase, nid)]
-            reaction_force += values[:3]
-            reaction_moment += values[3:] + np.cross(model["nodes"][nid]["xyz"], values[:3])
+        max_cp_error, max_cp_tolerance, max_cp_box = max(cp_checks, key=lambda row: row[0])
+        worst_cp = max(cp_checks, key=lambda row: row[0] / row[1])
+        require(worst_cp[0] <= worst_cp[1],
+                f"APRES pressure is inconsistent with q times Cp: box {worst_cp[2]}, "
+                f"error {worst_cp[0]:.8g} Pa exceeds printed-roundoff tolerance {worst_cp[1]:.8g} Pa")
         listed = resultants[subcase]
-        nodal_vs_listed = float(np.max(abs(np.r_[reaction_force, reaction_moment] - listed)))
-        require(nodal_vs_listed < 1e-4, "Nodal root reactions do not reproduce printed SPCFORCE resultant")
+        node_order = sorted(root_nodes)
+        nodal_difference, nodal_tolerance = reaction_consistency(
+            [model["nodes"][nid]["xyz"] for nid in node_order],
+            [reactions[(subcase, nid)] for nid in node_order],
+            [precision["reactions"][(subcase, nid)] for nid in node_order],
+            listed, precision["resultants"][subcase])
+        nodal_vs_listed = float(np.max(abs(nodal_difference)))
+        require(np.all(abs(nodal_difference) <= nodal_tolerance),
+                "Nodal root reactions do not reproduce printed SPCFORCE resultant: "
+                f"component residuals {nodal_difference.tolist()}, tolerances {nodal_tolerance.tolist()} (N, N m)")
         root_moment = shift_moment(moment, force, root_origin)
         reaction_root_moment = shift_moment(listed[3:], listed[:3], root_origin)
         force_error = float(np.linalg.norm(force + listed[:3]))
@@ -250,6 +315,18 @@ def check(case_dir, export_dir, part_index, job_name="bwb_sol144", yield_mpa=200
             moment_balance_error_Nm=moment_error, moment_balance_relative=moment_relative,
             nodal_vs_listed_spc_max_abs_component_difference=nodal_vs_listed,
             max_pressure_vs_qCp_error_Pa=max_cp_error,
+            printed_output_consistency=dict(
+                pressure_at_max_error_box_id=max_cp_box,
+                pressure_tolerance_at_max_error_Pa=max_cp_tolerance,
+                pressure_max_error_over_tolerance=worst_cp[0] / worst_cp[1],
+                pressure_worst_ratio_box_id=worst_cp[2],
+                pressure_worst_ratio_error_Pa=worst_cp[0],
+                pressure_worst_ratio_tolerance_Pa=worst_cp[1],
+                nodal_minus_listed_force_N=nodal_difference[:3].tolist(),
+                nodal_force_tolerance_N=nodal_tolerance[:3].tolist(),
+                nodal_minus_listed_moment_Nm=nodal_difference[3:].tolist(),
+                nodal_moment_tolerance_Nm=nodal_tolerance[3:].tolist(),
+                nodal_max_error_over_tolerance=float(np.max(abs(nodal_difference) / nodal_tolerance))),
             max_translation_m=max_displacement, max_translation_over_reference_span=max_displacement / span,
             max_rotation_rad=max_rotation, max_rotation_deg=math.degrees(max_rotation), max_abs_root_dof=root_dof,
             von_mises_by_surface={surface: dict(peak_MPa=value / 1e6, element_id=eid) for surface, (value, eid) in vm.items()},
@@ -263,6 +340,11 @@ def check(case_dir, export_dir, part_index, job_name="bwb_sol144", yield_mpa=200
         source_f06_sha256=digest(f06), export_summary_sha256=digest(summary_path),
         aero_manifest_sha256=digest(manifest_path), pressure_boxes_per_subcase=len(boxes), root_reaction_nodes=len(root_nodes),
         material=dict(young_modulus_Pa=young, poisson_ratio=poisson, assumed_yield_MPa=yield_mpa),
+        printed_output_tolerance_policy=dict(
+            method="Half each F06 token's last printed digit, propagated through q*Cp and sums of forces/moments including moment arms; absolute and floating-point arithmetic floors added.",
+            absolute_floor=PRINT_ABSOLUTE_FLOOR, arithmetic_relative_floor=PRINT_ARITHMETIC_RTOL,
+            units="Comparison-specific: Pa for pressure, N for force, N m for moment.",
+            physical_screen_thresholds_unchanged=True),
         rough_finite_wing=dict(reference_area_m2=area, reference_span_m=span, aspect_ratio=aspect_ratio,
             slope_per_rad=slope, formula="a=2*pi*AR/(2+sqrt(4+AR^2)); L=q*S*a*alpha",
             dynamic_pressure_Pa=dynamic_pressure, alpha_deg=math.degrees(alpha), estimated_lift_N=rough_lift,

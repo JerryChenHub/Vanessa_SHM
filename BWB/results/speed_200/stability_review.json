@@ -1,0 +1,570 @@
+{
+  "schema_version": 1,
+  "status": "linear_response_computed; aeroelastic_stability_not_assessed",
+  "review_scope": "Read-only review of the eight existing 200 m/s SOL144 response runs; no solver or divergence analysis was started for this review.",
+  "operating_point": {
+    "velocity_m_s": 200.0,
+    "density_kg_m3": 1.225,
+    "mach": 0.5877167205406993,
+    "dynamic_pressure_Pa": 24500.0
+  },
+  "findings": [
+    "All eight runs contain a nonzero aerodynamic stiffness contribution and factorization of the unsymmetric effective stiffness KSALL. This supports that the aeroelastic response equations were solved at the requested operating point.",
+    "Successful decomposition, no Nastran fatal, and a zero structural-singularity count do not establish that the operating point lies below the first positive aeroelastic divergence pressure. A nonsingular linear response can also exist beyond a stability boundary.",
+    "The effective matrix is unsymmetric. Zero diagonals, generic pivot signs, or the presence of factors are not a standalone positive-stiffness or aeroelastic-stability certificate.",
+    "No DIVERG eigenanalysis was requested in these inputs, and no critical divergence pressure or stability margin has been computed. The F06 structural singularity message is not a divergence eigenvalue result.",
+    "Every current case fails the existing small-translation, small-rotation and assumed-yield coarse screens. These failures already limit interpretation of the linear response; they do not by themselves identify static divergence.",
+    "The known MKL diagnostic and launcher return code remain recorded. Completion and load balance must not be relabeled as stability validation."
+  ],
+  "stability_method_reference": {
+    "method": "A separate SOL144 DIVERG request, selected through Case Control and paired with CMETHOD/EIGC, computes divergence dynamic-pressure eigenvalues for specified Mach numbers. The lowest positive root is the critical static-divergence pressure.",
+    "not_performed_in_this_task": true,
+    "manuals": [
+      {
+        "path": "D:/Siemens/Femap 2406/nastranhelp/pdf/aero.pdf",
+        "title": "Simcenter Nastran Aeroelastic Analysis User's Guide, Femap2406",
+        "pdf_pages": [
+          75,
+          76
+        ],
+        "printed_pages": [
+          "1-61",
+          "1-62"
+        ],
+        "topic": "Restrained-component divergence eigenproblem and interpretation of its lowest positive dynamic-pressure root"
+      },
+      {
+        "path": "D:/Siemens/Femap 2406/nastranhelp/pdf/aero.pdf",
+        "title": "Simcenter Nastran Aeroelastic Analysis User's Guide, Femap2406",
+        "pdf_pages": [
+          148,
+          149
+        ],
+        "printed_pages": [
+          "2-22",
+          "2-23"
+        ],
+        "topic": "SOL144 DIVERG, CMETHOD and EIGC organization"
+      },
+      {
+        "path": "D:/Siemens/Femap 2406/nastranhelp/pdf/QRG.pdf",
+        "title": "Simcenter Nastran Quick Reference Guide, Femap2406",
+        "pdf_pages": [
+          323,
+          1689
+        ],
+        "printed_pages": [
+          "4-127",
+          "13-31"
+        ],
+        "topic": "DIVERG Case Control and Bulk Data entries; requested lowest divergence pressures"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "aoa_deg": 3,
+      "part": 1,
+      "source_run": "workspace/BWB/speed_200/run_01/aoa_03/part_1",
+      "f04_sha256": "baea54c8a01d945211a3261df845dd8663d53f28813e4740a7e93bcc6abb59ae",
+      "f06_sha256": "ae036eca8b95c22cd86aba4c7e0a27aa9e87e9fde81e9f28515465cd19abe5cb",
+      "f04_effective_stiffness_evidence": [
+        {
+          "line": 743,
+          "text": "MPYAD   247  KALL          17346      17346  1 1       420 5.86273E-04      11     2      88200        409      16892     16926 *8**"
+        },
+        {
+          "line": 746,
+          "text": "ADD5    248  KSALL         17346      17346  1 1       472 3.66456E-03      41     7     144798       1217      17043         0 *8**"
+        },
+        {
+          "line": 751,
+          "text": "PARAMETERS FOR PARALLEL SPARSE UNSYM. DECOMP OF DATA BLOCK  KSALL   ( TYPE=RSP ) FOLLOW"
+        },
+        {
+          "line": 752,
+          "text": "MATRIX SIZE =    17346 ROWS            NUMBER OF NONZEROES =     1085320 TERMS"
+        },
+        {
+          "line": 753,
+          "text": "NUMBER OF ZERO COLUMNS =        0       NUMBER OF ZERO DIAGONAL TERMS =           0"
+        },
+        {
+          "line": 767,
+          "text": "DECOMP  249  LSALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        },
+        {
+          "line": 768,
+          "text": "DECOMP  249  USALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        }
+      ],
+      "f06_structural_singularity_diagnostic": [
+        {
+          "line": 277,
+          "text": "***       0 SINGULARITIES FOUND         0 SINGULARITIES ELIMINATED"
+        }
+      ],
+      "nonzero_aerodynamic_stiffness_present": true,
+      "effective_stiffness_decomposition": "17346 x 17346 real unsymmetric KSALL; LSALL and USALL factors produced; zero-column and zero-diagonal counts are zero",
+      "divergence_analysis_requested": false,
+      "critical_divergence_dynamic_pressure_Pa": null,
+      "stable_at_operating_point": null,
+      "negative_effective_stiffness_assessed": false,
+      "raw_solver_status": "completed_with_runtime_errors",
+      "runtime_errors_retained": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "coarse_screens": {
+        "force_balance": true,
+        "moment_balance": true,
+        "root_fixed": true,
+        "small_translation": false,
+        "small_rotation": false,
+        "below_assumed_yield": false,
+        "same_lift_order_as_isolated_finite_wing": true
+      }
+    },
+    {
+      "aoa_deg": 3,
+      "part": 2,
+      "source_run": "workspace/BWB/speed_200/run_01/aoa_03/part_2",
+      "f04_sha256": "61cdd00592ad0ee53d26128fa0076eb5083f71db1ec85564e92ea70339c11698",
+      "f06_sha256": "b6fa0fc5e5f4f7e40af624fcb86e19589368a4de8b94b9a790efdcca7ea70536",
+      "f04_effective_stiffness_evidence": [
+        {
+          "line": 743,
+          "text": "MPYAD   247  KALL          17346      17346  1 1       420 5.86273E-04      11     2      88200        409      16892     16926 *8**"
+        },
+        {
+          "line": 746,
+          "text": "ADD5    248  KSALL         17346      17346  1 1       472 3.66456E-03      41     7     144798       1217      17043         0 *8**"
+        },
+        {
+          "line": 751,
+          "text": "PARAMETERS FOR PARALLEL SPARSE UNSYM. DECOMP OF DATA BLOCK  KSALL   ( TYPE=RSP ) FOLLOW"
+        },
+        {
+          "line": 752,
+          "text": "MATRIX SIZE =    17346 ROWS            NUMBER OF NONZEROES =     1085320 TERMS"
+        },
+        {
+          "line": 753,
+          "text": "NUMBER OF ZERO COLUMNS =        0       NUMBER OF ZERO DIAGONAL TERMS =           0"
+        },
+        {
+          "line": 767,
+          "text": "DECOMP  249  LSALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        },
+        {
+          "line": 768,
+          "text": "DECOMP  249  USALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        }
+      ],
+      "f06_structural_singularity_diagnostic": [
+        {
+          "line": 277,
+          "text": "***       0 SINGULARITIES FOUND         0 SINGULARITIES ELIMINATED"
+        }
+      ],
+      "nonzero_aerodynamic_stiffness_present": true,
+      "effective_stiffness_decomposition": "17346 x 17346 real unsymmetric KSALL; LSALL and USALL factors produced; zero-column and zero-diagonal counts are zero",
+      "divergence_analysis_requested": false,
+      "critical_divergence_dynamic_pressure_Pa": null,
+      "stable_at_operating_point": null,
+      "negative_effective_stiffness_assessed": false,
+      "raw_solver_status": "completed_with_runtime_errors",
+      "runtime_errors_retained": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "coarse_screens": {
+        "force_balance": true,
+        "moment_balance": true,
+        "root_fixed": true,
+        "small_translation": false,
+        "small_rotation": false,
+        "below_assumed_yield": false,
+        "same_lift_order_as_isolated_finite_wing": true
+      }
+    },
+    {
+      "aoa_deg": 4,
+      "part": 1,
+      "source_run": "workspace/BWB/speed_200/run_01/aoa_04/part_1",
+      "f04_sha256": "13b878b57bbb7a4faf0a2053ab1b921710afece99f271bbcb699c46a45415edf",
+      "f06_sha256": "bab3fedfe3a6bdda50e268af13b6061c7091a2c7742868f6e280deb433b4c37d",
+      "f04_effective_stiffness_evidence": [
+        {
+          "line": 743,
+          "text": "MPYAD   247  KALL          17346      17346  1 1       420 5.86273E-04      11     2      88200        409      16892     16926 *8**"
+        },
+        {
+          "line": 746,
+          "text": "ADD5    248  KSALL         17346      17346  1 1       472 3.66456E-03      41     7     144798       1217      17043         0 *8**"
+        },
+        {
+          "line": 751,
+          "text": "PARAMETERS FOR PARALLEL SPARSE UNSYM. DECOMP OF DATA BLOCK  KSALL   ( TYPE=RSP ) FOLLOW"
+        },
+        {
+          "line": 752,
+          "text": "MATRIX SIZE =    17346 ROWS            NUMBER OF NONZEROES =     1085320 TERMS"
+        },
+        {
+          "line": 753,
+          "text": "NUMBER OF ZERO COLUMNS =        0       NUMBER OF ZERO DIAGONAL TERMS =           0"
+        },
+        {
+          "line": 767,
+          "text": "DECOMP  249  LSALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        },
+        {
+          "line": 768,
+          "text": "DECOMP  249  USALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        }
+      ],
+      "f06_structural_singularity_diagnostic": [
+        {
+          "line": 277,
+          "text": "***       0 SINGULARITIES FOUND         0 SINGULARITIES ELIMINATED"
+        }
+      ],
+      "nonzero_aerodynamic_stiffness_present": true,
+      "effective_stiffness_decomposition": "17346 x 17346 real unsymmetric KSALL; LSALL and USALL factors produced; zero-column and zero-diagonal counts are zero",
+      "divergence_analysis_requested": false,
+      "critical_divergence_dynamic_pressure_Pa": null,
+      "stable_at_operating_point": null,
+      "negative_effective_stiffness_assessed": false,
+      "raw_solver_status": "completed_with_runtime_errors",
+      "runtime_errors_retained": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "coarse_screens": {
+        "force_balance": true,
+        "moment_balance": true,
+        "root_fixed": true,
+        "small_translation": false,
+        "small_rotation": false,
+        "below_assumed_yield": false,
+        "same_lift_order_as_isolated_finite_wing": true
+      }
+    },
+    {
+      "aoa_deg": 4,
+      "part": 2,
+      "source_run": "workspace/BWB/speed_200/run_01/aoa_04/part_2",
+      "f04_sha256": "a5e57395e222f258a7a70d45ad267061264fc6ea509f85dac40dade6545bbb66",
+      "f06_sha256": "a8ff198af7000a51d43029bc51eadd27ee5444fc10646994fa2f0d06dd2eb6c9",
+      "f04_effective_stiffness_evidence": [
+        {
+          "line": 742,
+          "text": "MPYAD   247  KALL          17346      17346  1 1       420 5.86273E-04      11     2      88200        409      16892     16926 *8**"
+        },
+        {
+          "line": 745,
+          "text": "ADD5    248  KSALL         17346      17346  1 1       472 3.66456E-03      41     7     144798       1217      17043         0 *8**"
+        },
+        {
+          "line": 750,
+          "text": "PARAMETERS FOR PARALLEL SPARSE UNSYM. DECOMP OF DATA BLOCK  KSALL   ( TYPE=RSP ) FOLLOW"
+        },
+        {
+          "line": 751,
+          "text": "MATRIX SIZE =    17346 ROWS            NUMBER OF NONZEROES =     1085320 TERMS"
+        },
+        {
+          "line": 752,
+          "text": "NUMBER OF ZERO COLUMNS =        0       NUMBER OF ZERO DIAGONAL TERMS =           0"
+        },
+        {
+          "line": 766,
+          "text": "DECOMP  249  LSALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        },
+        {
+          "line": 767,
+          "text": "DECOMP  249  USALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        }
+      ],
+      "f06_structural_singularity_diagnostic": [
+        {
+          "line": 277,
+          "text": "***       0 SINGULARITIES FOUND         0 SINGULARITIES ELIMINATED"
+        }
+      ],
+      "nonzero_aerodynamic_stiffness_present": true,
+      "effective_stiffness_decomposition": "17346 x 17346 real unsymmetric KSALL; LSALL and USALL factors produced; zero-column and zero-diagonal counts are zero",
+      "divergence_analysis_requested": false,
+      "critical_divergence_dynamic_pressure_Pa": null,
+      "stable_at_operating_point": null,
+      "negative_effective_stiffness_assessed": false,
+      "raw_solver_status": "completed_with_runtime_errors",
+      "runtime_errors_retained": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "coarse_screens": {
+        "force_balance": true,
+        "moment_balance": true,
+        "root_fixed": true,
+        "small_translation": false,
+        "small_rotation": false,
+        "below_assumed_yield": false,
+        "same_lift_order_as_isolated_finite_wing": true
+      }
+    },
+    {
+      "aoa_deg": 5,
+      "part": 1,
+      "source_run": "workspace/BWB/speed_200/run_01/aoa_05/part_1",
+      "f04_sha256": "2478347efc6e52f65dbaabba9d2b78888891822ae6ddcdcc117e350f2e628b80",
+      "f06_sha256": "6d5a2e0ff63998c1669045665309141db71177947d2e621cafbbe64e87c55517",
+      "f04_effective_stiffness_evidence": [
+        {
+          "line": 743,
+          "text": "MPYAD   247  KALL          17346      17346  1 1       420 5.86273E-04      11     2      88200        409      16892     16926 *8**"
+        },
+        {
+          "line": 746,
+          "text": "ADD5    248  KSALL         17346      17346  1 1       472 3.66456E-03      41     7     144798       1217      17043         0 *8**"
+        },
+        {
+          "line": 751,
+          "text": "PARAMETERS FOR PARALLEL SPARSE UNSYM. DECOMP OF DATA BLOCK  KSALL   ( TYPE=RSP ) FOLLOW"
+        },
+        {
+          "line": 752,
+          "text": "MATRIX SIZE =    17346 ROWS            NUMBER OF NONZEROES =     1085320 TERMS"
+        },
+        {
+          "line": 753,
+          "text": "NUMBER OF ZERO COLUMNS =        0       NUMBER OF ZERO DIAGONAL TERMS =           0"
+        },
+        {
+          "line": 767,
+          "text": "DECOMP  249  LSALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        },
+        {
+          "line": 768,
+          "text": "DECOMP  249  USALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        }
+      ],
+      "f06_structural_singularity_diagnostic": [
+        {
+          "line": 277,
+          "text": "***       0 SINGULARITIES FOUND         0 SINGULARITIES ELIMINATED"
+        }
+      ],
+      "nonzero_aerodynamic_stiffness_present": true,
+      "effective_stiffness_decomposition": "17346 x 17346 real unsymmetric KSALL; LSALL and USALL factors produced; zero-column and zero-diagonal counts are zero",
+      "divergence_analysis_requested": false,
+      "critical_divergence_dynamic_pressure_Pa": null,
+      "stable_at_operating_point": null,
+      "negative_effective_stiffness_assessed": false,
+      "raw_solver_status": "completed_with_runtime_errors",
+      "runtime_errors_retained": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "coarse_screens": {
+        "force_balance": true,
+        "moment_balance": true,
+        "root_fixed": true,
+        "small_translation": false,
+        "small_rotation": false,
+        "below_assumed_yield": false,
+        "same_lift_order_as_isolated_finite_wing": true
+      }
+    },
+    {
+      "aoa_deg": 5,
+      "part": 2,
+      "source_run": "workspace/BWB/speed_200/run_01/aoa_05/part_2",
+      "f04_sha256": "ceec8e9e75dbf806d96628a1d1d93d8a08f271331bf97771022424ff5021dc1c",
+      "f06_sha256": "7ba733a0e13e551340fe13de8d7bbbf0ed4f50582ddfa7bd5a55419d71d10ddc",
+      "f04_effective_stiffness_evidence": [
+        {
+          "line": 743,
+          "text": "MPYAD   247  KALL          17346      17346  1 1       420 5.86273E-04      11     2      88200        409      16892     16926 *8**"
+        },
+        {
+          "line": 746,
+          "text": "ADD5    248  KSALL         17346      17346  1 1       472 3.66456E-03      41     7     144798       1217      17043         0 *8**"
+        },
+        {
+          "line": 751,
+          "text": "PARAMETERS FOR PARALLEL SPARSE UNSYM. DECOMP OF DATA BLOCK  KSALL   ( TYPE=RSP ) FOLLOW"
+        },
+        {
+          "line": 752,
+          "text": "MATRIX SIZE =    17346 ROWS            NUMBER OF NONZEROES =     1085320 TERMS"
+        },
+        {
+          "line": 753,
+          "text": "NUMBER OF ZERO COLUMNS =        0       NUMBER OF ZERO DIAGONAL TERMS =           0"
+        },
+        {
+          "line": 767,
+          "text": "DECOMP  249  LSALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        },
+        {
+          "line": 768,
+          "text": "DECOMP  249  USALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        }
+      ],
+      "f06_structural_singularity_diagnostic": [
+        {
+          "line": 277,
+          "text": "***       0 SINGULARITIES FOUND         0 SINGULARITIES ELIMINATED"
+        }
+      ],
+      "nonzero_aerodynamic_stiffness_present": true,
+      "effective_stiffness_decomposition": "17346 x 17346 real unsymmetric KSALL; LSALL and USALL factors produced; zero-column and zero-diagonal counts are zero",
+      "divergence_analysis_requested": false,
+      "critical_divergence_dynamic_pressure_Pa": null,
+      "stable_at_operating_point": null,
+      "negative_effective_stiffness_assessed": false,
+      "raw_solver_status": "completed_with_runtime_errors",
+      "runtime_errors_retained": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "coarse_screens": {
+        "force_balance": true,
+        "moment_balance": true,
+        "root_fixed": true,
+        "small_translation": false,
+        "small_rotation": false,
+        "below_assumed_yield": false,
+        "same_lift_order_as_isolated_finite_wing": true
+      }
+    },
+    {
+      "aoa_deg": 6,
+      "part": 1,
+      "source_run": "workspace/BWB/speed_200/run_01/aoa_06/part_1",
+      "f04_sha256": "20a99c91ea474abfdc86d046fc3fd30c56e98fed5764ba33b8e0c0bbe14557bc",
+      "f06_sha256": "2e3bc52c212ed691459a2d0b1156b9d630651fb6c8563c4d4bbf78e8b38e79cc",
+      "f04_effective_stiffness_evidence": [
+        {
+          "line": 742,
+          "text": "MPYAD   247  KALL          17346      17346  1 1       420 5.86273E-04      11     2      88200        409      16892     16926 *8**"
+        },
+        {
+          "line": 746,
+          "text": "ADD5    248  KSALL         17346      17346  1 1       472 3.66456E-03      41     7     144798       1217      17043         0 *8**"
+        },
+        {
+          "line": 751,
+          "text": "PARAMETERS FOR PARALLEL SPARSE UNSYM. DECOMP OF DATA BLOCK  KSALL   ( TYPE=RSP ) FOLLOW"
+        },
+        {
+          "line": 752,
+          "text": "MATRIX SIZE =    17346 ROWS            NUMBER OF NONZEROES =     1085320 TERMS"
+        },
+        {
+          "line": 753,
+          "text": "NUMBER OF ZERO COLUMNS =        0       NUMBER OF ZERO DIAGONAL TERMS =           0"
+        },
+        {
+          "line": 767,
+          "text": "DECOMP  249  LSALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        },
+        {
+          "line": 768,
+          "text": "DECOMP  249  USALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        }
+      ],
+      "f06_structural_singularity_diagnostic": [
+        {
+          "line": 277,
+          "text": "***       0 SINGULARITIES FOUND         0 SINGULARITIES ELIMINATED"
+        }
+      ],
+      "nonzero_aerodynamic_stiffness_present": true,
+      "effective_stiffness_decomposition": "17346 x 17346 real unsymmetric KSALL; LSALL and USALL factors produced; zero-column and zero-diagonal counts are zero",
+      "divergence_analysis_requested": false,
+      "critical_divergence_dynamic_pressure_Pa": null,
+      "stable_at_operating_point": null,
+      "negative_effective_stiffness_assessed": false,
+      "raw_solver_status": "completed_with_runtime_errors",
+      "runtime_errors_retained": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "coarse_screens": {
+        "force_balance": true,
+        "moment_balance": true,
+        "root_fixed": true,
+        "small_translation": false,
+        "small_rotation": false,
+        "below_assumed_yield": false,
+        "same_lift_order_as_isolated_finite_wing": true
+      }
+    },
+    {
+      "aoa_deg": 6,
+      "part": 2,
+      "source_run": "workspace/BWB/speed_200/run_01/aoa_06/part_2",
+      "f04_sha256": "88bdaf2ba84b6a9fafb148858546a63f836c15f011eed1bb7bcb5ca72e074990",
+      "f06_sha256": "afec04ede4f593dd2a044163d19f75af8db30f9589ab08da1f868c555df71696",
+      "f04_effective_stiffness_evidence": [
+        {
+          "line": 743,
+          "text": "MPYAD   247  KALL          17346      17346  1 1       420 5.86273E-04      11     2      88200        409      16892     16926 *8**"
+        },
+        {
+          "line": 746,
+          "text": "ADD5    248  KSALL         17346      17346  1 1       472 3.66456E-03      41     7     144798       1217      17043         0 *8**"
+        },
+        {
+          "line": 751,
+          "text": "PARAMETERS FOR PARALLEL SPARSE UNSYM. DECOMP OF DATA BLOCK  KSALL   ( TYPE=RSP ) FOLLOW"
+        },
+        {
+          "line": 752,
+          "text": "MATRIX SIZE =    17346 ROWS            NUMBER OF NONZEROES =     1085320 TERMS"
+        },
+        {
+          "line": 753,
+          "text": "NUMBER OF ZERO COLUMNS =        0       NUMBER OF ZERO DIAGONAL TERMS =           0"
+        },
+        {
+          "line": 767,
+          "text": "DECOMP  249  LSALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        },
+        {
+          "line": 768,
+          "text": "DECOMP  249  USALL         17346      17346 15 1      5      5    138   1488   1246 *8**"
+        }
+      ],
+      "f06_structural_singularity_diagnostic": [
+        {
+          "line": 277,
+          "text": "***       0 SINGULARITIES FOUND         0 SINGULARITIES ELIMINATED"
+        }
+      ],
+      "nonzero_aerodynamic_stiffness_present": true,
+      "effective_stiffness_decomposition": "17346 x 17346 real unsymmetric KSALL; LSALL and USALL factors produced; zero-column and zero-diagonal counts are zero",
+      "divergence_analysis_requested": false,
+      "critical_divergence_dynamic_pressure_Pa": null,
+      "stable_at_operating_point": null,
+      "negative_effective_stiffness_assessed": false,
+      "raw_solver_status": "completed_with_runtime_errors",
+      "runtime_errors_retained": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "coarse_screens": {
+        "force_balance": true,
+        "moment_balance": true,
+        "root_fixed": true,
+        "small_translation": false,
+        "small_rotation": false,
+        "below_assumed_yield": false,
+        "same_lift_order_as_isolated_finite_wing": true
+      }
+    }
+  ]
+}

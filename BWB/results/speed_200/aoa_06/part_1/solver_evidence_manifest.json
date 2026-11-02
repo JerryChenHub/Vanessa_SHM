@@ -1,0 +1,22 @@
+{
+  "archive": "solver_evidence.zip",
+  "sha256": "7bdee53fdcb8c70557224271d4ac5f195512c5c14493585a82a676cbac45acab",
+  "source_run": "workspace/BWB/speed_200/run_01/aoa_06/part_1",
+  "members_sha256": {
+    "aero_cards.bdf": "b52b1f920654443815db83acbc7c2e25b6a5861f41ed53c2ff585d922e6a5603",
+    "bwb_sol144.bdf": "66e98501d13f3a27d4c0cddf37fd4afdc3418183aaabd1b2c4d182e2106c4d8c",
+    "bwb_sol144.f04": "20a99c91ea474abfdc86d046fc3fd30c56e98fed5764ba33b8e0c0bbe14557bc",
+    "bwb_sol144.f06": "2e3bc52c212ed691459a2d0b1156b9d630651fb6c8563c4d4bbf78e8b38e79cc",
+    "bwb_sol144.log": "5bbcb81c8844d60dacabad8f0cf8c8c4b9f5022dfac14899ebd40c7b28770d62",
+    "bwb_sol144.op2": "005481d119d9325f514338e9fb70a9af17f255e2406b647a473064042ffb580d",
+    "case_manifest.json": "8f8d21a3bcf997240d8af527cf40e5305509d533b954386d8dfc1d0289ea5ceb",
+    "dmicards.bdf": "e12d3608faa6a3d2ae613c4b25524c39211132013ab76bf886ebcbb61efe5fa3",
+    "flight_condition.bdf": "02e6b9d285e9e8c2033dc4e3fca8b515e04060d7325b6ccf1c3710fa2d6af6a7",
+    "launcher.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "launcher.stdout.txt": "1a7cb737fe72477b6f837b83a51106e73e99f1785c889db1981566e765787919",
+    "run-invocation.json": "66d5abd7e2e5c5a85953ef4e013d7b4d4fae05eea2773f2f758dd37d330a0ca9",
+    "run-summary.json": "d713c8c4dee52d91068a85a751dd39ca69e9faa20c7003098d48cbea8c2621f5",
+    "spline_cards.bdf": "a1199fab9e45e50f483f819cf9f0b2e45d301f334add2eee5c8783a028079f89",
+    "structural_cards.bdf": "6fc0d77b835e4022e00993dee2bdc28a5a33fe095e911e8df98f4206647d50d5"
+  }
+}

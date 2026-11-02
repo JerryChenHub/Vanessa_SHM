@@ -21,6 +21,8 @@ Vanessa_SHM/
 │   ├── results/sol144_demo/  实际应变、云图、Femap 结果与求解证据
 │   ├── cases/aoa_sweep/      3°、4°、5°、6°的独立输入
 │   ├── results/aoa_sweep/    迎角扫描结果、2°–6°比较和多工况Femap模型
+│   ├── cases/speed_200/      200 m/s、3°–6°的独立输入
+│   ├── results/speed_200/    高动压线性输出、应力超限及模型适用性审查
 │   └── README.md             项目边界与复用约定
 └── workspace/                共享临时工作区，不提交计算文件
     ├── NASA_SHM/             原有 case、结果、诊断和历史归档
@@ -57,7 +59,9 @@ BWB 的流程为：原始 CAD 的只读副本 → SolidWorks API 导出 Parasoli
 
 当前 BWB 气动包定义每件 11 个 CAERO1 大面、590 个小面板及对应结构连接。独立的 `cases/sol144_demo/` 已补齐假设飞况：20 m/s、迎角 2°、侧滑 0°、1 mm 铝蒙皮、根部固定。两件均实际运行 SOL144，得到完整的位移与蒙皮两表面应变，详见 [结果与合理性判断](BWB/results/sol144_demo/README.md)。两件保持各自 CAD 坐标并独立求解，不代表整机装配或自由飞行配平。
 
-两件的输入检查、结果覆盖、力/力矩平衡和量级筛查均通过。求解器正常到达 END OF JOB，仍保留一条已追踪到零行矩阵的 MKL 诊断和非零启动器退出码；没有将它们改写为无错误运行。当前成果适合流程演示，尚未完成气动或网格精度验证，也未生成 BWB 损伤数据集。
+20 m/s 基准的两件输入检查、结果覆盖、力/力矩平衡和量级筛查均通过。求解器正常到达 END OF JOB，仍保留一条已追踪到零行矩阵的 MKL 诊断和非零启动器退出码；没有将它们改写为无错误运行。当前成果适合流程演示，尚未完成气动或网格精度验证，也未生成 BWB 损伤数据集。
+
+另已实际计算 [200 m/s、迎角 3°–6°](BWB/results/speed_200/README.md)。这八组虽然完成结果恢复并满足载荷平衡，却全部超过假设屈服强度和小变形筛查界限；其线性输出不能代表屈服后的真实响应，亦未验证屈曲或发散稳定性。
 
 详细说明：[NASA_SHM](NASA_SHM/README.md)、[BWB](BWB/README.md)、[气动生成与文件说明](BWB/models/aero_panels/README.md)。Windows、Femap 和 Python 依赖配置见 BWB 说明。
 
