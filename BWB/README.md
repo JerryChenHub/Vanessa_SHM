@@ -1,12 +1,13 @@
 # BWB
 
-本项目从两个 SolidWorks 零件生成规则蒙皮，再由同一套蒙皮行列建立气动参考面、结构插值连接和弯度/扭转修正。已在假设的 20 m/s、2° 迎角工况下分别运行两件的 SOL144，获得完整应变；两件尚未装配为整机。详见 [求解输入与复现](cases/sol144_demo/README.md) 和 [实际结果与合理性判断](results/sol144_demo/README.md)。
+本项目从两个 SolidWorks 零件生成规则蒙皮，再由同一套蒙皮行列建立气动参考面、结构插值连接和弯度/扭转修正。已在假设的 20 m/s、2°–6° 迎角工况下分别运行两件的 SOL144，获得完整应变；两件尚未装配为整机。详见 [求解输入与复现](cases/sol144_demo/README.md)、[基准结果与合理性判断](results/sol144_demo/README.md) 和 [迎角扫描结果](results/aoa_sweep/README.md)。
 
 - [规则蒙皮模型](models/skin_structured/README.md)：主翼采用平行弦向截面和连续展向列，保留材料、1 mm 厚度及根部固定的演示假设。
 - [气动面板模型](models/aero_panels/README.md)：每件 11 个 CAERO1、590 个气动小面板，附 SPLINE1/SET1、W2GJ、独立检查报告和 Femap 查看模型。
 - `models/skin_demo/`：原始 CAD 副本、Parasolid 导出及首版自由网格，保留作来源记录和对比。
 - `cases/sol144_demo/`：假设工况、完整 SOL144 入口、输入来源与求解诊断说明。
 - `results/sol144_demo/`：应变 CSV、位移、合理性检查、云图、Femap 结果模型及压缩求解证据。
+- `cases/aoa_sweep/`、[results/aoa_sweep](results/aoa_sweep/README.md)：保持基准速度和结构假设，对两件分别计算 3°、4°、5°、6°，并与 2° 基准比较。
 
 ## 目录与生成逻辑
 
@@ -22,7 +23,16 @@ BWB/
 │   ├── build_bwb_aero_panels.py       气动面、SPLINE 与 W2GJ 生成
 │   ├── check_aero_panels.py          从导出卡片独立重建并检查
 │   ├── view_femap_aero_panels.py     导入原生 Aero Panel 与查看模型
-│   └── plot_aero_panels.py           结构/气动叠加图
+│   ├── plot_aero_panels.py           结构/气动叠加图
+│   ├── build_sol144_demo.py          假设飞况与完整求解输入
+│   ├── run_sol144.py                 求解器调用与原始状态检查
+│   ├── export_sol144_strain.py       应变与位移提取
+│   ├── check_sol144_reasonableness.py 力/力矩平衡与量级检查
+│   ├── run_aoa_sweep.py              3°–6°实际求解与证据归档
+│   ├── summarize_aoa_sweep.py        与2°基准对比及趋势检查
+│   └── view_femap_aoa_sweep.py       四迎角Femap结果模型
+├── cases/sol144_demo/、aoa_sweep/     独立求解输入
+├── results/sol144_demo/、aoa_sweep/   应变、检查、图和Femap结果
 ├── tests/test_aero_panels.py          几何、符号、编号与输入检查
 └── models/
     ├── skin_demo/                    源 CAD 与历史自由网格

@@ -1,0 +1,197 @@
+{
+  "part": 2,
+  "result_model": "BWB/results/aoa_sweep/part_2_aoa_3to6.modfem",
+  "source_model": "BWB/models/aero_panels/part_2/part_2_aero_structure.modfem",
+  "source_model_sha256": "757eb8881b3a8879e2f1bba647b5792140b966a929174f0e1340e9618a506da6",
+  "angles_deg": [
+    3,
+    4,
+    5,
+    6
+  ],
+  "result_sets": [
+    {
+      "aoa_deg": 3,
+      "output_set_id": 1,
+      "output_set_title": "AOA 3 deg | Part 2 | SOL144",
+      "vector_id": 7071,
+      "vector_title": "Plate Top MajorPrn Strain",
+      "imported_vector_count": 70,
+      "source_op2": "workspace/BWB/aoa_sweep/run_01/aoa_03/part_2/bwb_sol144.op2",
+      "source_op2_sha256": "4e6112642bb4621a7e7c5f1bdf3940a6385f9682fc156247baad6ca06f3322e1",
+      "source_run_summary_sha256": "f3b39d23cb44e187798fbcf3718685e6521b91d851d37a9758eab4c6947c0748",
+      "source_case": "BWB/cases/aoa_sweep/aoa_03/part_2",
+      "original_solver_status": "completed_with_runtime_errors",
+      "runtime_diagnostics": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "solver_completed": true,
+      "fresh_f06": true,
+      "strain_statistics": {
+        "element_count": 2915,
+        "units": "m/m",
+        "minimum": {
+          "element_id": 2283,
+          "strain": -1.1665438250929583e-05,
+          "microstrain": -11.665438250929583
+        },
+        "maximum": {
+          "element_id": 2353,
+          "strain": 2.2678923414787278e-05,
+          "microstrain": 22.678923414787278
+        },
+        "maximum_absolute": {
+          "element_id": 2353,
+          "strain": 2.2678923414787278e-05,
+          "microstrain": 22.678923414787278
+        }
+      }
+    },
+    {
+      "aoa_deg": 4,
+      "output_set_id": 2,
+      "output_set_title": "AOA 4 deg | Part 2 | SOL144",
+      "vector_id": 7071,
+      "vector_title": "Plate Top MajorPrn Strain",
+      "imported_vector_count": 70,
+      "source_op2": "workspace/BWB/aoa_sweep/run_01/aoa_04/part_2/bwb_sol144.op2",
+      "source_op2_sha256": "7d099934674ae75761bae38d4364a1124b4e66f38112fa9b2999e73b616fd971",
+      "source_run_summary_sha256": "da8c6bd71e7da6b5e02c8533a5cbcef9ec65a3e0bff02396507695e1c9538d34",
+      "source_case": "BWB/cases/aoa_sweep/aoa_04/part_2",
+      "original_solver_status": "completed_with_runtime_errors",
+      "runtime_diagnostics": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "solver_completed": true,
+      "fresh_f06": true,
+      "strain_statistics": {
+        "element_count": 2915,
+        "units": "m/m",
+        "minimum": {
+          "element_id": 2283,
+          "strain": -1.466969661123585e-05,
+          "microstrain": -14.66969661123585
+        },
+        "maximum": {
+          "element_id": 2353,
+          "strain": 2.84921388811199e-05,
+          "microstrain": 28.4921388811199
+        },
+        "maximum_absolute": {
+          "element_id": 2353,
+          "strain": 2.84921388811199e-05,
+          "microstrain": 28.4921388811199
+        }
+      }
+    },
+    {
+      "aoa_deg": 5,
+      "output_set_id": 3,
+      "output_set_title": "AOA 5 deg | Part 2 | SOL144",
+      "vector_id": 7071,
+      "vector_title": "Plate Top MajorPrn Strain",
+      "imported_vector_count": 70,
+      "source_op2": "workspace/BWB/aoa_sweep/run_01/aoa_05/part_2/bwb_sol144.op2",
+      "source_op2_sha256": "b6a34fdf3b64c25c73179a9b04f3a21e8f625eb14343cfe483f8085153bcf66a",
+      "source_run_summary_sha256": "6a5cb1eefc7f50bf02e1e22cc5d89f9234cd5cac72707e5b6a0403be8ae78165",
+      "source_case": "BWB/cases/aoa_sweep/aoa_05/part_2",
+      "original_solver_status": "completed_with_runtime_errors",
+      "runtime_diagnostics": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "solver_completed": true,
+      "fresh_f06": true,
+      "strain_statistics": {
+        "element_count": 2915,
+        "units": "m/m",
+        "minimum": {
+          "element_id": 2283,
+          "strain": -1.767364847182762e-05,
+          "microstrain": -17.67364847182762
+        },
+        "maximum": {
+          "element_id": 2353,
+          "strain": 3.4305361623410136e-05,
+          "microstrain": 34.305361623410136
+        },
+        "maximum_absolute": {
+          "element_id": 2353,
+          "strain": 3.4305361623410136e-05,
+          "microstrain": 34.305361623410136
+        }
+      }
+    },
+    {
+      "aoa_deg": 6,
+      "output_set_id": 4,
+      "output_set_title": "AOA 6 deg | Part 2 | SOL144",
+      "vector_id": 7071,
+      "vector_title": "Plate Top MajorPrn Strain",
+      "imported_vector_count": 70,
+      "source_op2": "workspace/BWB/aoa_sweep/run_01/aoa_06/part_2/bwb_sol144.op2",
+      "source_op2_sha256": "9359fc4b2b27c97bda41bc25def4e47e5c4e9faefc1b9a0d9ac9384ef665c039",
+      "source_run_summary_sha256": "1f30c1f9b4d2a0516271ba3e58cf1b7d74777cc3d48e133af457a5301a17b9b3",
+      "source_case": "BWB/cases/aoa_sweep/aoa_06/part_2",
+      "original_solver_status": "completed_with_runtime_errors",
+      "runtime_diagnostics": [
+        "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+        "Launcher returned exit code 1"
+      ],
+      "solver_completed": true,
+      "fresh_f06": true,
+      "strain_statistics": {
+        "element_count": 2915,
+        "units": "m/m",
+        "minimum": {
+          "element_id": 2283,
+          "strain": -2.067742752842605e-05,
+          "microstrain": -20.67742752842605
+        },
+        "maximum": {
+          "element_id": 2353,
+          "strain": 4.0118586184689775e-05,
+          "microstrain": 40.118586184689775
+        },
+        "maximum_absolute": {
+          "element_id": 2353,
+          "strain": 4.0118586184689775e-05,
+          "microstrain": 40.118586184689775
+        }
+      }
+    }
+  ],
+  "entity_counts": {
+    "nodes": 2940,
+    "elements": 2915,
+    "aero_panels": 11,
+    "aero_splines": 11
+  },
+  "independent_result_sets": 4,
+  "all_prior_result_samples_preserved": true,
+  "reviewed_empty_matrix_diagnostic_allowed": true,
+  "diagnostic_policy": "Original statuses retained; only the explicitly reviewed DGEMM parameter 13 and launcher 1 pair can bypass the clean-status gate",
+  "default_display": {
+    "aoa_deg": 6,
+    "id": 1,
+    "result_set": 4,
+    "vector_id": 7071,
+    "vector_title": "Plate Top MajorPrn Strain",
+    "contour_on": true,
+    "unaveraged_element_contour": true,
+    "deformation_display": false,
+    "units": "m/m",
+    "shell_side_note": "Top is the positive shell-normal face, not the aircraft upper skin"
+  },
+  "persistence_check": {
+    "reopened_from_disk": true,
+    "all_four_sets_in_femap_database": true,
+    "all_four_labels_and_strain_samples_retained": true,
+    "default_aoa_6_strain_contour_retained": true
+  },
+  "source_model_unchanged": true,
+  "source_op2_files_unchanged": true,
+  "analysis_deck_exported": false
+}

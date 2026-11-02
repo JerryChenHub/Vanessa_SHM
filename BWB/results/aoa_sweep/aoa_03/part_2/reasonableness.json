@@ -1,0 +1,131 @@
+{
+  "status": "diagnostic_only",
+  "diagnostic_only": true,
+  "all_coarse_screens_pass": true,
+  "part": 2,
+  "source_f06_sha256": "293c5a26ed3d9c96ac93531e42856bfd26d8de9074daa95e2402eb2f605fa05c",
+  "export_summary_sha256": "8aa96e2cd379656daf8036ce1e54492437919669ae2798a575bc712edf271c0c",
+  "aero_manifest_sha256": "030f2e4667fff929f27cbb0d1c8872fa398e28775e4e088850a5e69a08c8c99b",
+  "pressure_boxes_per_subcase": 590,
+  "root_reaction_nodes": 49,
+  "material": {
+    "young_modulus_Pa": 69000000000.0,
+    "poisson_ratio": 0.33,
+    "assumed_yield_MPa": 200.0
+  },
+  "rough_finite_wing": {
+    "reference_area_m2": 0.2614171901,
+    "reference_span_m": 0.8702281,
+    "aspect_ratio": 2.8968903909491224,
+    "slope_per_rad": 3.297275722889249,
+    "formula": "a=2*pi*AR/(2+sqrt(4+AR^2)); L=q*S*a*alpha",
+    "dynamic_pressure_Pa": 245.0,
+    "alpha_deg": 3.000000000009747,
+    "estimated_lift_N": 11.057427840517501,
+    "scope": "Isolated uncambered unswept finite-wing scale only; ignores CAD camber, sweep, winglet interaction and elastic redistribution."
+  },
+  "subcases": [
+    {
+      "subcase": 1,
+      "screens": {
+        "force_balance": true,
+        "moment_balance": true,
+        "root_fixed": true,
+        "small_translation": true,
+        "small_rotation": true,
+        "below_assumed_yield": true,
+        "same_lift_order_as_isolated_finite_wing": true
+      },
+      "aerodynamic_force_CAD_N": [
+        0.0,
+        10.070937219998081,
+        1.1671517572220664
+      ],
+      "aerodynamic_moment_basic_origin_Nm": [
+        -11.079000129134796,
+        -0.062321487801776904,
+        -1.9219914016935142
+      ],
+      "aerodynamic_moment_root_origin_Nm": [
+        4.63166193406221,
+        -0.062321487801776904,
+        -1.9219914016935142
+      ],
+      "root_origin_CAD_m": [
+        0.0,
+        0.0,
+        1.56
+      ],
+      "spc_force_CAD_N": [
+        2.420463e-10,
+        -10.07094,
+        -1.167152
+      ],
+      "spc_moment_basic_origin_Nm": [
+        11.079,
+        0.06232149,
+        1.921991
+      ],
+      "spc_moment_root_origin_Nm": [
+        -4.6316664,
+        0.06232148962240777,
+        1.921991
+      ],
+      "force_balance_error_N": 2.7905827088793015e-06,
+      "force_balance_relative": 2.7525034660882845e-07,
+      "moment_balance_error_Nm": 4.483967143099369e-06,
+      "moment_balance_relative": 8.941110564507616e-07,
+      "nodal_vs_listed_spc_max_abs_component_difference": 9.433964621254065e-06,
+      "max_pressure_vs_qCp_error_Pa": 5.899999999314787e-05,
+      "max_translation_m": 0.00036558004398600256,
+      "max_translation_over_reference_span": 0.0004200968044883894,
+      "max_rotation_rad": 0.0016131075814563526,
+      "max_rotation_deg": 0.09242425631800466,
+      "max_abs_root_dof": 0.0,
+      "von_mises_by_surface": {
+        "top": {
+          "peak_MPa": 1.5787075404501965,
+          "element_id": 2137
+        },
+        "bottom": {
+          "peak_MPa": 2.0829677878438115,
+          "element_id": 2305
+        },
+        "mid": {
+          "peak_MPa": 1.1403696561394427,
+          "element_id": 2113
+        }
+      },
+      "peak_von_mises_MPa": 2.0829677878438115,
+      "assumed_yield_MPa": 200.0,
+      "yield_utilization": 0.010414838939219058,
+      "body_up_lift_N": 10.070937219998081,
+      "body_up_CL": 0.1572423993554118,
+      "lift_to_rough_finite_wing_ratio": 0.9107848014250979,
+      "root_thin_wall_estimate": {
+        "thin_wall_area_m2": 0.0008899026041806483,
+        "centroid_cad_m": [
+          -0.220207548815862,
+          -0.0012349798401563462,
+          1.5600000000000003
+        ],
+        "I_about_CAD_X_m4": 1.7017683867156075e-07,
+        "I_about_CAD_Y_m4": 1.453822412430432e-05,
+        "Ixy_m4": -3.3714887359663843e-07,
+        "bending_moment_about_section_centroid_Nm": [
+          4.633103342952786,
+          -0.31933711535577425,
+          0.2957049978006947
+        ],
+        "estimated_max_axial_bending_microstrain": 9.291366717736866,
+        "assumptions": "Thin-wall contour integration and unsymmetric beam bending along CAD Z; ignores shear, torsion, local shell bending and concentrations.",
+        "actual_max_abs_root_adjacent_principal_microstrain": 12.722209530147424
+      }
+    }
+  ],
+  "limitations": [
+    "A force-balanced result may still contain an incorrect modeling assumption.",
+    "Coarse magnitude checks are not mesh convergence, experimental validation or strength certification.",
+    "Plane-stress von Mises is reconstructed from printed linear isotropic shell strains."
+  ]
+}

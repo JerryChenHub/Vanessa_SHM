@@ -1,0 +1,22 @@
+{
+  "archive": "solver_evidence.zip",
+  "sha256": "9199755c8ec1dcaf1386e943b23ee38a3ab5a175546c02cde1f87c82f44a447f",
+  "source_run": "workspace/BWB/aoa_sweep/run_01/aoa_06/part_2",
+  "members_sha256": {
+    "aero_cards.bdf": "85b7a925847441b7b7cb06241b67d302fb5c9a146b3e8d9adb0b4acdc3995750",
+    "bwb_sol144.bdf": "af133e7bec220654a1367a99ab682e966c27175c0912b859ea0bb5b6cc0b61e6",
+    "bwb_sol144.f04": "9185d3ebecb67975649c59b293b1b1ec0d4dd0f588105fc61442a71a4d224fc5",
+    "bwb_sol144.f06": "6d499744ebd0676baad136ec5216be9a516391792b1b054abe28fafb4452a534",
+    "bwb_sol144.log": "06c111212dc38c3a18b06e477256f176575a707a337a54ae2851f43e43d4ad76",
+    "bwb_sol144.op2": "9359fc4b2b27c97bda41bc25def4e47e5c4e9faefc1b9a0d9ac9384ef665c039",
+    "case_manifest.json": "409f5c5fa95a7221a8bf8a2b5fa66a85a4a9782998a993695e642b0eb1fe0db9",
+    "dmicards.bdf": "87799350f0245abc531fbd72f9aa0f99eb66765094223e82a2d004c646082f37",
+    "flight_condition.bdf": "043eaa80f54da80886280fbe5c3fe35a671774bc5d51c4db2596a0f017af8734",
+    "launcher.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "launcher.stdout.txt": "51d7a0730781619c95eac0cce1403179f7823985d96fdb8b1c2cfee3bd088df8",
+    "run-invocation.json": "0bb6b25453f946f8d90914252e65f7b9945d9ae6e71f90aaf3eaede7dae22155",
+    "run-summary.json": "1f30c1f9b4d2a0516271ba3e58cf1b7d74777cc3d48e133af457a5301a17b9b3",
+    "spline_cards.bdf": "1bec7f197515d6b0d9ef09ac2d5bc36e1f2d3c0d9bd833cda7309c432214ae60",
+    "structural_cards.bdf": "7e2bb6e720375847718f51664da676ba64dc53cc0bde7d8ddbf515c10e8ffc69"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "status": "accepted_for_workflow_demo_with_documented_runtime_diagnostic",
+  "accepted_for_demo": true,
+  "aoa_deg": 6,
+  "part": 1,
+  "raw_solver_status": "completed_with_runtime_errors",
+  "runtime_errors_retained": [
+    "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+    "Launcher returned exit code 1"
+  ],
+  "prior_runtime_diagnostic_evidence": {
+    "path": "BWB/results/sol144_demo/runtime_diagnostic_review.json",
+    "sha256": "4f13420298160749a3e8159a97c423474026c35699a1d76020fc7bc9884b5953",
+    "hash_mode": "crlf_to_lf",
+    "raw_sha256_at_generation": "fd6dc1b213b87e68aaa3f69b181e79cd39d3229d0207e963d90f4a011c11e3e3"
+  },
+  "runtime_review_scope": "Same solver, geometry, Mach, q, fixed trim-variable count and error signature as the traced 2-degree baseline; these angle cases are not individually verbose-traced.",
+  "source_f06_sha256": "14eb105f7489f5295a254111ba8f0a61b7bc7b04b048e80d293cd7fce7c64ab7",
+  "nonzero_aero_stiffness_evidence": [
+    "MPYAD   247  KALL          17346      17346  1 1       420 5.86273E-04      11     2      88200        409      16892     16926 *8**"
+  ],
+  "rigid_body_up_force_N": 20.60199,
+  "elastic_body_up_force_N": 20.62955,
+  "elastic_increment_percent": 0.13377348498857522,
+  "reasonableness_sha256": "5d1575ac5a6f49d1394a465ebce8efcd4b4ebde8412af737570f4dc5747d433b",
+  "strain_summary_sha256": "c340d7082809e28b0823b0a02931dd4f29187bb03f751243eb2e61d7a3762ba9",
+  "driver": {
+    "path": "BWB/scripts/run_aoa_sweep.py",
+    "sha256": "02b5b48ad561f7dd5cbcb971dc5c3bb2711ebaebaa855143a1d2f96035603dc5",
+    "hash_mode": "crlf_to_lf",
+    "raw_sha256_at_generation": "02b5b48ad561f7dd5cbcb971dc5c3bb2711ebaebaa855143a1d2f96035603dc5"
+  }
+}

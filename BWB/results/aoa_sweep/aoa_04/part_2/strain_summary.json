@@ -1,0 +1,100 @@
+{
+  "status": "exported_with_runtime_diagnostics",
+  "diagnostic_only": true,
+  "solver_end_of_job": true,
+  "fatal_messages": [],
+  "job_name": "bwb_sol144",
+  "case_dir": "D:\\Python\\Projects\\Vanessa_SHM\\workspace\\BWB\\aoa_sweep\\run_01\\aoa_04\\part_2",
+  "source_f06": "D:\\Python\\Projects\\Vanessa_SHM\\workspace\\BWB\\aoa_sweep\\run_01\\aoa_04\\part_2\\bwb_sol144.f06",
+  "source_f06_sha256": "17605aad5ba1d9c56ef784e8261fbe78bd705975b2eae4932f5f53ac1d6784fd",
+  "f06_parser_adaptation": {
+    "normalized_subcase_headers": 507,
+    "normalized_text_sha256": "eafd6cf0edc21c5fdf9aab650e2cf4eff08ecce8d3c7c0dcfc3cbfea82f5ad2d",
+    "original_f06_modified": false,
+    "procedure": "Only labeled/page SUBCASE header lines normalized in a temporary parser input."
+  },
+  "input_sha256": {
+    "aero_cards.bdf": "85b7a925847441b7b7cb06241b67d302fb5c9a146b3e8d9adb0b4acdc3995750",
+    "bwb_sol144.bdf": "af133e7bec220654a1367a99ab682e966c27175c0912b859ea0bb5b6cc0b61e6",
+    "dmicards.bdf": "87799350f0245abc531fbd72f9aa0f99eb66765094223e82a2d004c646082f37",
+    "flight_condition.bdf": "565780b1a14c2580da2f38dc2f9a177760e571b915bd17b80d7eab077c5d9689",
+    "spline_cards.bdf": "1bec7f197515d6b0d9ef09ac2d5bc36e1f2d3c0d9bd833cda7309c432214ae60",
+    "structural_cards.bdf": "7e2bb6e720375847718f51664da676ba64dc53cc0bde7d8ddbf515c10e8ffc69"
+  },
+  "nodes_per_subcase": 2940,
+  "shells_per_subcase": 2915,
+  "solver_generated_aero_points_per_subcase": 1360,
+  "nonstructural_grid_policy": "CAERO1 box-center plus corner-point count and local DOF pattern checked; preserved separately in local aerodynamic coordinates, not treated as structural GRID data.",
+  "strain_csv_rows": 8745,
+  "displacement_csv_rows": 2940,
+  "subcases": [
+    {
+      "subcase": 1,
+      "surfaces": {
+        "top": {
+          "max_principal_microstrain": 28.49213742472378,
+          "min_principal_microstrain": -28.484857961559516,
+          "max_abs_principal_microstrain": 28.49213742472378,
+          "max_abs_element_id": 2353
+        },
+        "bottom": {
+          "max_principal_microstrain": 18.815173264081658,
+          "min_principal_microstrain": -37.769766009751244,
+          "max_abs_principal_microstrain": 37.769766009751244,
+          "max_abs_element_id": 2305
+        },
+        "mid": {
+          "max_principal_microstrain": 21.056023696413106,
+          "min_principal_microstrain": -18.3402405111708,
+          "max_abs_principal_microstrain": 21.056023696413106,
+          "max_abs_element_id": 2113
+        }
+      },
+      "max_translation_m": 0.00047504507796756513,
+      "max_translation_grid_id": 2722,
+      "plot": "strain_overview.png"
+    }
+  ],
+  "root_constraint_set": 1,
+  "root_fixed_nodes": 49,
+  "max_abs_root_dof": 0.0,
+  "root_tolerance": 1e-10,
+  "coordinates": "Displacements: basic CAD coordinates. Strains: local element axes, centroid values.",
+  "strain_definition": "gamma_xy is engineering shear; principal strains use gamma_xy/2 in the tensor.",
+  "surfaces": {
+    "top": "+element-z fiber",
+    "bottom": "-element-z fiber",
+    "mid": "Arithmetic mean of top/bottom components; principal strains recomputed from that mean."
+  },
+  "units": "m-N-kg-s; strains dimensionless and microstrain; rotations radians.",
+  "precision": "Nastran F06 printed precision; no interpolation or nodal averaging of results.",
+  "nasa_reuse": {
+    "path": "NASA_SHM/core/plate_strain.py",
+    "symbol": "read_fiber_strains",
+    "mode": "explicit read-only Python import; no NASA output workflow called",
+    "sha256": "5bb290a15365096279d5f161a80d458d7ad14f9434529078eef2e5586c2bca1a",
+    "hash_mode": "crlf_to_lf"
+  },
+  "recorded_output_freshness": true,
+  "recorded_launcher_returncode": 1,
+  "diagnostics": {
+    "warning_messages": [],
+    "runtime_error_lines": [
+      "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM ."
+    ],
+    "recorded_runtime_errors": [
+      "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+      "Launcher returned exit code 1"
+    ]
+  },
+  "files": {
+    "strain": "shell_strain_long.csv",
+    "displacements": "grid_displacements.csv",
+    "solver_generated_aero_displacements": "solver_generated_aero_displacements.csv"
+  },
+  "csv_sha256": {
+    "shell_strain_long.csv": "f32cfea540e578114c830a3e577d1501aa02ea2d013deb805cbc8b4e39e4d25b",
+    "grid_displacements.csv": "82484d4cc0d0cc51b6c48ff3446dde2be0304f899f7c59db853e3c35f2a09f94",
+    "solver_generated_aero_displacements.csv": "cdcc7099dff108291075eac0b2d28576c6275b4737ce995018a71f0323acafb6"
+  }
+}

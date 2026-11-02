@@ -19,6 +19,8 @@ Vanessa_SHM/
 │   ├── models/aero_panels/   两件独立的气动/结构输入与 Femap 查看模型
 │   ├── cases/sol144_demo/    假设飞况下可重建的 SOL144 输入
 │   ├── results/sol144_demo/  实际应变、云图、Femap 结果与求解证据
+│   ├── cases/aoa_sweep/      3°、4°、5°、6°的独立输入
+│   ├── results/aoa_sweep/    迎角扫描结果、2°–6°比较和多工况Femap模型
 │   └── README.md             项目边界与复用约定
 └── workspace/                共享临时工作区，不提交计算文件
     ├── NASA_SHM/             原有 case、结果、诊断和历史归档

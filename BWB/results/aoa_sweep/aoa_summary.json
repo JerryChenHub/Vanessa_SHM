@@ -1,0 +1,1073 @@
+{
+  "status": "summary_with_runtime_diagnostics",
+  "angles_deg": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "new_angles_deg": [
+    3,
+    4,
+    5,
+    6
+  ],
+  "parts": [
+    1,
+    2
+  ],
+  "total_jobs": 10,
+  "new_jobs": 8,
+  "baseline": "D:\\Python\\Projects\\Vanessa_SHM\\BWB\\results\\sol144_demo",
+  "dynamic_pressure_Pa": 245.0,
+  "all_coarse_screens_pass": true,
+  "all_new_jobs_accepted_for_workflow_demo": true,
+  "all_component_affine_checks_pass": true,
+  "component_affine_checks": {
+    "1": {
+      "translations": {
+        "form": "component(alpha_deg) = slope * alpha_deg + intercept",
+        "unit": "m",
+        "scalar_components_checked": 8820,
+        "components_outside_tolerance": 0,
+        "passed": true,
+        "absolute_tolerance": 1e-12,
+        "relative_tolerance": 5e-06,
+        "max_abs_fit_residual": 5.600864821301947e-11,
+        "max_normalized_residual": 0.08559316483414887,
+        "worst_component": "GRID 2365 uz_m",
+        "worst_component_slope_per_deg": -1.9447690004393913e-06,
+        "worst_component_intercept_at_zero_deg": -2.798097986628738e-07,
+        "max_abs_intercept_at_zero_deg": 5.475221994720379e-05,
+        "roundoff_scale_floor_applied": false,
+        "note": "Nonzero intercept is allowed because initial camber/twist W2GJ remains active. No fit through zero is imposed."
+      },
+      "rotations": {
+        "form": "component(alpha_deg) = slope * alpha_deg + intercept",
+        "unit": "rad",
+        "scalar_components_checked": 8820,
+        "components_outside_tolerance": 0,
+        "passed": true,
+        "absolute_tolerance": 1e-12,
+        "relative_tolerance": 5e-06,
+        "max_abs_fit_residual": 5.800594167319761e-10,
+        "max_normalized_residual": 0.08792804299735427,
+        "worst_component": "GRID 2426 ry_rad",
+        "worst_component_slope_per_deg": 1.704031000384999e-05,
+        "worst_component_intercept_at_zero_deg": 1.5854401988283997e-05,
+        "max_abs_intercept_at_zero_deg": 0.0003456149199692556,
+        "roundoff_scale_floor_applied": false,
+        "note": "Nonzero intercept is allowed because initial camber/twist W2GJ remains active. No fit through zero is imposed."
+      },
+      "local_strain_components": {
+        "form": "component(alpha_deg) = slope * alpha_deg + intercept",
+        "unit": "dimensionless",
+        "scalar_components_checked": 26235,
+        "components_outside_tolerance": 0,
+        "passed": true,
+        "absolute_tolerance": 1e-13,
+        "relative_tolerance": 5e-06,
+        "max_abs_fit_residual": 5.599431501964163e-12,
+        "max_normalized_residual": 0.09228947838468475,
+        "worst_component": "element 1123 top exx_element",
+        "worst_component_slope_per_deg": -7.028420001587948e-08,
+        "worst_component_intercept_at_zero_deg": 1.2907643400483235e-06,
+        "max_abs_intercept_at_zero_deg": 7.347075994534207e-06,
+        "roundoff_scale_floor_applied": true,
+        "note": "Nonzero intercept is allowed because initial camber/twist W2GJ remains active. No fit through zero is imposed."
+      },
+      "aerodynamic_force": {
+        "form": "component(alpha_deg) = slope * alpha_deg + intercept",
+        "unit": "N",
+        "scalar_components_checked": 3,
+        "components_outside_tolerance": 0,
+        "passed": true,
+        "absolute_tolerance": 1e-07,
+        "relative_tolerance": 5e-06,
+        "max_abs_fit_residual": 2.409586912222039e-07,
+        "max_normalized_residual": 0.005327266944417721,
+        "worst_component": "CAD Fz",
+        "worst_component_slope_per_deg": -0.33388642354678694,
+        "worst_component_intercept_at_zero_deg": -0.16549552503627812,
+        "max_abs_intercept_at_zero_deg": 0.48765042575050516,
+        "roundoff_scale_floor_applied": false,
+        "note": "Nonzero intercept is allowed because initial camber/twist W2GJ remains active. No fit through zero is imposed."
+      },
+      "aerodynamic_root_moment": {
+        "form": "component(alpha_deg) = slope * alpha_deg + intercept",
+        "unit": "N*m",
+        "scalar_components_checked": 3,
+        "components_outside_tolerance": 0,
+        "passed": true,
+        "absolute_tolerance": 1e-07,
+        "relative_tolerance": 5e-06,
+        "max_abs_fit_residual": 7.495144505043072e-08,
+        "max_normalized_residual": 0.0044135966130990694,
+        "worst_component": "CAD Mz",
+        "worst_component_slope_per_deg": -0.48479839778208267,
+        "worst_component_intercept_at_zero_deg": -0.4675981328018574,
+        "max_abs_intercept_at_zero_deg": 0.4675981328018574,
+        "roundoff_scale_floor_applied": false,
+        "note": "Nonzero intercept is allowed because initial camber/twist W2GJ remains active. No fit through zero is imposed."
+      }
+    },
+    "2": {
+      "translations": {
+        "form": "component(alpha_deg) = slope * alpha_deg + intercept",
+        "unit": "m",
+        "scalar_components_checked": 8820,
+        "components_outside_tolerance": 0,
+        "passed": true,
+        "absolute_tolerance": 1e-12,
+        "relative_tolerance": 5e-06,
+        "max_abs_fit_residual": 5.600619778058438e-11,
+        "max_normalized_residual": 0.07615721482618734,
+        "worst_component": "GRID 1500 uy_m",
+        "worst_component_slope_per_deg": 2.340201800528732e-05,
+        "worst_component_intercept_at_zero_deg": -1.4528942016090003e-05,
+        "max_abs_intercept_at_zero_deg": 5.475085994720364e-05,
+        "roundoff_scale_floor_applied": false,
+        "note": "Nonzero intercept is allowed because initial camber/twist W2GJ remains active. No fit through zero is imposed."
+      },
+      "rotations": {
+        "form": "component(alpha_deg) = slope * alpha_deg + intercept",
+        "unit": "rad",
+        "scalar_components_checked": 8820,
+        "components_outside_tolerance": 0,
+        "passed": true,
+        "absolute_tolerance": 1e-12,
+        "relative_tolerance": 5e-06,
+        "max_abs_fit_residual": 5.400980040808079e-10,
+        "max_normalized_residual": 0.0965252434389472,
+        "worst_component": "GRID 477 rz_rad",
+        "worst_component_slope_per_deg": 5.748320001298749e-06,
+        "worst_component_intercept_at_zero_deg": -0.00012318173400395228,
+        "max_abs_intercept_at_zero_deg": 0.0003456163999692558,
+        "roundoff_scale_floor_applied": false,
+        "note": "Nonzero intercept is allowed because initial camber/twist W2GJ remains active. No fit through zero is imposed."
+      },
+      "local_strain_components": {
+        "form": "component(alpha_deg) = slope * alpha_deg + intercept",
+        "unit": "dimensionless",
+        "scalar_components_checked": 26235,
+        "components_outside_tolerance": 0,
+        "passed": true,
+        "absolute_tolerance": 1e-13,
+        "relative_tolerance": 5e-06,
+        "max_abs_fit_residual": 6.000547631953494e-12,
+        "max_normalized_residual": 0.08978494263955127,
+        "worst_component": "element 997 bottom eyy_element",
+        "worst_component_slope_per_deg": -1.951929200441008e-06,
+        "worst_component_intercept_at_zero_deg": -2.9517859865795547e-07,
+        "max_abs_intercept_at_zero_deg": 7.3469279945341996e-06,
+        "roundoff_scale_floor_applied": true,
+        "note": "Nonzero intercept is allowed because initial camber/twist W2GJ remains active. No fit through zero is imposed."
+      },
+      "aerodynamic_force": {
+        "form": "component(alpha_deg) = slope * alpha_deg + intercept",
+        "unit": "N",
+        "scalar_components_checked": 3,
+        "components_outside_tolerance": 0,
+        "passed": true,
+        "absolute_tolerance": 1e-07,
+        "relative_tolerance": 5e-06,
+        "max_abs_fit_residual": 4.078198845292036e-07,
+        "max_normalized_residual": 0.00394991781461805,
+        "worst_component": "CAD Fy",
+        "worst_component_slope_per_deg": 3.5195334293903464,
+        "worst_component_intercept_at_zero_deg": -0.4876627537592809,
+        "max_abs_intercept_at_zero_deg": 0.4876627537592809,
+        "roundoff_scale_floor_applied": false,
+        "note": "Nonzero intercept is allowed because initial camber/twist W2GJ remains active. No fit through zero is imposed."
+      },
+      "aerodynamic_root_moment": {
+        "form": "component(alpha_deg) = slope * alpha_deg + intercept",
+        "unit": "N*m",
+        "scalar_components_checked": 3,
+        "components_outside_tolerance": 0,
+        "passed": true,
+        "absolute_tolerance": 1e-07,
+        "relative_tolerance": 5e-06,
+        "max_abs_fit_residual": 2.2795254572827162e-07,
+        "max_normalized_residual": 0.004863875398029102,
+        "worst_component": "CAD Mx",
+        "worst_component_slope_per_deg": 1.5738756123529656,
+        "worst_component_intercept_at_zero_deg": -0.0899647565042119,
+        "max_abs_intercept_at_zero_deg": 0.46759622789676236,
+        "roundoff_scale_floor_applied": false,
+        "note": "Nonzero intercept is allowed because initial camber/twist W2GJ remains active. No fit through zero is imposed."
+      }
+    }
+  },
+  "trends": {
+    "1": {
+      "body_up_lift_N": {
+        "values": [
+          6.551416452027033,
+          10.070950035209602,
+          13.590483632200451,
+          17.110016687077557,
+          20.629550475846713
+        ],
+        "direction": "nondecreasing"
+      },
+      "max_translation_mm": {
+        "values": [
+          0.25668071710057594,
+          0.36558161981345233,
+          0.4750467779036949,
+          0.5847593354012316,
+          0.6946020055297357
+        ],
+        "direction": "nondecreasing"
+      },
+      "max_fiber_abs_principal_microstrain": {
+        "values": [
+          22.393985705240027,
+          30.081868525255363,
+          37.76991062081688,
+          45.45802693694267,
+          53.14617651900764
+        ],
+        "direction": "nondecreasing"
+      },
+      "peak_von_mises_MPa": {
+        "values": [
+          1.5509188841004826,
+          2.0829778199887974,
+          2.6150499871603268,
+          3.1471284044519385,
+          3.6792098132684203
+        ],
+        "direction": "nondecreasing"
+      }
+    },
+    "2": {
+      "body_up_lift_N": {
+        "values": [
+          6.551404146031063,
+          10.070937219998081,
+          13.590471371667729,
+          17.110004357006588,
+          20.629537720502622
+        ],
+        "direction": "nondecreasing"
+      },
+      "max_translation_mm": {
+        "values": [
+          0.256679055761774,
+          0.3655800439860026,
+          0.4750450779675651,
+          0.5847575048758733,
+          0.6946001073160828
+        ],
+        "direction": "nondecreasing"
+      },
+      "max_fiber_abs_principal_microstrain": {
+        "values": [
+          22.393832298121374,
+          30.081723916949667,
+          37.769766009751244,
+          45.45787354273364,
+          53.14603190533731
+        ],
+        "direction": "nondecreasing"
+      },
+      "peak_von_mises_MPa": {
+        "values": [
+          1.5509083038471032,
+          2.0829677878438115,
+          2.615039954843333,
+          3.1471178248878413,
+          3.679199780800382
+        ],
+        "direction": "nondecreasing"
+      }
+    }
+  },
+  "mirror_comparison": [
+    {
+      "alpha_deg": 2,
+      "max_geometry_reflection_error_m": 1.000000000001e-06,
+      "max_reflected_translation_vector_difference_mm": 1.6643316977052375e-06,
+      "max_reflected_rotation_vector_difference_rad": 6.018882454409668e-08,
+      "max_matched_principal_strain_difference_microstrain": 0.0015195792862385815,
+      "reflected_aerodynamic_force_difference_norm_N": 1.2673551322124244e-05,
+      "reflected_root_moment_difference_norm_Nm": 3.3334637609182178e-06,
+      "lift_difference_N": 1.2305995970685046e-05,
+      "max_translation_peak_difference_mm": 1.6613388019171005e-06,
+      "max_fiber_principal_peak_difference_microstrain": 0.00015340711865263756,
+      "peak_von_mises_difference_MPa": 1.058025337941082e-05
+    },
+    {
+      "alpha_deg": 3,
+      "max_geometry_reflection_error_m": 1.000000000001e-06,
+      "max_reflected_translation_vector_difference_mm": 1.7466486882025545e-06,
+      "max_reflected_rotation_vector_difference_rad": 9.063588122261657e-08,
+      "max_matched_principal_strain_difference_microstrain": 0.0022982441654777475,
+      "reflected_aerodynamic_force_difference_norm_N": 1.3170819881268296e-05,
+      "reflected_root_moment_difference_norm_Nm": 3.5830138392588704e-06,
+      "lift_difference_N": 1.281521152129983e-05,
+      "max_translation_peak_difference_mm": 1.5758274497512659e-06,
+      "max_fiber_principal_peak_difference_microstrain": 0.0001446083056961811,
+      "peak_von_mises_difference_MPa": 1.0032144985849811e-05
+    },
+    {
+      "alpha_deg": 4,
+      "max_geometry_reflection_error_m": 1.000000000001e-06,
+      "max_reflected_translation_vector_difference_mm": 2.3338568765027404e-06,
+      "max_reflected_rotation_vector_difference_rad": 1.2108314842702346e-07,
+      "max_matched_principal_strain_difference_microstrain": 0.003078957310631125,
+      "reflected_aerodynamic_force_difference_norm_N": 1.263402307355867e-05,
+      "reflected_root_moment_difference_norm_Nm": 3.2844509510037495e-06,
+      "lift_difference_N": 1.2260532722407902e-05,
+      "max_translation_peak_difference_mm": 1.6999361297509452e-06,
+      "max_fiber_principal_peak_difference_microstrain": 0.00014461106563601334,
+      "peak_von_mises_difference_MPa": 1.0032316993591195e-05
+    },
+    {
+      "alpha_deg": 5,
+      "max_geometry_reflection_error_m": 1.000000000001e-06,
+      "max_reflected_translation_vector_difference_mm": 2.9220640752727706e-06,
+      "max_reflected_rotation_vector_difference_rad": 1.5153047948844809e-07,
+      "max_matched_principal_strain_difference_microstrain": 0.003856781141097443,
+      "reflected_aerodynamic_force_difference_norm_N": 1.2687116064284174e-05,
+      "reflected_root_moment_difference_norm_Nm": 3.4182924498941042e-06,
+      "lift_difference_N": 1.2330070969568396e-05,
+      "max_translation_peak_difference_mm": 1.8305253582928671e-06,
+      "max_fiber_principal_peak_difference_microstrain": 0.00015339420903615064,
+      "peak_von_mises_difference_MPa": 1.0579564097223937e-05
+    },
+    {
+      "alpha_deg": 6,
+      "max_geometry_reflection_error_m": 1.000000000001e-06,
+      "max_reflected_translation_vector_difference_mm": 3.5092724288659785e-06,
+      "max_reflected_rotation_vector_difference_rad": 1.8197784910532142e-07,
+      "max_matched_principal_strain_difference_microstrain": 0.004634627273095049,
+      "reflected_aerodynamic_force_difference_norm_N": 1.3112102704038492e-05,
+      "reflected_root_moment_difference_norm_Nm": 3.557884510093104e-06,
+      "lift_difference_N": 1.2755344091175402e-05,
+      "max_translation_peak_difference_mm": 1.8982136529288596e-06,
+      "max_fiber_principal_peak_difference_microstrain": 0.00014461367032936323,
+      "peak_von_mises_difference_MPa": 1.0032468038545517e-05
+    }
+  ],
+  "maximum_mirror_differences": {
+    "max_geometry_reflection_error_m": 1.000000000001e-06,
+    "max_reflected_translation_vector_difference_mm": 3.5092724288659785e-06,
+    "max_reflected_rotation_vector_difference_rad": 1.8197784910532142e-07,
+    "max_matched_principal_strain_difference_microstrain": 0.004634627273095049,
+    "reflected_aerodynamic_force_difference_norm_N": 1.3170819881268296e-05,
+    "reflected_root_moment_difference_norm_Nm": 3.5830138392588704e-06,
+    "lift_difference_N": 1.281521152129983e-05,
+    "max_translation_peak_difference_mm": 1.8982136529288596e-06,
+    "max_fiber_principal_peak_difference_microstrain": 0.00015340711865263756,
+    "peak_von_mises_difference_MPa": 1.058025337941082e-05
+  },
+  "cases": [
+    {
+      "alpha_deg": 2,
+      "part": 1,
+      "body_up_lift_N": 6.551416452027033,
+      "body_up_CL": 0.10229042437556235,
+      "lateral_CAD_Fz_N": -0.8332683520594268,
+      "max_translation_mm": 0.25668071710057594,
+      "max_translation_grid_id": 2722,
+      "max_rotation_deg": 0.06756448094636966,
+      "top_peak_abs_principal_microstrain": 16.86583597172513,
+      "bottom_peak_abs_principal_microstrain": 22.393985705240027,
+      "mid_peak_abs_principal_microstrain": 12.47575816145157,
+      "max_fiber_abs_principal_microstrain": 22.393985705240027,
+      "max_fiber_surface": "bottom",
+      "max_fiber_element_id": 2305,
+      "peak_von_mises_MPa": 1.5509188841004826,
+      "yield_utilization": 0.0077545944205024125,
+      "force_balance_relative": 6.882931171232501e-08,
+      "moment_balance_relative": 5.998270926610757e-08,
+      "max_abs_root_dof": 0.0,
+      "coarse_screens_pass": true,
+      "accepted_for_workflow_demo": null,
+      "diagnostic_only": true
+    },
+    {
+      "alpha_deg": 2,
+      "part": 2,
+      "body_up_lift_N": 6.551404146031063,
+      "body_up_CL": 0.1022902322361129,
+      "lateral_CAD_Fz_N": 0.8332653219824833,
+      "max_translation_mm": 0.256679055761774,
+      "max_translation_grid_id": 2722,
+      "max_rotation_deg": 0.06756407897408546,
+      "top_peak_abs_principal_microstrain": 16.86571990597085,
+      "bottom_peak_abs_principal_microstrain": 22.393832298121374,
+      "mid_peak_abs_principal_microstrain": 12.47567288132542,
+      "max_fiber_abs_principal_microstrain": 22.393832298121374,
+      "max_fiber_surface": "bottom",
+      "max_fiber_element_id": 2305,
+      "peak_von_mises_MPa": 1.5509083038471032,
+      "yield_utilization": 0.007754541519235516,
+      "force_balance_relative": 2.2361053120782876e-08,
+      "moment_balance_relative": 7.078972285217429e-08,
+      "max_abs_root_dof": 0.0,
+      "coarse_screens_pass": true,
+      "accepted_for_workflow_demo": null,
+      "diagnostic_only": true
+    },
+    {
+      "alpha_deg": 3,
+      "part": 1,
+      "body_up_lift_N": 10.070950035209602,
+      "body_up_CL": 0.15724259944548918,
+      "lateral_CAD_Fz_N": -1.1671547970987102,
+      "max_translation_mm": 0.36558161981345233,
+      "max_translation_grid_id": 2722,
+      "max_rotation_deg": 0.09242465751995856,
+      "top_peak_abs_principal_microstrain": 22.679029780548777,
+      "bottom_peak_abs_principal_microstrain": 30.081868525255363,
+      "mid_peak_abs_principal_microstrain": 16.765900320496307,
+      "max_fiber_abs_principal_microstrain": 30.081868525255363,
+      "max_fiber_surface": "bottom",
+      "max_fiber_element_id": 2305,
+      "peak_von_mises_MPa": 2.0829778199887974,
+      "yield_utilization": 0.010414889099943987,
+      "force_balance_relative": 2.0312358627619056e-08,
+      "moment_balance_relative": 6.32613465842719e-08,
+      "max_abs_root_dof": 0.0,
+      "coarse_screens_pass": true,
+      "accepted_for_workflow_demo": true,
+      "diagnostic_only": true
+    },
+    {
+      "alpha_deg": 3,
+      "part": 2,
+      "body_up_lift_N": 10.070937219998081,
+      "body_up_CL": 0.1572423993554118,
+      "lateral_CAD_Fz_N": 1.1671517572220664,
+      "max_translation_mm": 0.3655800439860026,
+      "max_translation_grid_id": 2722,
+      "max_rotation_deg": 0.09242425631800466,
+      "top_peak_abs_principal_microstrain": 22.678925914795773,
+      "bottom_peak_abs_principal_microstrain": 30.081723916949667,
+      "mid_peak_abs_principal_microstrain": 16.765815283873696,
+      "max_fiber_abs_principal_microstrain": 30.081723916949667,
+      "max_fiber_surface": "bottom",
+      "max_fiber_element_id": 2305,
+      "peak_von_mises_MPa": 2.0829677878438115,
+      "yield_utilization": 0.010414838939219058,
+      "force_balance_relative": 2.7525034660882845e-07,
+      "moment_balance_relative": 8.941110564507616e-07,
+      "max_abs_root_dof": 0.0,
+      "coarse_screens_pass": true,
+      "accepted_for_workflow_demo": true,
+      "diagnostic_only": true
+    },
+    {
+      "alpha_deg": 4,
+      "part": 1,
+      "body_up_lift_N": 13.590483632200451,
+      "body_up_CL": 0.21219477473101137,
+      "lateral_CAD_Fz_N": -1.5010412775297493,
+      "max_translation_mm": 0.4750467779036949,
+      "max_translation_grid_id": 2722,
+      "max_rotation_deg": 0.11730121495406932,
+      "top_peak_abs_principal_microstrain": 28.49224968567473,
+      "bottom_peak_abs_principal_microstrain": 37.76991062081688,
+      "mid_peak_abs_principal_microstrain": 21.05610545025812,
+      "max_fiber_abs_principal_microstrain": 37.76991062081688,
+      "max_fiber_surface": "bottom",
+      "max_fiber_element_id": 2305,
+      "peak_von_mises_MPa": 2.6150499871603268,
+      "yield_utilization": 0.013075249935801635,
+      "force_balance_relative": 2.6641953466532964e-07,
+      "moment_balance_relative": 7.162520882284344e-08,
+      "max_abs_root_dof": 0.0,
+      "coarse_screens_pass": true,
+      "accepted_for_workflow_demo": true,
+      "diagnostic_only": true
+    },
+    {
+      "alpha_deg": 4,
+      "part": 2,
+      "body_up_lift_N": 13.590471371667729,
+      "body_up_CL": 0.21219458330140153,
+      "lateral_CAD_Fz_N": 1.501038228287813,
+      "max_translation_mm": 0.4750450779675651,
+      "max_translation_grid_id": 2722,
+      "max_rotation_deg": 0.11730081404710811,
+      "top_peak_abs_principal_microstrain": 28.49213742472378,
+      "bottom_peak_abs_principal_microstrain": 37.769766009751244,
+      "mid_peak_abs_principal_microstrain": 21.056023696413106,
+      "max_fiber_abs_principal_microstrain": 37.769766009751244,
+      "max_fiber_surface": "bottom",
+      "max_fiber_element_id": 2305,
+      "peak_von_mises_MPa": 2.615039954843333,
+      "yield_utilization": 0.013075199774216666,
+      "force_balance_relative": 1.0169849623338983e-07,
+      "moment_balance_relative": 7.094102177991329e-07,
+      "max_abs_root_dof": 0.0,
+      "coarse_screens_pass": true,
+      "accepted_for_workflow_demo": true,
+      "diagnostic_only": true
+    },
+    {
+      "alpha_deg": 5,
+      "part": 1,
+      "body_up_lift_N": 17.110016687077557,
+      "body_up_CL": 0.26714694155225027,
+      "lateral_CAD_Fz_N": -1.8349276022055923,
+      "max_translation_mm": 0.5847593354012316,
+      "max_translation_grid_id": 2722,
+      "max_rotation_deg": 0.1421855555482676,
+      "top_peak_abs_principal_microstrain": 34.30546825937723,
+      "bottom_peak_abs_principal_microstrain": 45.45802693694267,
+      "mid_peak_abs_principal_microstrain": 25.346347386033838,
+      "max_fiber_abs_principal_microstrain": 45.45802693694267,
+      "max_fiber_surface": "bottom",
+      "max_fiber_element_id": 2305,
+      "peak_von_mises_MPa": 3.1471284044519385,
+      "yield_utilization": 0.01573564202225969,
+      "force_balance_relative": 1.939036918251496e-07,
+      "moment_balance_relative": 1.950299576280369e-08,
+      "max_abs_root_dof": 0.0,
+      "coarse_screens_pass": true,
+      "accepted_for_workflow_demo": true,
+      "diagnostic_only": true
+    },
+    {
+      "alpha_deg": 5,
+      "part": 2,
+      "body_up_lift_N": 17.110004357006588,
+      "body_up_CL": 0.2671467490369063,
+      "lateral_CAD_Fz_N": 1.8349246135162618,
+      "max_translation_mm": 0.5847575048758733,
+      "max_translation_grid_id": 2722,
+      "max_rotation_deg": 0.14218515486441,
+      "top_peak_abs_principal_microstrain": 34.30536073396886,
+      "bottom_peak_abs_principal_microstrain": 45.45787354273364,
+      "mid_peak_abs_principal_microstrain": 25.346260939330378,
+      "max_fiber_abs_principal_microstrain": 45.45787354273364,
+      "max_fiber_surface": "bottom",
+      "max_fiber_element_id": 2305,
+      "peak_von_mises_MPa": 3.1471178248878413,
+      "yield_utilization": 0.015735589124439207,
+      "force_balance_relative": 2.541890563209091e-07,
+      "moment_balance_relative": 3.941688987081392e-07,
+      "max_abs_root_dof": 0.0,
+      "coarse_screens_pass": true,
+      "accepted_for_workflow_demo": true,
+      "diagnostic_only": true
+    },
+    {
+      "alpha_deg": 6,
+      "part": 1,
+      "body_up_lift_N": 20.629550475846713,
+      "body_up_CL": 0.32209911983209966,
+      "lateral_CAD_Fz_N": -2.1688140668627383,
+      "max_translation_mm": 0.6946020055297357,
+      "max_translation_grid_id": 2722,
+      "max_rotation_deg": 0.16707420162904535,
+      "top_peak_abs_principal_microstrain": 40.11869896784864,
+      "bottom_peak_abs_principal_microstrain": 53.14617651900764,
+      "mid_peak_abs_principal_microstrain": 29.636601820926373,
+      "max_fiber_abs_principal_microstrain": 53.14617651900764,
+      "max_fiber_surface": "bottom",
+      "max_fiber_element_id": 2305,
+      "peak_von_mises_MPa": 3.6792098132684203,
+      "yield_utilization": 0.018396049066342103,
+      "force_balance_relative": 2.3165225367649276e-08,
+      "moment_balance_relative": 4.801839290268922e-08,
+      "max_abs_root_dof": 0.0,
+      "coarse_screens_pass": true,
+      "accepted_for_workflow_demo": true,
+      "diagnostic_only": true
+    },
+    {
+      "alpha_deg": 6,
+      "part": 2,
+      "body_up_lift_N": 20.629537720502622,
+      "body_up_CL": 0.32209892067676127,
+      "lateral_CAD_Fz_N": 2.1688110290288987,
+      "max_translation_mm": 0.6946001073160828,
+      "max_translation_grid_id": 2722,
+      "max_rotation_deg": 0.16707380161565996,
+      "top_peak_abs_principal_microstrain": 40.1185832032622,
+      "bottom_peak_abs_principal_microstrain": 53.14603190533731,
+      "mid_peak_abs_principal_microstrain": 29.636519172235847,
+      "max_fiber_abs_principal_microstrain": 53.14603190533731,
+      "max_fiber_surface": "bottom",
+      "max_fiber_element_id": 2305,
+      "peak_von_mises_MPa": 3.679199780800382,
+      "yield_utilization": 0.018395998904001908,
+      "force_balance_relative": 1.0990006362860229e-07,
+      "moment_balance_relative": 3.56664537922363e-07,
+      "max_abs_root_dof": 0.0,
+      "coarse_screens_pass": true,
+      "accepted_for_workflow_demo": true,
+      "diagnostic_only": true
+    }
+  ],
+  "diagnostic_cases": [
+    {
+      "alpha_deg": 2,
+      "part": 1,
+      "diagnostics": {
+        "warning_messages": [],
+        "runtime_error_lines": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM ."
+        ],
+        "recorded_runtime_errors": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+          "Launcher returned exit code 1"
+        ]
+      }
+    },
+    {
+      "alpha_deg": 2,
+      "part": 2,
+      "diagnostics": {
+        "warning_messages": [],
+        "runtime_error_lines": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM ."
+        ],
+        "recorded_runtime_errors": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+          "Launcher returned exit code 1"
+        ]
+      }
+    },
+    {
+      "alpha_deg": 3,
+      "part": 1,
+      "diagnostics": {
+        "warning_messages": [],
+        "runtime_error_lines": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM ."
+        ],
+        "recorded_runtime_errors": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+          "Launcher returned exit code 1"
+        ]
+      }
+    },
+    {
+      "alpha_deg": 3,
+      "part": 2,
+      "diagnostics": {
+        "warning_messages": [],
+        "runtime_error_lines": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM ."
+        ],
+        "recorded_runtime_errors": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+          "Launcher returned exit code 1"
+        ]
+      }
+    },
+    {
+      "alpha_deg": 4,
+      "part": 1,
+      "diagnostics": {
+        "warning_messages": [],
+        "runtime_error_lines": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM ."
+        ],
+        "recorded_runtime_errors": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+          "Launcher returned exit code 1"
+        ]
+      }
+    },
+    {
+      "alpha_deg": 4,
+      "part": 2,
+      "diagnostics": {
+        "warning_messages": [],
+        "runtime_error_lines": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM ."
+        ],
+        "recorded_runtime_errors": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+          "Launcher returned exit code 1"
+        ]
+      }
+    },
+    {
+      "alpha_deg": 5,
+      "part": 1,
+      "diagnostics": {
+        "warning_messages": [],
+        "runtime_error_lines": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM ."
+        ],
+        "recorded_runtime_errors": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+          "Launcher returned exit code 1"
+        ]
+      }
+    },
+    {
+      "alpha_deg": 5,
+      "part": 2,
+      "diagnostics": {
+        "warning_messages": [],
+        "runtime_error_lines": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM ."
+        ],
+        "recorded_runtime_errors": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+          "Launcher returned exit code 1"
+        ]
+      }
+    },
+    {
+      "alpha_deg": 6,
+      "part": 1,
+      "diagnostics": {
+        "warning_messages": [],
+        "runtime_error_lines": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM ."
+        ],
+        "recorded_runtime_errors": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+          "Launcher returned exit code 1"
+        ]
+      }
+    },
+    {
+      "alpha_deg": 6,
+      "part": 2,
+      "diagnostics": {
+        "warning_messages": [],
+        "runtime_error_lines": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM ."
+        ],
+        "recorded_runtime_errors": [
+          "Intel MKL ERROR: Parameter 13 was incorrect on entry to DGEMM .",
+          "Launcher returned exit code 1"
+        ]
+      }
+    }
+  ],
+  "provenance": [
+    {
+      "alpha_deg": 2,
+      "part": 1,
+      "hash_checks": {
+        "summary": "exact",
+        "strain": "exact",
+        "displacement": "exact"
+      },
+      "source_files": [
+        {
+          "path": "BWB\\results\\sol144_demo\\part_1\\strain_summary.json",
+          "sha256": "db2709198ca03525b5a97ee1f5823cec008cdd94bd7eb3a86f410fbf2731b856"
+        },
+        {
+          "path": "BWB\\results\\sol144_demo\\part_1\\reasonableness.json",
+          "sha256": "4d7bca32f4c1d641d8daaebbd395ddabce37311e8f42f85716fdbc35e5ded887"
+        },
+        {
+          "path": "BWB\\results\\sol144_demo\\part_1\\shell_strain_long.csv",
+          "sha256": "12e05bd9f044857f7060c259c92361c082f980fd5f7648aecf58ef4c26327545"
+        },
+        {
+          "path": "BWB\\results\\sol144_demo\\part_1\\grid_displacements.csv",
+          "sha256": "6a3ad7296e57d2f6ecf902303afc85095617c46fa265a960d34a5eb9b0991eef"
+        }
+      ],
+      "source_f06_sha256": "d1d4eeada1183ceb5e75818272920be9c0be7de999631151ab4012e46a388bcc"
+    },
+    {
+      "alpha_deg": 2,
+      "part": 2,
+      "hash_checks": {
+        "summary": "exact",
+        "strain": "exact",
+        "displacement": "exact"
+      },
+      "source_files": [
+        {
+          "path": "BWB\\results\\sol144_demo\\part_2\\strain_summary.json",
+          "sha256": "26e246322d7b91633f0e3094980b3ea47709ea775e32db98a8d53a153f1d7f7e"
+        },
+        {
+          "path": "BWB\\results\\sol144_demo\\part_2\\reasonableness.json",
+          "sha256": "be189e42607f88552212e3c13252bd53085b03811bd385f445ec355075f408fe"
+        },
+        {
+          "path": "BWB\\results\\sol144_demo\\part_2\\shell_strain_long.csv",
+          "sha256": "da68742c6837c09ee89235d3744d318cda5f9807617f39d2c79162659b015ad3"
+        },
+        {
+          "path": "BWB\\results\\sol144_demo\\part_2\\grid_displacements.csv",
+          "sha256": "0b1752b2bcdf07ea6d72335aea01ad66047b4b3a5d804941bba5b35fcca6b856"
+        }
+      ],
+      "source_f06_sha256": "406a1ad7ed46c568a098bc3a93bf06222e7acff6e65070b71823490e621ee8ba"
+    },
+    {
+      "alpha_deg": 3,
+      "part": 1,
+      "hash_checks": {
+        "summary": "exact",
+        "strain": "exact",
+        "displacement": "exact"
+      },
+      "source_files": [
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_03\\part_1\\strain_summary.json",
+          "sha256": "54ca7bb7ef73c9a9f1ac6e9383e8e9ed2f4115011cb884fd625c9f552aae787c"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_03\\part_1\\reasonableness.json",
+          "sha256": "cac916bcd19afadddc472373fa6642befb64d10d84eea5dd153516dfd7cc575d"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_03\\part_1\\shell_strain_long.csv",
+          "sha256": "233aa3ac0e30dcc5d40728a48aa2201618f6c059c955df2124445eb7e8223ca1"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_03\\part_1\\grid_displacements.csv",
+          "sha256": "5cd34f69885c5b87555ca5c2af7cb8895f60d18047560c1bf4752cfc5838ce81"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_03\\part_1\\case_review.json",
+          "sha256": "1f3256f5279e19abb7ebc1dad041fba60c76ead18107c57209925cb5c8ed3340"
+        }
+      ],
+      "source_f06_sha256": "9a9e9f95544b16f03a3421008c3859d207392996a80731f4885bb152bcf500ee"
+    },
+    {
+      "alpha_deg": 3,
+      "part": 2,
+      "hash_checks": {
+        "summary": "exact",
+        "strain": "exact",
+        "displacement": "exact"
+      },
+      "source_files": [
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_03\\part_2\\strain_summary.json",
+          "sha256": "8aa96e2cd379656daf8036ce1e54492437919669ae2798a575bc712edf271c0c"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_03\\part_2\\reasonableness.json",
+          "sha256": "7ae89ac1b3d491434191aa8235c772e62a54c9edb149b5fadba0141899c3c631"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_03\\part_2\\shell_strain_long.csv",
+          "sha256": "bce50291f99096672b00521c57cc354cafc0339fd5e1805db6183c31bb5a8c0b"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_03\\part_2\\grid_displacements.csv",
+          "sha256": "66e5238eb1d648d21f10162fb337f2d9cb84a0cff54ae554a2c81f8704d79a50"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_03\\part_2\\case_review.json",
+          "sha256": "64334f866d545f21d77bce15a2c6fe5dc1f309511d3190e0c7fef89b58511d73"
+        }
+      ],
+      "source_f06_sha256": "293c5a26ed3d9c96ac93531e42856bfd26d8de9074daa95e2402eb2f605fa05c"
+    },
+    {
+      "alpha_deg": 4,
+      "part": 1,
+      "hash_checks": {
+        "summary": "exact",
+        "strain": "exact",
+        "displacement": "exact"
+      },
+      "source_files": [
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_04\\part_1\\strain_summary.json",
+          "sha256": "1d6d5c93fc8d362edbcfb790c2fed7624af21861829111f1189f3f1c56eeb386"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_04\\part_1\\reasonableness.json",
+          "sha256": "77405995495e197f28c6bdf3b9b4335f63d67b88f831b8aab26d1fb873f964ed"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_04\\part_1\\shell_strain_long.csv",
+          "sha256": "76a598b4c76158fb4b186f395dbe0d64f4ff87631727df1e0d3de99d97081762"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_04\\part_1\\grid_displacements.csv",
+          "sha256": "bf22fb690674f17293838a2a561e5a2780ed4e769be59a46013497b526b65e0f"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_04\\part_1\\case_review.json",
+          "sha256": "3094d6bd5294bf40ca38645122eec132210fdce18aee19aefa6eacba882ab229"
+        }
+      ],
+      "source_f06_sha256": "d29f3b817b82a98fd2a740d91f3f6057b11710ca545cf28a69c38dd28ad6fb7a"
+    },
+    {
+      "alpha_deg": 4,
+      "part": 2,
+      "hash_checks": {
+        "summary": "exact",
+        "strain": "exact",
+        "displacement": "exact"
+      },
+      "source_files": [
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_04\\part_2\\strain_summary.json",
+          "sha256": "b23644f491c0822476f2dcf2814680cb28225165b835a83946b9471955f31413"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_04\\part_2\\reasonableness.json",
+          "sha256": "05df35047366f89beefa076d0605a688d6dac80e1b891698cdd0d5d9ae8fa484"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_04\\part_2\\shell_strain_long.csv",
+          "sha256": "f32cfea540e578114c830a3e577d1501aa02ea2d013deb805cbc8b4e39e4d25b"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_04\\part_2\\grid_displacements.csv",
+          "sha256": "82484d4cc0d0cc51b6c48ff3446dde2be0304f899f7c59db853e3c35f2a09f94"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_04\\part_2\\case_review.json",
+          "sha256": "c918c469b3ea854a151cc5c9bcd0c27b79e47d940e7f91b957e1f9e4bf676679"
+        }
+      ],
+      "source_f06_sha256": "17605aad5ba1d9c56ef784e8261fbe78bd705975b2eae4932f5f53ac1d6784fd"
+    },
+    {
+      "alpha_deg": 5,
+      "part": 1,
+      "hash_checks": {
+        "summary": "exact",
+        "strain": "exact",
+        "displacement": "exact"
+      },
+      "source_files": [
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_05\\part_1\\strain_summary.json",
+          "sha256": "f8b3148726fd2e0092544d0c272c445dcc9f11140616b2fb1e526e3dd3c62118"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_05\\part_1\\reasonableness.json",
+          "sha256": "b5f68cc6cf76577c3378c37d8432186d1dc93b33b8bd2d4517f246558af3c955"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_05\\part_1\\shell_strain_long.csv",
+          "sha256": "7c1e61ba554488ed2db970019dccb0d46301eeba6fb9f2fe15f0532f86623875"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_05\\part_1\\grid_displacements.csv",
+          "sha256": "c722a2de1e894bb69074983a085fba5b73939ba03675fb66b929951f66c8db47"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_05\\part_1\\case_review.json",
+          "sha256": "cdeabe81e628f0197e03a271acd70c29f6a1bb624ce780c093edb162e599c572"
+        }
+      ],
+      "source_f06_sha256": "d795d365d1898ccce8d49dc833e74481f706fadb25008b0b0552ba11e2eb8c8f"
+    },
+    {
+      "alpha_deg": 5,
+      "part": 2,
+      "hash_checks": {
+        "summary": "exact",
+        "strain": "exact",
+        "displacement": "exact"
+      },
+      "source_files": [
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_05\\part_2\\strain_summary.json",
+          "sha256": "ae79189c5d3163d0c941dffbb2241dfcfa1b6847089498f1cc2c1680ebbd354e"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_05\\part_2\\reasonableness.json",
+          "sha256": "685a1a2b64021fc27b2184c4d18305d99b49ffa86b2463aff3d56b21474bca15"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_05\\part_2\\shell_strain_long.csv",
+          "sha256": "731fb27f3e1445bdf0d8a7e80d69243fbc29e8eea739e1018435445ce4a816da"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_05\\part_2\\grid_displacements.csv",
+          "sha256": "7b7e023b8a3fe02393c0fba813b2d2ee954c6650996742ce4d2829c64777a306"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_05\\part_2\\case_review.json",
+          "sha256": "88e58c474e3f27cafa6d733d62c7f5102b408d3d1ed830cae4db7a7f56443490"
+        }
+      ],
+      "source_f06_sha256": "eab4f8ea7ccca1d4b1111abd441ed316605c7cbe39d6a2c2d1f1f68b432190e8"
+    },
+    {
+      "alpha_deg": 6,
+      "part": 1,
+      "hash_checks": {
+        "summary": "exact",
+        "strain": "exact",
+        "displacement": "exact"
+      },
+      "source_files": [
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_06\\part_1\\strain_summary.json",
+          "sha256": "c340d7082809e28b0823b0a02931dd4f29187bb03f751243eb2e61d7a3762ba9"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_06\\part_1\\reasonableness.json",
+          "sha256": "5d1575ac5a6f49d1394a465ebce8efcd4b4ebde8412af737570f4dc5747d433b"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_06\\part_1\\shell_strain_long.csv",
+          "sha256": "17b183ae82080654fb632ab907a1f141efd40f80a2224a0c02238990bb8c60ab"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_06\\part_1\\grid_displacements.csv",
+          "sha256": "09753674743b54d9e981124d1eb8fb980b9c450fe82d9fdc7075f0dc1d2f396d"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_06\\part_1\\case_review.json",
+          "sha256": "6652164ebfe7bc7c884d3a33ec69c139c4ae52e90a723525fb5a848e34a5b383"
+        }
+      ],
+      "source_f06_sha256": "14eb105f7489f5295a254111ba8f0a61b7bc7b04b048e80d293cd7fce7c64ab7"
+    },
+    {
+      "alpha_deg": 6,
+      "part": 2,
+      "hash_checks": {
+        "summary": "exact",
+        "strain": "exact",
+        "displacement": "exact"
+      },
+      "source_files": [
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_06\\part_2\\strain_summary.json",
+          "sha256": "658e5e2cc0f35e35e53630f59a3d46d59b1aeeb255d4c62373e16df1fbcf9d32"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_06\\part_2\\reasonableness.json",
+          "sha256": "424792ea4ddc671307396a59042dfe8aeccf0ed2145c7684678d87f27b9197f2"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_06\\part_2\\shell_strain_long.csv",
+          "sha256": "29923d25f6e8eba63b4339a48e8ad3e4b2e3b73a275d6612d1ec8f78bc5fbf8d"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_06\\part_2\\grid_displacements.csv",
+          "sha256": "d13db565889d7e36c5968c2056a9a844693edb29441339f3061015885bc6f6ed"
+        },
+        {
+          "path": "BWB\\results\\aoa_sweep\\aoa_06\\part_2\\case_review.json",
+          "sha256": "5846537a92440d3b025098bfdb437f991ee65d49e632f1e6de55c71e7f6dab89"
+        }
+      ],
+      "source_f06_sha256": "6d499744ebd0676baad136ec5216be9a516391792b1b054abe28fafb4452a534"
+    }
+  ],
+  "mirror_convention": "CAD Z2=1.56-Z1. Polar vector sign transform (1,1,-1); axial vector sign transform (-1,-1,1). Same shell IDs/surfaces compared using principal-strain invariants, not unlike local axes.",
+  "limitations": [
+    "Maximal principal strains, stress extrema and displacement magnitudes are not required to be affine.",
+    "Within-part local strain components and GRID DOFs are fit with a free intercept; W2GJ is retained.",
+    "All results retain the underlying solver runtime diagnostics and assumed material/flight conditions.",
+    "A sweep consistency check is not grid convergence, experimental validation or certification."
+  ]
+}
