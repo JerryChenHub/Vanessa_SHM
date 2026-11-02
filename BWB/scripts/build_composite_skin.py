@@ -1,4 +1,4 @@
-"""Assign four parameterized woven carbon/epoxy regions and build trial SOL144 decks."""
+"""Assign four independent carbon/epoxy materials and build trial SOL144 decks."""
 from __future__ import annotations
 
 import argparse
@@ -15,22 +15,68 @@ from .build_sol144_demo import build as build_flight
 from .inspect_shell_bdf import cards, load_model
 
 REGIONS = {'upper': 101, 'lower': 102, 'leading_edge': 103, 'trailing_edge': 104}
+REGION_MATERIAL_IDS = {'upper': 1, 'lower': 2, 'leading_edge': 3, 'trailing_edge': 4}
+STRENGTH_KEYS = ('Xt', 'Xc', 'Yt', 'Yc', 'S')
 DEFAULT_CONFIG = ROOT / 'BWB/config/composite_skin.json'
 
 
-def material_values(config):
-    m = config['material']
+def material_values(config, region=None):
+    """Resolve a region's cured material; isotropic G12 is constrained, not fitted.
+
+    Legacy schema 1 accepts a single top-level material. Schema 2 requires an
+    explicit material in every region, preventing accidental shared defaults.
+    Strengths are independent of elastic stiffness and are stress allowables.
+    """
+    if 'material' in config:
+        if any('material' in value for value in config.get('regions', {}).values()):
+            raise ValueError('Do not mix legacy shared material and regional materials')
+        m = config['material']
+    else:
+        if region not in REGIONS or 'material' not in config['regions'][region]:
+            raise ValueError('Select a region with its own material definition')
+        m = config['regions'][region]['material']
+    model = m.get('model', 'orthotropic')
     scale = float(m.get('stiffness_scale', 1.))
+    if not math.isfinite(scale) or scale <= 0:
+        raise ValueError('stiffness_scale must be finite and positive')
     names = ('E1_Pa', 'E2_Pa', 'G12_Pa', 'G13_Pa', 'G23_Pa')
-    values = {key: float(m[key]) * scale for key in names}
-    values.update(nu12=float(m['nu12']), density_kg_m3=float(m['density_kg_m3']))
+    if model == 'orthotropic':
+        values = {key: float(m[key]) * scale for key in names}
+        nu = float(m['nu12'])
+    elif model == 'plane_isotropic':
+        young, nu = float(m['E_Pa']), float(m['nu'])
+        if not math.isfinite(nu) or not -1 < nu < .5:
+            raise ValueError('Plane-isotropic Poisson ratio must be between -1 and 0.5')
+        shear = young/(2*(1+nu))
+        expected = dict(E1_Pa=young, E2_Pa=young, nu12=nu, G12_Pa=shear)
+        for key, value in expected.items():
+            if key in m and not math.isclose(float(m[key]), value, rel_tol=1e-10, abs_tol=1e-12):
+                raise ValueError(f'{key} conflicts with plane-isotropic E/nu')
+        values = dict(E1_Pa=young*scale, E2_Pa=young*scale, G12_Pa=shear*scale,
+                      G13_Pa=float(m['G13_Pa'])*scale, G23_Pa=float(m['G23_Pa'])*scale)
+    else:
+        raise ValueError(f'Unknown material model: {model}')
+    values.update(nu12=nu, density_kg_m3=float(m['density_kg_m3']))
     if not all(math.isfinite(v) for v in values.values()) or min(values[k] for k in names) <= 0:
         raise ValueError('Finite positive elastic moduli are required')
-    if values['density_kg_m3'] <= 0 or not 0 <= values['nu12'] < 1:
+    if values['density_kg_m3'] <= 0 or not -1 < values['nu12'] < 1:
         raise ValueError('Invalid material density or Poisson ratio')
     if 1 - values['nu12']**2 * values['E2_Pa'] / values['E1_Pa'] <= 0:
         raise ValueError('Orthotropic plane stress compliance is not positive definite')
+    supplied = m.get('strengths_Pa') or {}
+    if not isinstance(supplied, dict) or set(supplied)-set(STRENGTH_KEYS):
+        raise ValueError('strengths_Pa accepts only Xt, Xc, Yt, Yc and S')
+    strengths = {key: None if supplied.get(key) is None else float(supplied[key]) for key in STRENGTH_KEYS}
+    if any(value is not None and (not math.isfinite(value) or value <= 0) for value in strengths.values()):
+        raise ValueError('Strength allowables must be positive finite stresses or null')
+    if any(value is not None for value in strengths.values()) and any(strengths[key] is None for key in ('Xt','Yt','S')):
+        raise ValueError('MAT8 strengths require Xt, Yt and S when any strength is specified')
+    values.update(model=model, strengths_Pa=strengths)
     return values
+
+
+def materials_by_region(config):
+    return {name: material_values(config, name) for name in REGIONS}
 
 
 def transformed_stiffness(material, angle_deg):
@@ -256,11 +302,14 @@ def build(config_path=DEFAULT_CONFIG, output=TRIALS_DIR/'composite_skin', angle_
     if angle_override is not None:
         for region in config['regions'].values():
             region['angle_deg'] = float(angle_override)
-    material = material_values(config)
+    materials = materials_by_region(config)
     stacks_by_part = {}
     for part in (1, 2):
         sign = float(config['part_angle_sign'][str(part)])
-        stacks_by_part[part] = {name: laminate(value, material, sign) for name, value in config['regions'].items()}
+        stacks_by_part[part] = {name: dict(laminate(value, materials[name], sign),
+                                          material_id=REGION_MATERIAL_IDS[name],
+                                          material_model=materials[name]['model'])
+                               for name, value in config['regions'].items()}
     flight = config['flight']
     cases_root = output/'cases'
     if any(cases_root.glob('part_*/bwb_sol144.bdf')):
@@ -273,7 +322,7 @@ def build(config_path=DEFAULT_CONFIG, output=TRIALS_DIR/'composite_skin', angle_
         model = load_model(source); layout = json.loads(layout_path.read_text())
         assignment = element_assignment(model, layout, config)
         stacks = stacks_by_part[part]
-        chunks = ['$ Four-zone cured woven carbon/epoxy trial; SI units.\n']
+        chunks = ['$ Four independent regional carbon/epoxy materials; SI units.\n']
         for name, fields, _ in cards(source):
             if name in ('MAT1','PSHELL'):
                 continue
@@ -284,14 +333,20 @@ def build(config_path=DEFAULT_CONFIG, output=TRIALS_DIR/'composite_skin', angle_
                 values = [fields[1], entry['pid'], *fields[3:3+count], entry['mcid']]
             chunks.append(write_card(name, values))
         chunks.append(write_card('PARAM',['NOCOMPS',1]))
-        chunks.append(write_card('MAT8',[1,real(material['E1_Pa']),real(material['E2_Pa']),real(material['nu12']),
-                                        real(material['G12_Pa']),real(material['G13_Pa']),real(material['G23_Pa']),
-                                        real(material['density_kg_m3'])]))
+        for region, material in materials.items():
+            values = [REGION_MATERIAL_IDS[region],real(material['E1_Pa']),real(material['E2_Pa']),real(material['nu12']),
+                      real(material['G12_Pa']),real(material['G13_Pa']),real(material['G23_Pa']),
+                      real(material['density_kg_m3'])]
+            if any(value is not None for value in material['strengths_Pa'].values()):
+                # MAT8 fields A1/A2/TREF precede Xt/Xc/Yt/Yc/S. STRN stays blank.
+                values += ['', '', ''] + [real(material['strengths_Pa'][key])
+                                           if material['strengths_Pa'][key] is not None else '' for key in STRENGTH_KEYS]
+            chunks.append(write_card('MAT8', values))
         for region,pid in REGIONS.items():
             stack=stacks[region]
             values=[pid,real(-stack['total_thickness_m']/2),0.,'', '',0.,0.,'']
             for angle, thickness in zip(stack['angles_deg'], stack['ply_thicknesses_m']):
-                values.extend([1,real(thickness),real(angle),'YES'])
+                values.extend([REGION_MATERIAL_IDS[region],real(thickness),real(angle),'YES'])
             chunks.append(write_card('PCOMP',values))
         for entry in assignment.values():
             centre=np.array(entry['centroid_m']); normal=np.array(entry['normal']); tangent=np.array(entry['reference_axis'])
@@ -299,22 +354,24 @@ def build(config_path=DEFAULT_CONFIG, output=TRIALS_DIR/'composite_skin', angle_
         folder=cases_root/f'part_{part}'
         (folder/'structural_cards.bdf').write_text(''.join(chunks),encoding='ascii')
         deck=folder/'bwb_sol144.bdf'
-        deck.write_text(deck.read_text().replace('ASSUMED LOW SPEED AEROELASTIC STRAIN DEMO','FOUR ZONE WOVEN CARBON EPOXY TRIAL')
+        deck.write_text(deck.read_text().replace('ASSUMED LOW SPEED AEROELASTIC STRAIN DEMO','FOUR REGION INDEPENDENT CARBON EPOXY TRIAL')
                         .replace('REAL,VONMISES,CENTER','REAL,CENTER').replace('REAL,FIBER,CENTER','REAL,CENTER'),encoding='ascii')
         counts=Counter(entry['region'] for entry in assignment.values())
         mass=sum(entry['area_m2']*stacks[entry['region']]['areal_mass_kg_m2'] for entry in assignment.values())
-        report=dict(part=part,config=config,material_effective=material,laminates=stacks,element_counts=dict(counts),
+        report=dict(schema_version=2,part=part,config=config,materials_effective=materials,
+                    region_material_ids=REGION_MATERIAL_IDS,laminates=stacks,element_counts=dict(counts),
                     shell_mass_kg=mass,elements=assignment,source_structure=provenance(source),source_layout=provenance(layout_path),
                     band_boundaries=report_band_boundaries(assignment, config),
                     generator=provenance(Path(__file__)),
                     discretization='Element-centroid selection; bands follow existing elements, not exact CAD cuts. Refinement is needed to resolve arbitrary narrow widths.',
-                    coordinate_convention='Each element MCID X follows outward span projected onto shell. Tip cap uses chord. PCOMP angles rotate woven warp; fill is +90 degrees. Part 2 angle sign mirrors the fabric path.',
+                    coordinate_convention='MCID X follows projected outward span; tip cap uses chord. PCOMP angles rotate material 1-axis. Part 2 angle sign mirrors orthotropic fabric paths. Plane-isotropic in-plane stiffness is independent of angle.',
                     inputs=[provenance(folder/name) for name in ('structural_cards.bdf','aero_cards.bdf','spline_cards.bdf','dmicards.bdf','flight_condition.bdf','bwb_sol144.bdf')])
         (folder/'composite_assignment.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
         manifest=json.loads((folder/'case_manifest.json').read_text())
         manifest['assumptions']=[s for s in manifest['assumptions'] if 'Aluminium' not in s and 'Strains are linear' not in s]
-        manifest['assumptions'] += ['MAT8 effective cured woven carbon/epoxy, four explicit PCOMP regions, no added epoxy layer.',
-                                    'In-plane ply stress and strain are recovered at ply midpoints; no aluminium yield criterion applies.']
+        manifest['assumptions'] += ['Four independent effective cured carbon/epoxy MAT8 materials, one per PCOMP region; no added epoxy layer.',
+                                    'LE/TE plane-isotropic equivalence is a declared homogenization assumption; upper/lower retain independent orthotropy.',
+                                    'In-plane ply stress and strain are recovered at ply midpoints; optional MAT8 strengths do not change linear stiffness and no failure theory is activated.']
         manifest['inputs']=report['inputs']; manifest['composite_assignment']=provenance(folder/'composite_assignment.json')
         (folder/'case_manifest.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
         print(f'Part {part}: {dict(counts)}, shell mass {mass:.6f} kg',flush=True)

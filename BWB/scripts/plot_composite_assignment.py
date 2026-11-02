@@ -1,7 +1,8 @@
-"""Plot actual four-region composite assignment and first-ply fabric directions.
+"""Plot actual four-region composite assignment and first-ply material directions.
 
-Reads part 1 of the baseline and angle_30 temporary cases. The only output is
-workspace/BWB/trials/composite_skin/assignment_overview.png. No Femap is used.
+Reads part 1 of the baseline and angle_30 temporary cases. Isotropic regions
+have no directional arrows. The only output is assignment_overview.png in the
+selected temporary trial directory. No Femap is used.
 """
 from __future__ import annotations
 
@@ -22,6 +23,19 @@ REGIONS = ('upper', 'lower', 'leading_edge', 'trailing_edge')
 COLORS = {'upper': '#4b91b6', 'lower': '#e5a664',
           'leading_edge': '#65b699', 'trailing_edge': '#ab8ac5'}
 WARP, FILL = '#234e7a', '#d26936'
+
+
+def material_model(laminate):
+    """Legacy reports described four orthotropic woven-fabric regions."""
+    model = laminate.get('material_model', 'orthotropic')
+    if model not in ('orthotropic', 'plane_isotropic'):
+        raise ValueError(f'Unsupported material model in assignment report: {model!r}')
+    return model
+
+
+def directional_regions(assignment):
+    return {region for region, laminate in assignment['laminates'].items()
+            if material_model(laminate) == 'orthotropic'}
 
 
 def camera_matrix(elevation=45.0, azimuth=-64.0):
@@ -66,7 +80,8 @@ def fabric_directions(record, angle_deg):
     return warp, fill
 
 
-def visible_samples(elements, polygons, camera, maximum=22, minimum_spacing=.075):
+def visible_samples(elements, polygons, camera, maximum=22, minimum_spacing=.075,
+                    eligible_regions=None):
     """Select sparse front-surface anchors, checking occlusion in the actual mesh."""
     projected = {eid: points @ camera.T for eid, points in polygons.items()}
     triangles = []
@@ -82,6 +97,8 @@ def visible_samples(elements, polygons, camera, maximum=22, minimum_spacing=.075
     denominator = np.where(nondegenerate, denominator, 1.0)
     candidates = []
     for eid, record in sorted(elements.items()):
+        if eligible_regions is not None and record['region'] not in eligible_regions:
+            continue
         if np.asarray(record['normal']) @ camera[2] <= .12:
             continue
         point = np.asarray(record['centroid_m']) @ camera.T
@@ -93,7 +110,7 @@ def visible_samples(elements, polygons, camera, maximum=22, minimum_spacing=.075
         if np.any(covers) and np.max(depths[covers]) - point[2] < .0007:
             candidates.append((eid, point[:2]))
     if not candidates:
-        raise ValueError('No visible surface locations found')
+        return [], projected
     points = np.asarray([point for _, point in candidates])
     selected = [int(np.argmin(np.linalg.norm(points - points.mean(axis=0), axis=1)))]
     while len(selected) < maximum:
@@ -129,7 +146,9 @@ def render(trial_root=TRIAL_ROOT):
             raise ValueError('Geometry, regions or reference frames differ between comparison cases')
 
     camera = camera_matrix()
-    sampled, projected = visible_samples(elements, polygons, camera)
+    directional = directional_regions(baseline) | directional_regions(rotated)
+    sampled, projected = visible_samples(elements, polygons, camera,
+                                         eligible_regions=directional)
     drawing_order = sorted(projected, key=lambda eid: projected[eid][:, 2].mean())
     all_points = np.concatenate(list(projected.values()))[:, :2] * 1000
     low, high = all_points.min(axis=0), all_points.max(axis=0)
@@ -139,15 +158,18 @@ def render(trial_root=TRIAL_ROOT):
                          'text.color': '#263c50', 'axes.titlecolor': '#263c50'})
     fig, axes = plt.subplots(1, 3, figsize=(18.0, 7.0), facecolor='#f6f8fb')
     fig.subplots_adjust(left=.025, right=.985, bottom=.29, top=.81, wspace=.035)
-    fig.text(.035, .94, 'BWB composite skin | Regions and woven-fabric directions',
+    fig.text(.035, .94, 'BWB composite skin | Regions and material directions',
              fontsize=24, weight='bold')
     fig.text(.035, .89, f'Part 1  /  Actual BDF shell geometry  /  {len(elements):,} elements  /  '
              'Same upper-side orthographic view in all panels', fontsize=12, color='#64758a')
 
-    angle_label = lambda assignment: '/'.join(
-        f'{value:g}°' for value in sorted({data['angles_deg'][0] for data in assignment['laminates'].values()}))
-    titles = ('01  Four material regions', f'02  Baseline: first ply {angle_label(baseline)}',
-              f'03  Rotated: first ply {angle_label(rotated)}')
+    def angle_label(assignment):
+        angles = {data['angles_deg'][0] for data in assignment['laminates'].values()
+                  if material_model(data) == 'orthotropic'}
+        return '/'.join(f'{value:g}°' for value in sorted(angles)) or 'isotropic'
+
+    titles = ('01  Four material regions', f'02  Baseline: directional plies {angle_label(baseline)}',
+              f'03  Rotated: directional plies {angle_label(rotated)}')
     for index, axis in enumerate(axes):
         axis.set_facecolor('#f6f8fb')
         faces = []
@@ -167,7 +189,10 @@ def render(trial_root=TRIAL_ROOT):
             data, assignment = (elements, baseline) if index == 1 else (rotated_elements, rotated)
             for eid in sampled:
                 record = data[eid]
-                angle = assignment['laminates'][record['region']]['angles_deg'][0]
+                laminate = assignment['laminates'][record['region']]
+                if material_model(laminate) == 'plane_isotropic':
+                    continue
+                angle = laminate['angles_deg'][0]
                 center = np.asarray(record['centroid_m']) @ camera.T * 1000
                 for direction, color in zip(fabric_directions(record, angle), (WARP, FILL)):
                     vector = direction @ camera.T * 55.0
@@ -185,15 +210,18 @@ def render(trial_root=TRIAL_ROOT):
     handles = []
     for region in REGIONS:
         laminate = baseline['laminates'][region]
-        text = (f"{region_labels[region]}: {len(laminate['angles_deg'])} woven plies, "
+        description = ('equivalent plane-isotropic'
+                       if material_model(laminate) == 'plane_isotropic'
+                       else f"{len(laminate['angles_deg'])} orthotropic plies")
+        text = (f"{region_labels[region]}: {description}, "
                 f"{laminate['total_thickness_m'] * 1000:.3f} mm")
         handles.append(Patch(facecolor=COLORS[region], edgecolor='none', label=text))
     fig.legend(handles=handles, loc='lower left', bbox_to_anchor=(.030, .18), ncol=2,
                frameon=False, fontsize=10.5, handlelength=1.4, columnspacing=1.7)
-    fig.legend(handles=[Line2D([0], [0], color=WARP, lw=2, label='Warp: ply angle θ'),
-                        Line2D([0], [0], color=FILL, lw=2, label='Fill: θ + 90°')],
+    fig.legend(handles=[Line2D([0], [0], color=WARP, lw=2, label='Material axis 1: θ'),
+                        Line2D([0], [0], color=FILL, lw=2, label='Material axis 2: θ + 90°')],
                loc='lower right', bbox_to_anchor=(.974, .21), ncol=2, frameon=False, fontsize=11)
-    fig.text(.035, .15, 'One woven ply already contains both orthogonal fiber families; the two arrows do not represent two separate plies.',
+    fig.text(.035, .15, 'Arrows show orthotropic material axes only. Plane-isotropic regions have no preferred in-plane direction.',
              fontsize=11, weight='bold')
     fig.text(.035, .083,
              'θ rotates from each shell reference axis (projected outward span; chord on the tip cap). '
@@ -209,9 +237,15 @@ def render(trial_root=TRIAL_ROOT):
     fig.savefig(output, dpi=190, facecolor=fig.get_facecolor())
     plt.close(fig)
     print(json.dumps({'output': str(output), 'elements': len(elements),
-                      'visible_arrow_pairs_per_fiber_panel': len(sampled),
+                      'visible_arrow_pairs_per_panel': {
+                          name: sum(elements[eid]['region'] in directional_regions(assignment)
+                                    for eid in sampled)
+                          for name, assignment in [('baseline', baseline), ('angle_30', rotated)]},
+                      'material_models': {region: material_model(data)
+                                          for region, data in baseline['laminates'].items()},
                       'first_ply_angles_deg': {name: {region: data['angles_deg'][0]
-                                                    for region, data in assignment['laminates'].items()}
+                                                    for region, data in assignment['laminates'].items()
+                                                    if material_model(data) == 'orthotropic'}
                                               for name, assignment in [('baseline', baseline), ('angle_30', rotated)]}}, indent=2))
     return output
 

@@ -6,7 +6,7 @@
 
 - [规则蒙皮模型](models/skin_structured/README.md)：主翼采用平行弦向截面和连续展向列，保留材料、1 mm 厚度及根部固定的演示假设。
 - [气动面板模型](models/aero_panels/README.md)：每件 11 个 CAERO1、590 个气动小面板，附 SPLINE1/SET1、W2GJ、独立检查报告和 Femap 查看模型。
-- [四区碳纤维/环氧策略](docs/composite_skin_strategy.md)：上表面、下表面、前缘、后缘分别赋值；[配置](config/composite_skin.json)控制加强区比例、逐层厚度和纤维角度。使用 MAT8/PCOMP，完整流程入口为 `python -m BWB.scripts.run_composite_demo --output workspace/BWB/trials/composite_skin/<新目录>`。
+- [四区碳纤维/环氧策略](docs/composite_skin_strategy.md)：四区使用独立 MAT8/PCOMP；前后缘按面内各向同性等效，上下蒙皮分别配置方向、弹性属性和强度。[配置](config/composite_skin.json)同时控制加强区比例、逐层厚度和角度。完整流程入口为 `python -m BWB.scripts.run_composite_demo --output workspace/BWB/trials/composite_skin/<新目录>`。
 - `models/skin_demo/`：原始 CAD 副本、Parasolid 导出及首版自由网格，保留作来源记录和对比。
 - `cases/`、`results/`：仅预留给明确选定的固定输入和正式成果，当前不收录飞况试算。
 - `tests/`：可复用代码的回归测试，所需试算输入由测试临时生成并清理，不依赖本机试算数据。

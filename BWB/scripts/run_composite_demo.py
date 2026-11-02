@@ -1,4 +1,4 @@
-"""Build, solve, export and check one fresh two-part woven-composite trial.
+"""Build, solve, export and check one fresh two-part regional-composite trial.
 
 Run from the repository root, for example::
 
@@ -71,7 +71,7 @@ def run_trial(config, output, angle_override=None, solver=DEFAULT_SOLVER,
                               'Exporting a complete field for inspection is not acceptance of its diagnostics. '
                               'Coarse-screen results are reported independently of runtime cleanliness.'),
         'limitations': ['Passing coarse screens is not material-strength, mesh, experimental or aeroelastic-stability validation.',
-                        'This workflow does not assign or certify composite strength allowables or failure indices.'],
+                        'Assigned strengths are configurable reference inputs, not certified allowables or computed failure indices.'],
         'cases': [],
     }
     output.mkdir(parents=True, exist_ok=False)

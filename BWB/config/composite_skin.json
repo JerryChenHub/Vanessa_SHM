@@ -1,34 +1,167 @@
 {
-  "schema_version": 1,
-  "description": "Representative cured wet-layup balanced plain-weave carbon/epoxy; assumed, not the user's measured material",
-  "leading_edge_chord_fraction": 0.10,
+  "schema_version": 2,
+  "description": "Four independent cured carbon/epoxy materials: orthotropic upper/lower skins and plane-isotropic equivalent leading/trailing edges. Numerical defaults are reference proxies, not measured wing properties.",
+  "leading_edge_chord_fraction": 0.1,
   "trailing_edge_chord_fraction": 0.15,
-  "part_angle_sign": {"1": 1, "2": -1},
+  "part_angle_sign": {
+    "1": 1,
+    "2": -1
+  },
   "tip_cap_middle_region": "upper",
-  "material": {
-    "E1_Pa": 47200000000.0,
-    "E2_Pa": 47200000000.0,
-    "nu12": 0.074,
-    "G12_Pa": 2340000000.0,
-    "G13_Pa": 2340000000.0,
-    "G23_Pa": 2340000000.0,
-    "density_kg_m3": 1350.0,
-    "stiffness_scale": 1.0,
-    "source": "https://agate.niar.wichita.edu/Materials/WP3.3-033051-115.pdf",
-    "assumptions": [
-      "RTD wet-layup reference, rounded E and G; E1=E2 is a balanced-fabric approximation.",
-      "nu12=0.074 follows summary p24; detailed p26 gives a different value. It is an assumed reference, not measured for this wing.",
-      "G13=G23=G12 is an explicit transverse-shear assumption, not a measured property in the cited report.",
-      "Density 1350 kg/m3 lies within the cited wet-layup specimen ranges.",
-      "Effective cured properties already include epoxy. No extra epoxy stiffness or mass is added.",
-      "No composite strength allowables, von Mises yield criterion or certified failure index is assigned."
-    ]
-  },
   "regions": {
-    "upper": {"ply_thickness_m": 0.00026416, "angle_deg": 0.0, "ply_angles_deg": [0, 0, 0, 0]},
-    "lower": {"ply_thickness_m": 0.00026416, "angle_deg": 0.0, "ply_angles_deg": [0, 0, 0, 0]},
-    "leading_edge": {"ply_thickness_m": 0.00026416, "angle_deg": 0.0, "ply_angles_deg": [0, 0, 0, 0, 0, 0]},
-    "trailing_edge": {"ply_thickness_m": 0.00026416, "angle_deg": 0.0, "ply_angles_deg": [0, 0, 0, 0, 0, 0]}
+    "upper": {
+      "ply_thickness_m": 0.00026416,
+      "angle_deg": 0.0,
+      "ply_angles_deg": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "material": {
+        "model": "orthotropic",
+        "E1_Pa": 47200000000.0,
+        "E2_Pa": 47200000000.0,
+        "nu12": 0.074,
+        "G12_Pa": 2340000000.0,
+        "G13_Pa": 2340000000.0,
+        "G23_Pa": 2340000000.0,
+        "density_kg_m3": 1350.0,
+        "stiffness_scale": 1.0,
+        "strengths_Pa": {
+          "Xt": 390000000.0,
+          "Xc": 373000000.0,
+          "Yt": 390000000.0,
+          "Yc": 373000000.0,
+          "S": 97400000.0
+        },
+        "source": "https://agate.niar.wichita.edu/Materials/WP3.3-033051-115.pdf",
+        "assumptions": [
+          "Effective cured wet-layup reference includes epoxy; this is not raw carbon-fiber stiffness or strength.",
+          "E1=E2 and equal warp/fill strengths are balanced-fabric approximations. They remain separately editable.",
+          "G13=G23=2.34 GPa is an explicit unmeasured transverse-shear assumption.",
+          "Rounded RTD strength proxies: Xt=Yt=390 MPa, Xc=Yc=373 MPa, S=97.4 MPa, from AGATE report p24 measured B-basis entries; these are NOT verified allowables for this wing.",
+          "Upper/lower start from the same reference numbers but have separate definitions and MAT8 IDs; edits never propagate between regions.",
+          "Strengths do not alter linear elastic stiffness. PCOMP failure theory remains blank; no strength pass/fail is inferred."
+        ]
+      }
+    },
+    "lower": {
+      "ply_thickness_m": 0.00026416,
+      "angle_deg": 0.0,
+      "ply_angles_deg": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "material": {
+        "model": "orthotropic",
+        "E1_Pa": 47200000000.0,
+        "E2_Pa": 47200000000.0,
+        "nu12": 0.074,
+        "G12_Pa": 2340000000.0,
+        "G13_Pa": 2340000000.0,
+        "G23_Pa": 2340000000.0,
+        "density_kg_m3": 1350.0,
+        "stiffness_scale": 1.0,
+        "strengths_Pa": {
+          "Xt": 390000000.0,
+          "Xc": 373000000.0,
+          "Yt": 390000000.0,
+          "Yc": 373000000.0,
+          "S": 97400000.0
+        },
+        "source": "https://agate.niar.wichita.edu/Materials/WP3.3-033051-115.pdf",
+        "assumptions": [
+          "Effective cured wet-layup reference includes epoxy; this is not raw carbon-fiber stiffness or strength.",
+          "E1=E2 and equal warp/fill strengths are balanced-fabric approximations. They remain separately editable.",
+          "G13=G23=2.34 GPa is an explicit unmeasured transverse-shear assumption.",
+          "Rounded RTD strength proxies: Xt=Yt=390 MPa, Xc=Yc=373 MPa, S=97.4 MPa, from AGATE report p24 measured B-basis entries; these are NOT verified allowables for this wing.",
+          "Upper/lower start from the same reference numbers but have separate definitions and MAT8 IDs; edits never propagate between regions.",
+          "Strengths do not alter linear elastic stiffness. PCOMP failure theory remains blank; no strength pass/fail is inferred."
+        ]
+      }
+    },
+    "leading_edge": {
+      "ply_thickness_m": 0.00026416,
+      "angle_deg": 0.0,
+      "ply_angles_deg": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "material": {
+        "model": "plane_isotropic",
+        "E_Pa": 32923256790.0,
+        "nu": 0.3540903435,
+        "G13_Pa": 2340000000.0,
+        "G23_Pa": 2340000000.0,
+        "density_kg_m3": 1350.0,
+        "stiffness_scale": 1.0,
+        "strengths_Pa": {
+          "Xt": null,
+          "Xc": null,
+          "Yt": null,
+          "Yc": null,
+          "S": null
+        },
+        "source": "https://ntrs.nasa.gov/api/citations/19950009349/downloads/19950009349.pdf",
+        "assumptions": [
+          "User-requested in-plane isotropic homogenization. Crossing 0/90 fibers alone does not establish isotropy.",
+          "E and nu derived from orientation-averaging the reference cured woven plane-stress stiffness; G12 is computed as E/[2(1+nu)].",
+          "This is an effective membrane-property approximation, not measured edge properties or exact ply-by-ply bending equivalence.",
+          "G13/G23 remain independent assumed transverse-shear moduli; plane isotropy does not require full 3D isotropy.",
+          "Leading and trailing edges have separate definitions and MAT8 IDs even when initial numbers match.",
+          "No edge strength allowables assigned. Elastic isotropy alone does not establish an isotropic failure envelope."
+        ]
+      }
+    },
+    "trailing_edge": {
+      "ply_thickness_m": 0.00026416,
+      "angle_deg": 0.0,
+      "ply_angles_deg": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "material": {
+        "model": "plane_isotropic",
+        "E_Pa": 32923256790.0,
+        "nu": 0.3540903435,
+        "G13_Pa": 2340000000.0,
+        "G23_Pa": 2340000000.0,
+        "density_kg_m3": 1350.0,
+        "stiffness_scale": 1.0,
+        "strengths_Pa": {
+          "Xt": null,
+          "Xc": null,
+          "Yt": null,
+          "Yc": null,
+          "S": null
+        },
+        "source": "https://ntrs.nasa.gov/api/citations/19950009349/downloads/19950009349.pdf",
+        "assumptions": [
+          "User-requested in-plane isotropic homogenization. Crossing 0/90 fibers alone does not establish isotropy.",
+          "E and nu derived from orientation-averaging the reference cured woven plane-stress stiffness; G12 is computed as E/[2(1+nu)].",
+          "This is an effective membrane-property approximation, not measured edge properties or exact ply-by-ply bending equivalence.",
+          "G13/G23 remain independent assumed transverse-shear moduli; plane isotropy does not require full 3D isotropy.",
+          "Leading and trailing edges have separate definitions and MAT8 IDs even when initial numbers match.",
+          "No edge strength allowables assigned. Elastic isotropy alone does not establish an isotropic failure envelope."
+        ]
+      }
+    }
   },
-  "flight": {"velocity_m_s": 20.0, "density_kg_m3": 1.225, "sound_speed_m_s": 340.3, "alpha_deg": 3.0}
+  "flight": {
+    "velocity_m_s": 20.0,
+    "density_kg_m3": 1.225,
+    "sound_speed_m_s": 340.3,
+    "alpha_deg": 3.0
+  }
 }

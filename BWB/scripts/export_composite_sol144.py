@@ -45,6 +45,28 @@ def read_composite_model(deck):
             materials[mid] = {key: nastran_float(f(index)) for index, key in (
                 (2, 'E1_Pa'), (3, 'E2_Pa'), (4, 'nu12'), (5, 'G12_Pa'),
                 (6, 'G1z_Pa'), (7, 'G2z_Pa'), (8, 'rho_kg_m3'))}
+            # Simcenter 2406 QRG MAT8, printed pp. 15-20/21 (PDF 1982/1983).
+            # Keep specified blanks distinct from Nastran's Xc=Xt, Yc=Yt
+            # defaults. STRN=1 changes allowable units to strain, not Pa.
+            specified = {key: nastran_float(f(index)) if f(index) else None
+                         for index, key in ((12, 'Xt'), (13, 'Xc'), (14, 'Yt'),
+                                            (15, 'Yc'), (16, 'S'))}
+            require(all(value is None or math.isfinite(value) and value > 0
+                        for value in specified.values()), f'Invalid MAT8 allowable: {mid}')
+            if any(value is not None for value in specified.values()):
+                require(all(specified[key] is not None for key in ('Xt', 'Yt', 'S')),
+                        f'MAT8 {mid}: specifying any allowable requires Xt, Yt and S')
+            require(not f(19) or nastran_float(f(19)) == 1.,
+                    f'MAT8 {mid}: STRN must be blank (stress) or 1 (strain)')
+            mode = 'strain' if f(19) else 'stress'
+            effective = dict(specified)
+            effective['Xc'] = specified['Xc'] if specified['Xc'] is not None else specified['Xt']
+            effective['Yc'] = specified['Yc'] if specified['Yc'] is not None else specified['Yt']
+            materials[mid].update(allowable_mode=mode, specified_allowables=specified,
+                                  effective_allowables=effective,
+                                  strengths_Pa=specified if mode == 'stress' else None,
+                                  effective_strengths_Pa=effective if mode == 'stress' else None,
+                                  strength_failure_assessment_performed=False)
             require(all(materials[mid][key] > 0 for key in ('E1_Pa', 'E2_Pa', 'G12_Pa')),
                     f'Nonpositive MAT8 in-plane stiffness: {mid}')
         elif name == 'PCOMP':
@@ -203,6 +225,23 @@ def write_csv(path, rows):
         writer.writerows(rows)
 
 
+def ply_extrema(rows):
+    """Summarize actual ply results without inferring a failure criterion."""
+    critical = max(rows, key=lambda row: abs(row['dominant_principal_microstrain']))
+    return dict(ply_rows=len(rows), shell_elements=len({row['element_id'] for row in rows}),
+                material_ids=sorted({row['material_id'] for row in rows}),
+                property_ids=sorted({row['property_id'] for row in rows}),
+                max_abs_principal_microstrain=abs(critical['dominant_principal_microstrain']),
+                max_abs_principal_element_id=critical['element_id'],
+                max_abs_principal_ply_id=critical['ply_id'],
+                max_abs_epsilon_11=max(abs(row['epsilon_11']) for row in rows),
+                max_abs_epsilon_22=max(abs(row['epsilon_22']) for row in rows),
+                max_abs_gamma_12=max(abs(row['gamma_12']) for row in rows),
+                max_abs_sigma_11_Pa=max(abs(row['sigma_11_Pa']) for row in rows),
+                max_abs_sigma_22_Pa=max(abs(row['sigma_22_Pa']) for row in rows),
+                max_abs_tau_12_Pa=max(abs(row['tau_12_Pa']) for row in rows))
+
+
 def export_case(case_dir, output_dir, job_name='bwb_sol144', root_tolerance=1e-10):
     data = validate_case(case_dir, job_name, root_tolerance)
     output_dir = Path(output_dir).resolve()
@@ -253,19 +292,14 @@ def export_case(case_dir, output_dir, job_name='bwb_sol144', root_tolerance=1e-1
     cases = []
     for subcase in data['subcases']:
         selected = [r for r in rows if r['subcase'] == subcase]
-        critical = max(selected, key=lambda r: abs(r['dominant_principal_microstrain']))
-        cases.append(dict(subcase=subcase, ply_rows=len(selected),
-                          max_abs_principal_microstrain=abs(critical['dominant_principal_microstrain']),
-                          max_abs_principal_element_id=critical['element_id'], max_abs_principal_ply_id=critical['ply_id'],
-                          max_abs_epsilon_11=max(abs(r['epsilon_11']) for r in selected),
-                          max_abs_epsilon_22=max(abs(r['epsilon_22']) for r in selected),
-                          max_abs_gamma_12=max(abs(r['gamma_12']) for r in selected),
-                          max_abs_sigma_11_Pa=max(abs(r['sigma_11_Pa']) for r in selected),
-                          max_abs_sigma_22_Pa=max(abs(r['sigma_22_Pa']) for r in selected),
-                          max_abs_tau_12_Pa=max(abs(r['tau_12_Pa']) for r in selected),
-                          max_translation_m=max(r['translation_m'] for r in displacements if r['subcase'] == subcase)))
+        case = dict(subcase=subcase, **ply_extrema(selected),
+                    max_translation_m=max(r['translation_m'] for r in displacements if r['subcase'] == subcase))
+        for key, row_key in (('per_property_results', 'property_id'), ('per_material_results', 'material_id')):
+            case[key] = {value: ply_extrema([row for row in selected if row[row_key] == value])
+                         for value in sorted({row[row_key] for row in selected})}
+        cases.append(case)
     diagnostic = bool(data['diagnostics']['runtime_errors'] or data['diagnostics']['warning_messages'])
-    summary = dict(schema_version=1, status='exported_with_diagnostics' if diagnostic else 'exported',
+    summary = dict(schema_version=2, status='exported_with_diagnostics' if diagnostic else 'exported',
                    diagnostic_only=diagnostic, solver_end_of_job=True, source_f06=str(data['f06']),
                    source_f06_sha256=file_hash(data['f06']), input_sha256=data['input_sha256'],
                    exporter_sha256=file_hash(__file__), structural_nodes=len(model['nodes']),
@@ -278,6 +312,9 @@ def export_case(case_dir, output_dir, job_name='bwb_sol144', root_tolerance=1e-1
                    output_location='Element centroid; in-plane values at each ply midpoint. Interlaminar columns at the interface above that ply; final-ply interface values are nominally zero, subject to numerical roundoff.',
                    coordinates='11/22/12 in ply coordinates, with engineering shear strain. Interlaminar stress and strain xz/yz in element material coordinates, as labeled XZ-MAT/YZ-MAT in the actual F06.',
                    interpretation='Direct PCOMP ply output, no MAT1 or isotropic stress reconstruction; no composite strength/failure certification.',
+                   strength_interpretation=('MAT8 allowables are preserved as specified, with optional compression defaults reported separately. '
+                                            'All-null allowables mean unassigned, not zero strength. No failure index, utilization, '
+                                            'isotropic yield criterion or strength pass/fail assessment is inferred.'),
                    recorded_launcher_returncode=data['run'].get('launcher_returncode'), diagnostics=data['diagnostics'],
                    files=files, csv_sha256={name: file_hash(output_dir / name) for name in files})
     (output_dir / 'composite_summary.json').write_text(json.dumps(summary, indent=2) + '\n', encoding='utf-8')

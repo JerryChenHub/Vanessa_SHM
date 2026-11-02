@@ -13,8 +13,8 @@ import numpy as np
 
 from BWB.paths import REPOSITORY_ROOT as ROOT, WORKSPACE_DIR
 from BWB.scripts.build_composite_skin import (
-    DEFAULT_CONFIG, REGIONS, build, element_assignment, laminate, material_values,
-    report_band_boundaries, transformed_stiffness,
+    DEFAULT_CONFIG, REGIONS, REGION_MATERIAL_IDS, build, element_assignment, laminate,
+    material_values, materials_by_region, report_band_boundaries, transformed_stiffness,
 )
 from BWB.scripts.inspect_shell_bdf import cards, load_model, nastran_float
 
@@ -39,7 +39,7 @@ def independent_rotated_stiffness(material, angle):
 class LaminateTests(unittest.TestCase):
     def setUp(self):
         self.config = json.loads(DEFAULT_CONFIG.read_text(encoding='utf-8-sig'))
-        self.material = material_values(self.config)
+        self.material = material_values(self.config, 'upper')
 
     def test_rotated_stiffness_matches_independent_tensor_operation(self):
         material = dict(self.material, E1_Pa=131e9, E2_Pa=11e9, nu12=.27, G12_Pa=4.7e9)
@@ -58,7 +58,7 @@ class LaminateTests(unittest.TestCase):
         np.testing.assert_allclose(stack['D_Nm'], q*thickness**3/12, rtol=1e-14)
         self.assertEqual(stack['ply_thicknesses_m'], [.0002]*4)
         self.assertEqual(stack['ply_thickness_m'], .0002)
-        self.assertAlmostEqual(stack['areal_mass_kg_m2'], 1350*thickness)
+        self.assertAlmostEqual(stack['areal_mass_kg_m2'], self.material['density_kg_m3']*thickness)
 
     def test_nonuniform_abd_scales_with_thickness_and_reversing_stack(self):
         region = dict(ply_angles_deg=[0., 32., -18.], ply_thicknesses_m=[.0001, .0003, .0002])
@@ -117,9 +117,84 @@ class LaminateTests(unittest.TestCase):
 
     def test_nonpositive_orthotropic_compliance_is_rejected(self):
         config = copy.deepcopy(self.config)
-        config['material'].update(E1_Pa=1e9, E2_Pa=100e9, nu12=.5)
+        config['regions']['upper']['material'].update(E1_Pa=1e9, E2_Pa=100e9, nu12=.5)
         with self.assertRaisesRegex(ValueError, 'positive definite'):
-            material_values(config)
+            material_values(config, 'upper')
+
+
+class RegionalMaterialTests(unittest.TestCase):
+    def setUp(self):
+        self.config = json.loads(DEFAULT_CONFIG.read_text(encoding='utf-8-sig'))
+
+    def test_independent_upper_lower_materials_and_legacy_fallback(self):
+        original = materials_by_region(self.config)
+        changed = copy.deepcopy(self.config)
+        changed['regions']['upper']['material'].update(
+            E1_Pa=91e9, E2_Pa=12e9, nu12=.22, G12_Pa=4.5e9,
+            density_kg_m3=1530., strengths_Pa=dict(Xt=900e6, Xc=650e6, Yt=38e6, Yc=120e6, S=60e6))
+        actual = materials_by_region(changed)
+        self.assertEqual(set(actual), set(REGIONS))
+        self.assertEqual(actual['upper']['E1_Pa'], 91e9)
+        self.assertEqual(actual['upper']['strengths_Pa']['Yt'], 38e6)
+        for region in ('lower', 'leading_edge', 'trailing_edge'):
+            self.assertEqual(actual[region], original[region])
+        # Explicit legacy material input remains readable without choosing a region.
+        legacy = dict(material=copy.deepcopy(changed['regions']['upper']['material']))
+        self.assertEqual(material_values(legacy), actual['upper'])
+        with self.assertRaises(ValueError):
+            material_values(changed)
+
+    def test_plane_isotropic_stiffness_is_angle_invariant(self):
+        for region in ('leading_edge', 'trailing_edge'):
+            material = material_values(self.config, region)
+            self.assertEqual(material['model'], 'plane_isotropic')
+            self.assertEqual(material['E1_Pa'], material['E2_Pa'])
+            self.assertAlmostEqual(material['G12_Pa'], material['E1_Pa']/(2*(1+material['nu12'])))
+            reference = transformed_stiffness(material, 0.)
+            for angle in (13., 30., -47., 90., 137.):
+                np.testing.assert_allclose(transformed_stiffness(material, angle), reference, rtol=3e-14, atol=1e-4)
+        orthotropic = material_values(self.config, 'upper')
+        self.assertEqual(orthotropic['model'], 'orthotropic')
+        self.assertGreater(np.linalg.norm(transformed_stiffness(orthotropic, 30.)
+                                          - transformed_stiffness(orthotropic, 0.)), 1e9)
+
+    def test_strength_inputs_do_not_change_elastic_response_or_mass(self):
+        before = material_values(self.config, 'upper')
+        self.config['regions']['upper']['material']['strengths_Pa'] = dict(
+            Xt=900e6, Xc=650e6, Yt=38e6, Yc=120e6, S=60e6)
+        after = material_values(self.config, 'upper')
+        for angle in (0., 24., 90.):
+            np.testing.assert_array_equal(transformed_stiffness(before, angle), transformed_stiffness(after, angle))
+        self.assertEqual(laminate(self.config['regions']['upper'], before, 1),
+                         laminate(self.config['regions']['upper'], after, 1))
+
+    def test_strengths_can_be_unset_or_leave_only_compression_to_nastran(self):
+        material = self.config['regions']['upper']['material']
+        material['strengths_Pa'] = dict.fromkeys(('Xt', 'Xc', 'Yt', 'Yc', 'S'))
+        self.assertTrue(all(value is None for value in material_values(self.config, 'upper')['strengths_Pa'].values()))
+        material['strengths_Pa'] = dict(Xt=900e6, Yt=38e6, S=60e6)
+        resolved = material_values(self.config, 'upper')['strengths_Pa']
+        self.assertEqual(resolved['Xt'], 900e6)
+        self.assertEqual(resolved['Yt'], 38e6)
+        self.assertEqual(resolved['S'], 60e6)
+        self.assertIsNone(resolved['Xc'])
+        self.assertIsNone(resolved['Yc'])
+
+    def test_invalid_partial_strengths_and_isotropic_constants_are_rejected(self):
+        invalid_strengths = [dict(Xt=900e6), dict(Xt=900e6, Yt=30e6),
+                             dict(Xt=900e6, Yt=30e6, S=-1),
+                             dict(Xt=900e6, Yt=30e6, S=50e6, Xc=0),
+                             dict(Xt=float('nan'), Yt=30e6, S=50e6)]
+        for strengths in invalid_strengths:
+            config = copy.deepcopy(self.config)
+            config['regions']['upper']['material']['strengths_Pa'] = strengths
+            with self.subTest(strengths=strengths), self.assertRaises(ValueError):
+                material_values(config, 'upper')
+        for values in (dict(E_Pa=-1), dict(nu=.5), dict(nu=-1), dict(E_Pa=float('inf'))):
+            config = copy.deepcopy(self.config)
+            config['regions']['leading_edge']['material'].update(values)
+            with self.subTest(values=values), self.assertRaises(ValueError):
+                material_values(config, 'leading_edge')
 
 
 class CompositeGeometryTests(unittest.TestCase):
@@ -173,6 +248,29 @@ class CompositeGeometryTests(unittest.TestCase):
             if 'chord_node_fractions' in item:
                 self.assertTrue(all(-1e-12 <= xi <= 1+1e-12 for xi in item['chord_node_fractions']))
 
+    def test_legacy_global_material_builds_four_explicit_mids(self):
+        config = copy.deepcopy(self.config)
+        config['schema_version'] = 1
+        config['material'] = copy.deepcopy(config['regions']['upper']['material'])
+        for region in config['regions'].values():
+            region.pop('material')
+        material = material_values(config)
+        self.assertEqual(materials_by_region(config), {region: material for region in REGIONS})
+        WORKSPACE_DIR.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix='legacy-composite-test-', dir=WORKSPACE_DIR) as temporary:
+            folder = Path(temporary)
+            config_path = folder/'config.json'
+            config_path.write_text(json.dumps(config), encoding='utf-8')
+            output = build(config_path, folder/'generated')
+            for part in (1, 2):
+                parsed = list(cards(output/f'part_{part}/structural_cards.bdf'))
+                material_ids = {int(fields[1]) for name, fields, _ in parsed if name == 'MAT8'}
+                self.assertEqual(material_ids, set(REGION_MATERIAL_IDS.values()))
+                property_first_mids = {int(fields[1]): int(fields[9])
+                                       for name, fields, _ in parsed if name == 'PCOMP'}
+                self.assertEqual(property_first_mids, {pid: REGION_MATERIAL_IDS[region]
+                                                       for region, pid in REGIONS.items()})
+
     def test_pcomp_records_preserve_nonuniform_thicknesses(self):
         WORKSPACE_DIR.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(prefix='composite-test-', dir=WORKSPACE_DIR) as temporary:
@@ -180,17 +278,49 @@ class CompositeGeometryTests(unittest.TestCase):
             self.assertTrue(folder.is_relative_to(WORKSPACE_DIR.resolve()))
             config = copy.deepcopy(self.config)
             config['regions']['upper'] = dict(ply_count=4, angle_deg=17.,
-                                             ply_thicknesses_m=[.0001, .0002, .0003, .0004])
+                                             ply_thicknesses_m=[.0001, .0002, .0003, .0004],
+                                             material=copy.deepcopy(config['regions']['upper']['material']))
+            # Deliberately distinct elastic/strength numbers detect accidental reuse
+            # of the top skin's material on the bottom or reinforced edge regions.
+            config['regions']['upper']['material'].update(
+                E1_Pa=91e9, E2_Pa=12e9, nu12=.22, G12_Pa=4.5e9,
+                strengths_Pa=dict(Xt=900e6, Xc=650e6, Yt=38e6, Yc=120e6, S=60e6))
+            config['regions']['lower']['material'].update(
+                E1_Pa=75e9, E2_Pa=14e9, nu12=.19, G12_Pa=3.9e9,
+                strengths_Pa=dict(Xt=800e6, Xc=600e6, Yt=42e6, Yc=110e6, S=55e6))
+            expected_materials = materials_by_region(config)
             config_path = folder/'config.json'
             config_path.write_text(json.dumps(config), encoding='utf-8')
             output = build(config_path, folder/'generated')
             for part, angle in ((1, 17.), (2, -17.)):
-                pcomp = next(fields for name, fields, _ in cards(output/f'part_{part}/structural_cards.bdf')
-                             if name == 'PCOMP' and int(fields[1]) == REGIONS['upper'])
+                model_cards = list(cards(output/f'part_{part}/structural_cards.bdf'))
+                material_cards = {int(fields[1]): fields for name, fields, _ in model_cards if name == 'MAT8'}
+                property_cards = {int(fields[1]): fields for name, fields, _ in model_cards if name == 'PCOMP'}
+                self.assertEqual(set(material_cards), set(REGION_MATERIAL_IDS.values()))
+                self.assertEqual(set(property_cards), set(REGIONS.values()))
+                for region, pid in REGIONS.items():
+                    card = property_cards[pid]
+                    ply_count = 4 if region in ('upper', 'lower') else 6
+                    self.assertEqual([int(card[9+4*i]) for i in range(ply_count)],
+                                     [REGION_MATERIAL_IDS[region]]*ply_count)
+                    mat8 = material_cards[REGION_MATERIAL_IDS[region]]
+                    expected = expected_materials[region]
+                    for index, key in ((2, 'E1_Pa'), (3, 'E2_Pa'), (4, 'nu12'),
+                                       (5, 'G12_Pa'), (6, 'G13_Pa'), (7, 'G23_Pa'), (8, 'density_kg_m3')):
+                        self.assertAlmostEqual(nastran_float(mat8[index]), expected[key],
+                                               delta=max(abs(expected[key])*1e-7, 1e-12))
+                    if region in ('upper', 'lower'):
+                        for index, key in enumerate(('Xt', 'Xc', 'Yt', 'Yc', 'S'), start=12):
+                            self.assertEqual(nastran_float(mat8[index]), expected['strengths_Pa'][key])
+                pcomp = property_cards[REGIONS['upper']]
                 self.assertAlmostEqual(nastran_float(pcomp[2]), -.0005)
                 np.testing.assert_allclose([nastran_float(pcomp[10+4*i]) for i in range(4)], [.0001, .0002, .0003, .0004])
                 self.assertEqual([nastran_float(pcomp[11+4*i]) for i in range(4)], [angle]*4)
                 manifest = json.loads((output/f'part_{part}/composite_assignment.json').read_text())
+                self.assertEqual(manifest['materials_effective'], expected_materials)
+                for region in REGIONS:
+                    self.assertEqual(manifest['laminates'][region]['material_id'], REGION_MATERIAL_IDS[region])
+                    self.assertEqual(manifest['laminates'][region]['material_model'], expected_materials[region]['model'])
                 self.assertNotIn('ply_thickness_m', manifest['laminates']['upper'])
                 self.assertIn('ply_thickness_m', manifest['laminates']['lower'])
                 self.assertIn('band_boundaries', manifest)

@@ -71,6 +71,67 @@ class CompositeExportTests(unittest.TestCase):
             self.assertAlmostEqual(float(rows[0]['ply_mid_z_m']), -.0001)
             self.assertAlmostEqual(float(rows[1]['ply_mid_z_m']), .0001)
             self.assertEqual(float(rows[1]['ply_angle_deg']), 45.)
+            self.assertEqual(summary['mat8_materials'][101]['strengths_Pa'],
+                             dict(Xt=None, Xc=None, Yt=None, Yc=None, S=None))
+            self.assertFalse(summary['mat8_materials'][101]['strength_failure_assessment_performed'])
+
+    def test_independent_materials_strength_mapping_and_region_extrema(self):
+        first = 'MAT8,101,5.4E10,5.2E10,.05,4.E9,3.E9,3.E9,1550.'
+        second = 'MAT8,202,3.4E10,3.2E10,.08,2.E9,2.E9,2.E9,1450.'
+        structure = STRUCTURE.replace(first, first + '\n+,,,,100.E6,80.E6,60.E6,40.E6,20.E6\n' +
+                                      second + '\n+,,,,200.E6,,150.E6,,50.E6')
+        structure = structure.replace('+,101,.0003,-45.,YES', '+,202,.0003,-45.,YES')
+        text = f06_text().replace('0 20 1 7000000.', '0 20 1 14000000.')
+        text = text.replace('0 20 1 0. 0. .002', '0 20 1 0. 0. .004')
+        with tempfile.TemporaryDirectory() as temporary:
+            case, output = Path(temporary) / 'case', Path(temporary) / 'output'
+            write_case(case, text, structure)
+            summary = export_case(case, output)
+            materials = summary['mat8_materials']
+            self.assertEqual(materials[101]['strengths_Pa'],
+                             dict(Xt=100e6, Xc=80e6, Yt=60e6, Yc=40e6, S=20e6))
+            self.assertEqual(materials[202]['strengths_Pa'],
+                             dict(Xt=200e6, Xc=None, Yt=150e6, Yc=None, S=50e6))
+            self.assertEqual(materials[202]['effective_strengths_Pa'],
+                             dict(Xt=200e6, Xc=200e6, Yt=150e6, Yc=150e6, S=50e6))
+            subcase = summary['subcases'][0]
+            lower = subcase['per_property_results'][12]
+            self.assertEqual(lower['material_ids'], [202])
+            self.assertEqual(lower['property_ids'], [12])
+            self.assertEqual(lower['max_abs_sigma_11_Pa'], 14e6)
+            self.assertEqual(lower['max_abs_principal_microstrain'], 2000.)
+            self.assertEqual(subcase['per_property_results'][11]['max_abs_sigma_11_Pa'], 7e6)
+            self.assertEqual(subcase['per_material_results'][101]['ply_rows'], 2)
+            self.assertEqual(subcase['per_material_results'][202]['ply_rows'], 1)
+            self.assertEqual(sum(row['ply_rows'] for row in subcase['per_material_results'].values()), 3)
+            with (output / 'ply_stress_strain.csv').open(newline='') as stream:
+                rows = list(csv.DictReader(stream))
+            self.assertEqual(rows[-1]['material_id'], '202')
+
+    def test_strain_allowables_are_never_labeled_as_strengths_pa(self):
+        material = 'MAT8,101,5.4E10,5.2E10,.05,4.E9,3.E9,3.E9,1550.'
+        structure = STRUCTURE.replace(material, material + '\n+,,,,.01,.008,.006,.004,.002\n+,,,1.')
+        with tempfile.TemporaryDirectory() as temporary:
+            case = Path(temporary)
+            write_case(case, structure=structure)
+            _, _, materials, _ = read_composite_model(case / 'bwb_sol144.bdf')
+            self.assertEqual(materials[101]['allowable_mode'], 'strain')
+            self.assertEqual(materials[101]['specified_allowables']['Xt'], .01)
+            self.assertIsNone(materials[101]['strengths_Pa'])
+            self.assertIsNone(materials[101]['effective_strengths_Pa'])
+
+    def test_incomplete_negative_nonfinite_allowables_are_rejected(self):
+        material = 'MAT8,101,5.4E10,5.2E10,.05,4.E9,3.E9,3.E9,1550.'
+        continuations = ('\n+,,,,100.E6',
+                         '\n+,,,,100.E6,80.E6,60.E6,40.E6,-20.E6',
+                         '\n+,,,,NaN,80.E6,60.E6,40.E6,20.E6')
+        with tempfile.TemporaryDirectory() as temporary:
+            case = Path(temporary)
+            for continuation in continuations:
+                with self.subTest(continuation=continuation):
+                    write_case(case, structure=STRUCTURE.replace(material, material + continuation))
+                    with self.assertRaises(ValueError):
+                        read_composite_model(case / 'bwb_sol144.bdf')
 
     def test_missing_duplicate_nonfinite_and_incomplete_results_rejected(self):
         original = f06_text()
